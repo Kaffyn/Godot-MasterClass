@@ -1,4 +1,4 @@
-# Curso Kaffyn: Áudio Dinâmico e Imersivo
+# Godot MBA: Áudio Dinâmico e Imersivo
 
 > **Instrutor:** Machi
 > **Objetivo:** Parar de usar sons repetitivos e estáticos. Aprender a usar o `AudioStreamRandomizer` (antigo AudioStreamRandomPitch) e `AudioBuses` para criar uma paisagem sonora profissional.
@@ -13,7 +13,7 @@ O cérebro humano detecta padrões rapidamente.
 **A Solução Antiga:**
 Criar um script que sorteia um pitch aleatório antes de dar play.
 
-**A Solução Kaffyn (Godot 4):**
+**A Solução Godot 4:**
 Usar `AudioStreamRandomizer`.
 
 ---
@@ -23,6 +23,7 @@ Usar `AudioStreamRandomizer`.
 Este é um **Resource** especial que embrulha seus sons. Ele permite variações automáticas de Pitch (tom) e Volume sem escrever uma linha de código.
 
 ### Como Criar:
+
 1. No FileSystem, crie um novo Resource -> `AudioStreamRandomizer`.
 2. Salve como `footstep_grass.tres`.
 3. No Inspector do Resource:
@@ -31,6 +32,7 @@ Este é um **Resource** especial que embrulha seus sons. Ele permite variações
    - **Random Volume:** Defina uma variação (ex: `2.0` dB).
 
 ### Como Usar:
+
 No seu `AudioStreamPlayer`, em vez de arrastar o `.wav`, arraste o `footstep_grass.tres`. Pronto.
 
 ---
@@ -83,6 +85,7 @@ Vá na aba **Audio** (parte inferior do editor) e crie Buses:
   - **Voice** (Diálogos)
 
 **Por que?**
+
 1. **Menu de Opções:** Permite que o jogador baixe só a música.
 2. **Ducking (Sidechain):** Você pode adicionar um efeito "Compressor" no Bus da Música e fazer ele baixar o volume automaticamente quando o Bus de Voz tiver sinal. (Estilo rádio locutor).
 3. **Reverb Local:** Crie um Bus "ReverbCave". Quando o player entrar na caverna, redirecione os sons dele para esse Bus via script (`player_audio.bus = "ReverbCave"`).

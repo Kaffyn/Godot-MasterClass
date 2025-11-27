@@ -1,4 +1,4 @@
-# Curso Kaffyn: UI Profissional (Themes & Containers)
+# Godot MBA: UI Profissional (Themes & Containers)
 
 > **Instrutor:** Machi
 > **Objetivo:** Criar interfaces que se adaptam a qualquer resolução de tela e são fáceis de reestilizar globalmente. Proibido posicionar botões "na mão".
@@ -11,16 +11,19 @@ Nunca use `Position` (x, y) para elementos de UI. Use **Containers**.
 A Godot tem um sistema de layout poderoso (similar ao Flexbox da Web).
 
 ### Os Três Mosqueteiros:
+
 1. **`HBoxContainer`:** Alinha filhos horizontalmente.
 2. **`VBoxContainer`:** Alinha filhos verticalmente.
 3. **`GridContainer`:** Alinha em grade (colunas fixas).
 
 ### Containers de Ajuste:
+
 - **`MarginContainer`:** Adiciona "respiro" (padding) em volta do conteúdo. Essencial para não colar texto nas bordas da tela.
 - **`CenterContainer`:** Centraliza o filho.
 - **`PanelContainer`:** Adiciona um fundo (Background) automático ao redor dos filhos.
 
 **Exemplo: Menu Principal**
+
 ```
 CanvasLayer
 └── MarginContainer (Padding 50px)
@@ -30,6 +33,7 @@ CanvasLayer
         ├── Button ("Opções")
         └── Button ("Sair")
 ```
+
 Se você mudar a resolução de 720p para 4K, esse menu continua centralizado e legível automaticamente.
 
 ---
@@ -37,11 +41,13 @@ Se você mudar a resolução de 720p para 4K, esse menu continua centralizado e 
 ## 2. Size Flags e Anchors
 
 Dentro de um Container, o filho tem propriedades de Layout:
+
 - **Expand:** Ocupar todo o espaço vazio disponível.
 - **Fill:** Esticar o conteúdo para preencher o espaço.
 - **Shrink Center:** Ficar no meio.
 
 Use **Anchors** (Âncoras) apenas para o nó RAIZ da sua UI (ex: o `Control` principal do HUD).
+
 - **Full Rect:** Ancora nos 4 cantos da tela.
 
 ---
@@ -52,6 +58,7 @@ Imagine mudar a fonte de **todos** os botões do jogo de uma vez.
 Isso é feito com `Theme`.
 
 ### O Fluxo de Trabalho:
+
 1. Crie um recurso `main_theme.tres`.
 2. Vá nas Project Settings -> GUI -> Theme -> Custom e defina ele como padrão.
 3. Abra o editor de Theme.
@@ -60,10 +67,12 @@ Isso é feito com `Theme`.
 
 **StyleBox:**
 É o que define a "cara" de um painel ou botão.
+
 - **StyleBoxFlat:** Cor sólida, bordas arredondadas, sombra simples. (Ótimo para protótipos e UI moderna/flat).
 - **StyleBoxTexture:** Usa uma imagem (9-patch slice) para bordas complexas (Pixel Art, Medieval).
 
 ### Variações de Tipo (Type Variations)
+
 E se eu quiser um botão "Perigo" que é vermelho, mas o padrão é azul?
 Não mude a cor no nó!
 
@@ -98,5 +107,6 @@ Isso permite criar presets de tipografia: `Header1.tres`, `BodyText.tres`, `Tool
 
 Lembre-se que `_input()` pega tudo, mas `_gui_input()` pega eventos específicos daquele controle.
 Para botões, sempre use os sinais:
+
 - `pressed()`
 - `mouse_entered()` / `mouse_exited()` (para Tooltips ou sons de hover).

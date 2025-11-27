@@ -1,4 +1,4 @@
-# Curso Kaffyn: Animação & Motion Design
+# Godot MBA: Animação & Motion
 
 > **Instrutor:** Machi
 > **Objetivo:** Dominar as ferramentas de movimento da Godot. Entender a diferença entre `AnimationPlayer` e `Tweens` e quando usar cada um.
@@ -7,10 +7,10 @@
 
 ## 1. AnimationPlayer vs Tweens
 
-| Ferramenta | Melhor Uso | Exemplo |
-| :--- | :--- | :--- |
-| **AnimationPlayer** | Animações complexas, visuais, com keyframes fixos, sincronia de áudio e chamadas de função. | Walk cycles, Ataques, Cutscenes, UI complexa de entrada. |
-| **Tweens** | Animações procedurais, interpolações numéricas, movimentos simples "Fire-and-forget". | Fade in/out de um item coletado, Tremer a câmera, Barra de vida descendo suavemente. |
+| Ferramenta          | Melhor Uso                                                                                  | Exemplo                                                                              |
+| :------------------ | :------------------------------------------------------------------------------------------ | :----------------------------------------------------------------------------------- |
+| **AnimationPlayer** | Animações complexas, visuais, com keyframes fixos, sincronia de áudio e chamadas de função. | Walk cycles, Ataques, Cutscenes, UI complexa de entrada.                             |
+| **Tweens**          | Animações procedurais, interpolações numéricas, movimentos simples "Fire-and-forget".       | Fade in/out de um item coletado, Tremer a câmera, Barra de vida descendo suavemente. |
 
 ---
 
@@ -19,13 +19,17 @@
 O `AnimationPlayer` é o editor de vídeo da Godot. Ele anima QUALQUER propriedade exportada.
 
 ### Call Method Track (A arma secreta)
+
 Além de animar Posição e Rotação, você pode animar Funções.
+
 - **Cenário:** Um ataque de espada.
 - **Problema:** O dano deve ocorrer exatamente no frame 12, quando a espada atinge o ápice.
 - **Solução:** Adicione uma "Call Method Track" no AnimationPlayer, aponte para o script do Player e insira uma chave no tempo 0.4s chamando a função `apply_damage()`.
 
 ### AnimationTree (Estados de Animação)
+
 Para personagens, não controle o AnimationPlayer via código (`play("run")`). Use uma `AnimationTree`.
+
 - **StateMachine:** Cria um grafo visual (Idle <-> Run <-> Jump).
 - **BlendSpace1D/2D:** Mistura animações baseado em vetores (Ex: Idle mistura com Walk que mistura com Run dependendo da velocidade 0 a 100).
 
@@ -40,17 +44,19 @@ Em Godot 4, Tweens não são mais Nodes. São objetos criados on-the-fly.
 func collect_item():
     # Animação de "pulo" do item antes de sumir
     var tween = create_tween()
-    
+
     # Sobe e Escala
     tween.tween_property(self, "position:y", position.y - 50, 0.3).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
     tween.parallel().tween_property(self, "scale", Vector2(0, 0), 0.3).set_delay(0.2)
-    
+
     # Callback ao terminar
     tween.tween_callback(queue_free)
 ```
 
 ### Easing e Transições
+
 O segredo do polimento ("Juice") está nas curvas.
+
 - **Linear:** Chato, robótico.
 - **Sine/Cubic:** Suave, natural.
 - **Elastic/Bounce:** Cartunesco, divertido.
@@ -78,7 +84,7 @@ func _process(delta):
     if shake_strength > 0:
         # Reduz a força com o tempo
         shake_strength = lerpf(shake_strength, 0, fade_speed * delta)
-        
+
         # Aplica offset aleatório
         offset = Vector2(
             randf_range(-shake_strength, shake_strength),

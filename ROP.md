@@ -1,4 +1,4 @@
-# Curso Kaffyn: Programação Orientada a Resources (ROP)
+# Godot MBA: Programação Orientada a Resources (ROP)
 
 Bem-vindo ao guia definitivo sobre **Resource-Oriented Programming (ROP)** na Kaffyn. Este documento foi estruturado como um mini-curso para transformar sua mentalidade de "Programador de Scripts" para "Arquiteto de Sistemas Godot".
 
@@ -98,7 +98,7 @@ Note que o Resource **não cura o player**. Ele não acessa `Player.hp`. Ele ape
 
 ### Injeção de Dependência via Inspector
 
-O padrão Kaffyn dita que **Nodes são Agentes** e **Resources são Configurações**. O Node sabe "como atirar", o Resource define "o que está sendo atirado".
+O padrão Machi dita que **Nodes são Agentes** e **Resources são Configurações**. O Node sabe "como atirar", o Resource define "o que está sendo atirado".
 
 **Exemplo no Player:**
 
@@ -389,7 +389,7 @@ func add_item(item: ItemData, amount: int = 1) -> bool:
 
 ## Módulo 6: Benefícios e Conclusão
 
-Por que a Kaffyn exige ROP?
+Por que este MBA exige ROP?
 
 1. **Separação de Responsabilidades:** Programadores codam a lógica (`.gd`), Game Designers ajustam o balanceamento (`.tres`).
 2. **Versionamento (Git):** Resources são arquivos de texto. Se um designer muda o HP do Boss, o Git mostra exatamente essa linha alterada, sem conflito com a lógica do script.

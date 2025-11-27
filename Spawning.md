@@ -1,4 +1,4 @@
-# Curso Kaffyn: Sistemas de Spawn e Fábricas
+# Godot MBA: Sistemas de Spawn e Fábricas
 
 > **Instrutor:** Machi
 > **Objetivo:** Criar inimigos, balas e itens dinamicamente. Entender `instantiate()`, `add_child` e como evitar problemas de hierarquia.
@@ -15,17 +15,17 @@ Para criar algo que não existe no editor (ex: uma bala ao apertar o gatilho), p
 
 func shoot():
     if not bullet_scene: return
-    
+
     # 1. Cria a instância na memória (ainda não visível)
     var bullet = bullet_scene.instantiate()
-    
+
     # 2. Configura posição e rotação
     bullet.global_position = global_position
     bullet.rotation = rotation
-    
+
     # 3. CRÍTICO: Onde adicionar?
     # Errado: add_child(bullet) -> A bala vai ser filha da Arma. Se a arma girar, a bala gira junto!
-    
+
     # Certo: Adicionar na "Raiz do Mundo"
     get_tree().current_scene.add_child(bullet)
 ```
@@ -64,18 +64,18 @@ func _ready():
 
 func _on_timer_timeout():
     if _active_count >= limit: return
-    
+
     spawn_random()
 
 func spawn_random():
     var scene = spawn_list.pick_random()
     var enemy = scene.instantiate()
-    
+
     enemy.global_position = global_position
-    
+
     # Conectar sinal de morte para liberar o slot
     enemy.tree_exited.connect(func(): _active_count -= 1)
-    
+
     get_parent().add_child(enemy)
     _active_count += 1
 ```
@@ -91,7 +91,7 @@ Se você tem um jogo "Bullet Hell" com 1000 tiros por segundo, o jogo vai travar
 Em vez de destruir a bala, você a esconde e desliga a física.
 Quando precisar atirar de novo, você pega aquela bala escondida, move para a arma e liga de novo.
 
-**Implementação Kaffyn (Simplificada):**
+**Implementação (Simplificada):**
 
 ```gdscript
 # bullet_pool.gd
@@ -112,7 +112,8 @@ func return_bullet(b: Node2D):
     b.set_physics_process(false)
     _pool.append(b)
 ```
-*Nota: Em Godot 4, a instanciação ficou muito mais rápida, então Pooling só é obrigatório em casos extremos (Mobile ou Bullet Hells massivos).*
+
+_Nota: Em Godot 4, a instanciação ficou muito mais rápida, então Pooling só é obrigatório em casos extremos (Mobile ou Bullet Hells massivos)._
 
 ---
 
@@ -130,12 +131,13 @@ class_name LootTable extends Resource
 func roll_item() -> PackedScene:
     var roll = randf() # 0.0 a 1.0
     var current = 0.0
-    
+
     for entry in items:
         current += entry.chance
         if roll <= current:
             return entry.item_scene
-            
+
     return null # Nada dropou
 ```
+
 O Inimigo tem um `export var loot: LootTable`. Ao morrer, chama `loot.roll_item()` e instancia o resultado.

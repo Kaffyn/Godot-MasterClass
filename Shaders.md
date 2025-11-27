@@ -1,4 +1,4 @@
-# Curso Kaffyn: Shaders & Materiais
+# Godot MBA: Shaders & Materiais
 
 > **Instrutor:** Machi
 > **Objetivo:** Perder o medo da linguagem de Shaders (GLSL/GDShader) e entender como criar efeitos visuais (VFX) que rodam na GPU.
@@ -11,6 +11,7 @@
 Por rodar na GPU, é extremamente rápido.
 
 ### Tipos Principais (CanvasItem vs Spatial)
+
 - **CanvasItem (2D):** Para Sprites, UI, ColorRects.
 - **Spatial (3D):** Para Meshes 3D.
 - **Particles:** Para definir comportamento de partículas (chuva, fogo).
@@ -32,13 +33,13 @@ void fragment() {
     // COLOR: A cor do pixel atual na tela
     // TEXTURE: A imagem original
     // UV: A coordenada (0,0 a 1,1) do pixel na imagem
-    
+
     vec4 cor_original = texture(TEXTURE, UV);
-    
+
     // Exemplo: Pintar tudo de vermelho mantendo o alpha
     vec4 cor_final = cor_original;
     cor_final.rgb = mix(cor_original.rgb, nova_cor.rgb, intensidade);
-    
+
     COLOR = cor_final;
 }
 ```
@@ -48,6 +49,7 @@ void fragment() {
 ## 3. Efeitos Práticos (Receitas de Bolo)
 
 ### A. Hit Flash (Piscar Branco ao levar dano)
+
 Clássico de jogos retrô.
 
 ```glsl
@@ -57,7 +59,7 @@ uniform bool active = false;
 
 void fragment() {
     vec4 tex_color = texture(TEXTURE, UV);
-    
+
     if (active) {
         // Define a cor como Branco Puro, mantendo a transparência original
         COLOR = vec4(1.0, 1.0, 1.0, tex_color.a);
@@ -66,12 +68,14 @@ void fragment() {
     }
 }
 ```
-*Como usar:* No script do inimigo, ao levar dano:
+
+_Como usar:_ No script do inimigo, ao levar dano:
 `material.set_shader_parameter("active", true)`
 (Espere 0.1s)
 `material.set_shader_parameter("active", false)`
 
 ### B. Sway (Vento em Grama/Árvore 2D)
+
 Usa o Vertex Shader para mover os vértices superiores enquanto fixa os inferiores.
 
 ```glsl
@@ -83,9 +87,9 @@ uniform float strength = 5.0;
 void vertex() {
     // Mover apenas se o vértice estiver no topo (UV.y < 0.5 aproximadamente)
     // VERTEX.x += sin(TIME * speed) * strength * (1.0 - UV.y);
-    
+
     // Em GDShader 2D, VERTEX é local.
-    VERTEX.x += sin(TIME * speed) * strength * (1.0 - UV.y); 
+    VERTEX.x += sin(TIME * speed) * strength * (1.0 - UV.y);
 }
 ```
 
@@ -94,6 +98,7 @@ void vertex() {
 ## 4. Visual Shader Editor
 
 Se você não gosta de código, a Godot tem um editor visual de nós (similar ao Blender ou Unreal).
+
 - Crie um `VisualShader`.
 - Arraste nós como `Input > UV`, `VectorOp > Add`, `Texture`.
 - Conecte a saída no `Output > Color`.
@@ -117,6 +122,7 @@ void fragment() {
     COLOR = color;
 }
 ```
+
 Nota: Em Godot 4, é necessário declarar o `hint_screen_texture`.
 
 ---

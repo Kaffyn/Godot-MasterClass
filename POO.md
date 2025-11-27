@@ -1,4 +1,4 @@
-# Curso Kaffyn: POO & A Filosofia dos Nós
+# Godot MBA: POO & A Filosofia dos Nós
 
 > **Instrutor:** Machi
 > **Objetivo:** Entender como a Programação Orientada a Objetos (POO) se traduz no sistema de Nós da Godot. Parar de ver "Scripts" e começar a ver "Classes" e "Objetos".
@@ -7,8 +7,8 @@
 
 ## 1. O Mito do Script
 
-Muitos iniciantes dizem: *"Vou colocar um script nesse objeto"*.
-A mentalidade correta é: *"Vou transformar esse objeto em uma instância da minha Classe"*.
+Muitos iniciantes dizem: _"Vou colocar um script nesse objeto"_.
+A mentalidade correta é: _"Vou transformar esse objeto em uma instância da minha Classe"_.
 
 Quando você anexa um arquivo `.gd` a um `Node`, você está **estendendo** a funcionalidade base daquele nó.
 
@@ -24,6 +24,7 @@ Isso significa que `MeuPlayer` **É UM** `CharacterBody2D`. Ele herda tudo: `mov
 ## 2. Os 4 Pilares da POO na Godot
 
 ### A. Abstração
+
 Esconder a complexidade.
 Um `Carro` não precisa saber como o `Motor` queima combustível. Ele apenas chama `Motor.ligar()`.
 
@@ -33,6 +34,7 @@ Errado: `Player` instancia a bala e calcula a física.
 Certo: `Player` chama `$Gun.shoot()`. A `Gun` resolve o resto.
 
 ### B. Encapsulamento
+
 Proteger os dados. Variáveis internas não devem ser tocadas de fora.
 
 ```gdscript
@@ -48,9 +50,11 @@ func damage(amount: int):
 Se alguém fizer `player.hp = -50` diretamente, pode quebrar a lógica de morte. Obrigue o uso de funções (`damage()`).
 
 ### C. Herança
+
 Criar versões especializadas de algo genérico.
 
 **Exemplo Clássico:**
+
 1. `Enemy` (Base): Tem vida, toma dano, segue o player.
 2. `Goblin` (extends Enemy): Corre rápido.
 3. `Orc` (extends Enemy): Bate forte e tem muita vida.
@@ -71,6 +75,7 @@ func take_damage(amount):
 ```
 
 ### D. Polimorfismo
+
 Tratar objetos diferentes da mesma maneira.
 
 Se você tem uma lista de inimigos (`Goblin`, `Orc`, `Dragon`), você não quer saber qual é qual. Você só quer causar dano.
@@ -97,6 +102,7 @@ Em vez de criar uma árvore genealógica gigante (`Enemy -> FlyingEnemy -> Shoot
 - O Player **TEM UM** `InputHandler`.
 
 **Na SceneTree:**
+
 ```
 Player (CharacterBody2D)
 ├── HealthComponent (Node)
@@ -141,25 +147,32 @@ Isso elimina a necessidade de checar strings, grupos ou caminhos de nós. O sist
 Muitos confundem estes termos. Vamos definir a hierarquia da existência na Godot.
 
 ### Nodes (Nós)
+
 O bloco fundamental. Um nó é uma **Classe** que herda de `Node`. Ele tem:
+
 - Nome.
 - Propriedades (x, y, rotation).
 - Callbacks (`_ready`, `_process`).
 - Capacidade de ter filhos.
 
 ### Scenes (Cenas - PackedScene)
+
 Uma Cena (`.tscn`) é um **Blueprint** (Planta Baixa) de uma árvore de nós.
 Ela não "existe" no jogo até ser instanciada.
+
 - `Player.tscn` é o arquivo no disco.
 - Quando você faz `instantiate()`, você cria os nós na memória RAM.
 
 ### SceneTree (Árvore de Cena)
+
 É o "Mundo Ativo". O gerenciador principal do loop do jogo.
+
 - Contém a `root` (Window).
 - Contém a `current_scene` (o nível atual).
 - Contém os `Autoloads` (Singletons).
 
 **Hierarquia Visual:**
+
 ```
 SceneTree (Main Loop)
 ├── root (Window)
@@ -175,17 +188,19 @@ SceneTree (Main Loop)
 ## 6. Sinais (Observer Pattern)
 
 Como os nós conversam sem criar dependências "Spaghetti"?
-**Regra de Ouro:** *Call Down, Signal Up.*
+**Regra de Ouro:** _Call Down, Signal Up._
+
 - **Pai chama Filho:** O Pai sabe quem é o filho (`$Filho`). Pode chamar funções dele.
 - **Filho NÃO conhece Pai:** O Filho nunca deve fazer `get_parent().funcao()`. Se o pai mudar, o filho quebra.
 
 ### O Que é um Sinal?
-É um evento. O nó grita: *"Aconteceu algo!"*. Quem estiver ouvindo (conectado) reage. O nó que gritou não sabe quem (ou se alguém) ouviu.
+
+É um evento. O nó grita: _"Aconteceu algo!"_. Quem estiver ouvindo (conectado) reage. O nó que gritou não sabe quem (ou se alguém) ouviu.
 
 ### Exemplo Prático: Barra de Vida (HUD)
 
 1. **O Player (Emissor):**
-Ele não sabe que existe uma barra de vida na tela. Ele só avisa que a vida mudou.
+   Ele não sabe que existe uma barra de vida na tela. Ele só avisa que a vida mudou.
 
 ```gdscript
 # player.gd
@@ -201,13 +216,13 @@ func take_damage(amount):
     hp -= amount
     # Emite o sinal avisando o novo valor
     health_changed.emit(hp, max_hp)
-    
+
     if hp <= 0:
         died.emit()
 ```
 
 2. **A UI (Receptor):**
-A UI sabe quem é o Player (provavelmente foi injetado nela ou ela o buscou).
+   A UI sabe quem é o Player (provavelmente foi injetado nela ou ela o buscou).
 
 ```gdscript
 # health_bar.gd (HUD)
@@ -234,10 +249,10 @@ Sinais também servem para pausar a execução até algo acontecer.
 func _on_button_pressed():
     print("Iniciando cutscene...")
     $AnimationPlayer.play("intro_cutscene")
-    
+
     # Espera a animação terminar antes de continuar
     await $AnimationPlayer.animation_finished
-    
+
     print("Cutscene acabou. Iniciando jogo.")
     get_tree().change_scene_to_file("res://level_1.tscn")
 ```

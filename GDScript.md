@@ -1,4 +1,4 @@
-# Curso Kaffyn: GDScript Essentials (Zero to Hero)
+# Machi MBA: GDScript Essentials (Zero to Hero)
 
 > **Instrutor:** Machi
 > **Objetivo:** Ensinar a linguagem GDScript pura, lógica de programação e implementação de gameplay básica sem depender de arquiteturas complexas (ROP). Foco em "fazer funcionar bem".
@@ -10,7 +10,8 @@
 GDScript é similar a Python. Indentação (TAB) define blocos de código.
 
 ### Variáveis e Tipagem
-Na Kaffyn, usamos **Tipagem Estática**. Isso evita bugs e melhora o autocomplete.
+
+No MBA, usamos **Tipagem Estática**. Isso evita bugs e melhora o autocomplete.
 
 ```gdscript
 # Ruim (Dinâmico - pode ser qualquer coisa)
@@ -26,6 +27,7 @@ var is_vivo: bool = true
 ### Coleções (Arrays e Dictionaries)
 
 **Arrays (Listas Ordenadas):**
+
 ```gdscript
 var inventario: Array[String] = ["Espada", "Poção", "Mapa"]
 
@@ -33,7 +35,7 @@ func exemplo_array():
     inventario.append("Chave")
     print(inventario[0]) # Imprime "Espada"
     inventario.erase("Poção")
-    
+
     # Loop (Iteração)
     for item in inventario:
         print("Tenho: " + item)
@@ -41,6 +43,7 @@ func exemplo_array():
 
 **Dictionaries (Chave-Valor):**
 Ótimo para dados estruturados simples.
+
 ```gdscript
 var dados_player: Dictionary = {
     "nome": "Heroi",
@@ -67,6 +70,7 @@ func somar(a: int, b: int) -> int:
 
 **Static Funcs (Utilitários):**
 Funções que não precisam de uma instância do objeto para rodar. Útil para matemática ou ajudantes.
+
 ```gdscript
 static func calcular_dano(base: int, forca: int) -> int:
     return base + (forca * 2)
@@ -99,7 +103,7 @@ func _physics_process(delta: float) -> void:
     # 3. Movimento Horizontal
     # Retorna -1 (esquerda), 1 (direita) ou 0 (parado)
     var direction = Input.get_axis("ui_left", "ui_right")
-    
+
     if direction:
         velocity.x = direction * SPEED
     else:
@@ -132,10 +136,10 @@ func _physics_process(delta):
     if player_ref:
         # Direção = Destino - Origem (Normalizado para ter tamanho 1)
         var direction = (player_ref.global_position - global_position).normalized()
-        
+
         velocity = direction * speed
         move_and_slide()
-        
+
         # Olhar para o player
         if direction.x > 0:
             $Sprite2D.flip_h = false
@@ -150,13 +154,14 @@ func _physics_process(delta):
 A comunicação básica entre objetos.
 
 **No Inimigo (Receber Dano):**
+
 ```gdscript
 var hp: int = 3
 
 func take_damage(amount: int) -> void:
     hp -= amount
     $AnimationPlayer.play("hurt")
-    
+
     if hp <= 0:
         die()
 
@@ -217,21 +222,21 @@ func _physics_process(delta):
 func _process_idle(delta):
     velocity = Vector2.ZERO
     $AnimationPlayer.play("idle")
-    
+
     # Transição: Se ver o player, persiga
     if _can_see_player():
         current_state = State.CHASE
 
 func _process_chase(delta):
     if not player: return
-    
+
     var direction = (player.global_position - global_position).normalized()
     velocity = direction * speed
     move_and_slide()
     $AnimationPlayer.play("run")
-    
+
     var dist = global_position.distance_to(player.global_position)
-    
+
     # Transições
     if dist <= attack_range:
         current_state = State.ATTACK
@@ -242,8 +247,8 @@ func _process_attack(delta):
     velocity = Vector2.ZERO
     # Toca animação de ataque e espera ela acabar
     # (Nota: Em código real, usariamos sinais de animação, aqui é simplificado)
-    $AnimationPlayer.play("attack") 
-    
+    $AnimationPlayer.play("attack")
+
     # Transição de volta (simulada)
     # Num jogo real, aguardariamos 'animation_finished'
     if not $AnimationPlayer.is_playing():
@@ -255,7 +260,7 @@ func _can_see_player() -> bool:
     if not player:
         var p = get_tree().get_nodes_in_group("Player")
         if p: player = p[0]
-    
+
     if player:
         return global_position.distance_to(player.global_position) < detect_range
     return false

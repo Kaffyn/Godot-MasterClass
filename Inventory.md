@@ -1,4 +1,4 @@
-# Curso Kaffyn: Masterclass de Sistemas de Inventário
+# Godot MBA: Masterclass de Sistemas de Inventário
 
 > **Instrutor:** Machi
 > **Nível:** Básico ao Arquiteto Sênior

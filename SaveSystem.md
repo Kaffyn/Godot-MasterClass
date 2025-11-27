@@ -1,4 +1,4 @@
-# Curso Kaffyn: Sistema de Save/Load Profissional
+# Godot MBA: Sistema de Save/Load Profissional
 
 > **Instrutor:** Machi
 > **Objetivo:** Persistir o estado do jogo de forma segura, escalável e versionável. Abandonar a ideia de salvar "a cena inteira".
@@ -10,6 +10,7 @@
 **NUNCA** tente salvar a árvore de nós (`PackedScene.pack(root)`). Isso salva lixo, texturas, scripts e coisas que não deveriam estar no save.
 
 Salve apenas **DADOS**.
+
 - Posição do Player (Vector2)
 - Inventário (Array de IDs e Quantidades)
 - Flags de progresso ("boss_1_killed": true)
@@ -59,19 +60,19 @@ func save_game(data: Dictionary):
     if not file:
         push_error("Falha ao salvar jogo!")
         return
-    
+
     # Opção 1: JSON (Legível, debugável, mas inseguro e lento para dados gigantes)
     # file.store_string(JSON.stringify(data))
-    
-    # Opção 2: Binário (Rápido, compacto, difícil de editar na mão) -> Recomendado Kaffyn
+
+    # Opção 2: Binário (Rápido, compacto, difícil de editar na mão) -> Recomendado
     file.store_var(data)
 
 func load_game() -> Dictionary:
     if not FileAccess.file_exists(SAVE_PATH):
         return {} # Retorna vazio se não tem save
-        
+
     var file = FileAccess.open(SAVE_PATH, FileAccess.READ)
-    
+
     # Opção 2: Binário
     var data = file.get_var()
     return data
@@ -103,17 +104,18 @@ func load_save_data(data: Dictionary):
 ```
 
 **No momento de salvar:**
+
 ```gdscript
 func create_save_snapshot() -> Dictionary:
     var snapshot = {}
     var nodes = get_tree().get_nodes_in_group("Persist")
-    
+
     for node in nodes:
         # Usamos o path do node como ID único (cuidado se nodes mudam de nome!)
         # Ou melhor: Exigimos que cada node tenha um 'export var unique_id: String'
         if node.has_method("get_save_data"):
             snapshot[node.unique_id] = node.get_save_data()
-            
+
     return snapshot
 ```
 

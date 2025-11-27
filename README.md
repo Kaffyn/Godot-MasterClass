@@ -1,13 +1,13 @@
-# Machi Game Style: The Engineering Manifesto
+# Machi Game Style: The Godot MBA
 
-> **De:** Machi - Tech Leader da Kaffyn
-> **Para:** Desenvolvedores Godot que querem evoluir
+> **De:** Machi - Seu Mentor no Godot MBA
+> **Para:** Futuros Arquitetos de Software de Jogos
 >
-> Este documento não é um tutorial. É um padrão de arquitetura.
+> Este não é um tutorial. É um **MBA em Engenharia de Jogos**.
 >
-> Ele foi forjado nas trincheiras do desenvolvimento de _Lucy & Nero_ e da _SoftEngine_ para garantir escalabilidade, modularidade e performance.
+> Forjado nas trincheiras do desenvolvimento profissional, o **Machi Game Style** é o seu guia para transcender o "fazer funcionar" e construir sistemas escaláveis, modulares e performáticos na Godot Engine.
 >
-> Se você está cansado de "spaghetti code", de tutoriais que ensinam práticas ruins e quer construir sistemas profissionais, bem-vindo ao **Machi Game Style**.
+> Se você está pronto para abandonar o "spaghetti code" e se tornar um arquiteto de software de jogos, bem-vindo ao seu MBA.
 
 - [Machi Game Style: The Engineering Manifesto](#machi-game-style-the-engineering-manifesto)
   - [0. Índice do MBA (Masterclass)](#0-índice-do-mba-masterclass)
@@ -71,577 +71,859 @@
 Explore os documentos mestres que detalham cada pilar da nossa arquitetura.
 
 ### 🏛️ Fundamentos
+
 - [POO e A Filosofia dos Nós](POO.md): Entenda Nodes, SceneTree e Sinais.
 - [GDScript Essentials](GDScript.md): O básico bem feito (Movimento, Combate, IA simples).
 
 ### 🏗️ Arquitetura Core
-- [Programação Orientada a Resources (ROP)](ROP.md): O coração da arquitetura Kaffyn.
+
+- [Programação Orientada a Resources (ROP)](ROP.md): O coração do Machi Game Style.
+- [Singletons & Autoloads](Singletons.md): Os Gerentes Globais do seu Jogo.
+- [Arquitetura de Dados](DataManagement.md): A Espinha Dorsal do seu Jogo.
 - [Sistemas de Spawn e Fábricas](Spawning.md): Instanciando cenas dinamicamente.
 - [Gerenciamento de Cenas](SceneManagement.md): Loading screens e troca de fases.
 
 ### 📦 Sistemas de Produção
+
 - [Sistema de Inventário](Inventory.md): Do básico ao estilo RPG/Survival.
 - [Sistema de Save/Load](SaveSystem.md): Serialização segura e versionamento.
 - [Internacionalização (i18n)](i18n.md): Tradução e localização desde o dia 1.
 
 ### 🎨 Audiovisual
+
 - [UI Profissional](UI.md): Containers, Themes e Design Responsivo.
 - [Animação & Motion](Animation.md): AnimationPlayer vs Tweens.
 - [Áudio Dinâmico](Audio.md): AudioStreamRandomizer e Buses.
 - [Shaders & Materiais](Shaders.md): Introdução a VFX.
 
----
+### 🚀 Tópicos Avançados
 
-## 1. Tabela de Decisão Arquitetural
+- [Plugins & Modularidade](Plugins.md): Estendendo a Engine com suas próprias ferramentas.
+- [GDExtensions & Performance](GDExtensions.md): Quando descer para C++/Rust.
+- [Rust & IA (Deep Dive)](Rust_AI_Deep_Dive.md): Uma introdução à IA em jogos com Rust.
 
-Use esta tabela para decidir qual estrutura criar.
+### 🎓 Projetos Práticos (Capstone)
 
-| Estrutura        | Sintaxe Principal     | O que é?                                          | Para que serve? (Uso Kaffyn)                                                                                         | Quando NÃO usar                                                                                    |
-| :--------------- | :-------------------- | :------------------------------------------------ | :------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------- |
-| **Global Class** | `class_name Nome`     | Um **Tipo Global** registrado no editor.          | **Tipagem e Herança.** Para criar bases sólidas (`Enemy`, `Interactable`) que aparecem no menu "Create Node".        | Para scripts únicos de uma cena específica (ex: `Level1Manager`). Evite poluir o namespace global. |
-| **Resource**     | `extends Resource`    | Um container de **Dados** serializável (`.tres`). | **Dados Compartilhados.** "Fichas" de RPG, configurações de armas, árvores de diálogo. Carregado uma vez na memória. | Para guardar estado volátil da instância (ex: `current_hp` deve ir no Node, `max_hp` no Resource). |
-| **Autoload**     | _(Project Settings)_  | Um **Nó Persistente** (`/root/...`).              | **Sistemas Globais.** Gerenciadores de áudio, troca de cenas, analytics.                                             | Para lógica de gameplay local. Se pertence à fase, não deve ser Autoload.                          |
-| **Singleton**    | `static var instance` | **Padrão de Projeto** (via código).               | **Acesso Global Local.** Para Managers que vivem dentro da cena mas precisam ser acessados de qualquer lugar nela.   | Se o objeto precisa persistir entre cenas (use Autoload).                                          |
-| **Inner Class**  | `class Nome:`         | Uma classe auxiliar dentro de um script.          | **Structs/Helpers.** Dados complexos temporários restritos a um arquivo.                                             | Se a classe precisa ser usada por outros scripts (extraia para um arquivo próprio).                |
+- [A Ficha de RPG Suprema](FichaRPG.md): Integração total de ROP, UI, i18n e Save System.
 
 ---
 
-## 2. Detalhamento Técnico
+## 1. Escolhendo a Estrutura Certa: Um Guia de Decisão Arquitetural
 
-### A. Scripts vs. Classes (`.gd`)
+Na Godot, existem diversas formas de organizar seu código e seus dados. A escolha da ferramenta certa para cada problema é crucial para evitar o "spaghetti code" e garantir a escalabilidade do seu projeto.
 
-No Godot, **todo arquivo `.gd` é implicitamente uma classe**.
+### 1.1. Global Class & Singletons: O Poder do `class_name`
 
-- Você não precisa de `class_name` para usar um script.
-- Ao anexar `player.gd` a um Node, aquele Node se torna uma instância daquela classe anônima.
+**O que é?**
+A palavra-chave `class_name` registra seu script como um **Tipo Global** no editor. Isso permite que o script seja acessado por nome em qualquer lugar do projeto, sem `load()` ou `preload()`.
 
-### B. Global Class (`class_name`)
+**Visão Machi:**
+Embora a ferramenta seja a mesma (`class_name`), ela tem dois usos arquiteturais distintos e opostos. Entender quando usar cada um é vital.
 
-Use `class_name` para registrar um **Tipo** no sistema da Godot.
+**Uso A: Herança (Base Class)**
+Você cria uma classe para servir de **molde** para outras.
 
-- **Benefício 1 (Editor):** O script aparece na janela "Create New Node" com seu ícone personalizado.
-- **Benefício 2 (Tipagem):** Permite checagem de tipo robusta (`if body is Enemy:`) em vez de checagem por string ou grupos.
-- **Custo:** O Godot carrega todas as Global Classes na inicialização. O excesso pode aumentar o tempo de boot.
+- **Como usar:** Você define `class_name Enemy`. Você **NUNCA** coloca o nó `Enemy` puro na cena. Você cria scripts que herdam dele (`extends Enemy`) ou cenas que o usam como base.
+- **Exemplo:** `Enemy` (Base) -> `Goblin` (Filho). O jogo só tem Goblins, nunca "Enemies" genéricos.
 
-**Regra de Ouro:** Só use `class_name` se você pretende reutilizar aquele script em múltiplos lugares ou precisa de verificação de tipo (`is Type`).
+**Uso B: Singleton Manual (Manager)**
+Você cria uma classe para ser um **gerente único** dentro de uma cena.
 
-### C. Resources (`extends Resource`)
+- **Como usar:** Você define `class_name BattleManager`. Você coloca esse nó **DIRETAMENTE** na cena. Você **NUNCA** herda dele.
+- **O Padrão:** Adicione `static var instance` no script para permitir acesso global (`BattleManager.instance.start_battle()`) sem precisar de `get_node`.
+- **Diferença do Autoload:** O Autoload vive para sempre (entre cenas). O Singleton Manual vive apenas enquanto a cena atual existir (ex: um Manager de um minigame específico).
 
-A ferramenta mais poderosa e subutilizada da Godot. Resources são **Dados**, não Lógica.
+**⚠️ A Pegadinha: Script vs. Cena**
+Diferente dos **Autoloads** (que podem carregar uma cena `.tscn` inteira com todos os filhos), o `class_name` registra apenas o **Script**.
 
-- **Memória:** Se 100 inimigos usam o mesmo `zombie_stats.tres`, apenas **uma** cópia desse arquivo existe na memória RAM.
-- **Serialização:** Resources são salvos em disco (`.tres`). Isso facilita versionamento e edição por game designers sem tocar em código.
-- **Injeção de Dependência:** Em vez de hardcodar valores no script, exporte uma variável Resource. Isso torna o comportamento do Node modular.
+- Se você for em "Create New Node" e selecionar seu `BattleManager`, a Godot criará apenas o Nó raiz com o script anexado.
+- **Os filhos (Timers, AudioPlayers, UI) NÃO virão junto.**
 
-```gdscript
-# Errado (Hardcoded)
-extends Node
-var damage = 10
-var speed = 50
-
-# Certo (Modular)
-extends Node
-@export var stats: EnemyStats # Arraste um .tres aqui para mudar o comportamento
-```
-
-### D. O Padrão Singleton (Manual)
-
-Diferente do Autoload, este script pode estar na cena e ser destruído. Ele permite acesso global via variável estática.
+**💡 O "Hack" da PackedScene (Self-Instantiating)**
+O problema: Ao adicionar um nó via `class_name` (Create Node), ele vem "pelado" (sem os filhos da cena `.tscn`).
+A solução: Faça o script carregar seus próprios filhos automaticamente.
 
 ```gdscript
+# battle_manager.gd
 class_name BattleManager extends Node
 
 static var instance: BattleManager
 
+# Referência para a cena que contém a "carne" do manager (UI, Sons, Timers)
+# Use 'Copy UID' no FileSystem para pegar esse caminho
+@export var _impl_scene: PackedScene = preload("uid://c8j2k3l4m5n6")
+
 func _enter_tree():
     if instance:
-        queue_free() # Garante unicidade
+        queue_free()
         return
     instance = self
 
-func _exit_tree():
-    if instance == self:
-        instance = null
+        # O Hack: O Singleton se "recheia" instanciando sua cena como filha
+
+        # Mas verificamos se ele já tem filhos para evitar duplicação (caso já esteja na cena)
+
+        if _impl_scene and get_child_count() == 0:
+
+            var impl = _impl_scene.instantiate()
+
+            add_child(impl)
+
 ```
+
+Agora, sempre que você criar um `BattleManager` (seja por código ou editor), ele trará toda a sua estrutura junto, mas de forma segura e única.
+
+### 1.2. Resource (`extends Resource`)
+
+**O que é?**
+Um `Resource` é um container de dados serializável que pode ser salvo em disco (com a extensão `.tres` ou `.res`). Diferente dos `Nodes`, Resources não fazem parte da `SceneTree` e não têm processamento próprio (como `_process` ou `_physics_process`). Eles são pura informação.
+
+**Visão Machi:**
+A ferramenta mais poderosa e subutilizada da Godot é o `Resource`. Pense neles como "fichas de RPG" para seus objetos. Eles servem para **Dados Compartilhados**. Se 100 inimigos usam o mesmo `zombie_stats.tres`, apenas **uma** cópia desse arquivo existe na memória RAM, economizando recursos preciosos. Resources facilitam a injeção de dependência e a edição por game designers sem tocar em código.
+
+**Quando usar:**
+
+- Para definir configurações de itens, armas, inimigos (HP máximo, velocidade base, etc.).
+- Para árvores de diálogo, definições de habilidades, ou qualquer dado que precise ser compartilhado ou persistido.
+- Para injeção de dependência: exporte uma variável `Resource` no seu `Node` para que você possa arrastar um `.tres` e mudar o comportamento do `Node` facilmente pelo editor.
+- Para serializar dados complexos para o sistema de `Save Game`.
+
+**Quando NÃO usar:**
+
+- Para guardar estado volátil da instância. Por exemplo, o `current_hp` de um inimigo deve ir no `Node` que representa o inimigo em cena, enquanto `max_hp` (o dado fixo) vai no `Resource`.
+- Para lógica de gameplay complexa que precisa interagir com a `SceneTree` ou processamento por frame. Resources podem ter funções, mas elas devem operar _apenas_ nos dados do próprio Resource.
+
+```gdscript
+# Exemplo: Definindo atributos de um inimigo usando Resource
+# enemy_stats.gd
+class_name EnemyStats extends Resource
+
+@export var max_health: int = 100
+@export var move_speed: float = 50.0
+@export var attack_damage: int = 10
+
+# Opcional: Funções que operam nos próprios dados do Resource
+func get_damage_per_second() -> float:
+    return float(attack_damage) * 0.5 # Exemplo: 0.5 ataques por segundo
+```
+
+```gdscript
+# Exemplo: Usando o Resource em um Node
+# enemy.gd
+extends CharacterBody2D
+
+@export var stats: EnemyStats # Arraste um .tres aqui!
+
+var current_health: int
+
+func _ready():
+    if stats:
+        current_health = stats.max_health
+        print("Inimigo com HP: ", current_health, " e velocidade: ", stats.move_speed)
+    else:
+        push_warning("EnemyStats Resource não atribuído!")
+```
+
+### 1.3. Autoload (Singleton Global)
+
+**O que é?**
+Um Autoload (também conhecido como Singleton Global) é um `Node` ou `Script` que o Godot carrega automaticamente na inicialização do jogo e o mantém ativo durante toda a execução, independentemente da cena que esteja carregada. Ele é anexado diretamente à `root` da `SceneTree` e é acessível globalmente por seu nome.
+
+**Visão Machi:**
+Autoloads são seus **Sistemas Globais**. Eles são a solução perfeita para gerenciadores que precisam persistir entre cenas e ser acessíveis de qualquer lugar. Pense em sistemas de áudio, troca de cenas, gerenciamento de persistência de dados (save/load), analytics, ou qualquer lógica central do seu jogo.
+
+**Quando usar:**
+
+- Para gerenciadores de áudio (ex: `SoundManager`).
+- Para controle de cenas e transições (ex: `SceneLoader`).
+- Para um sistema de `Save/Load` que precisa ser acessível de qualquer lugar.
+- Para um `GameManager` que mantém o estado geral do jogo (pontuação, fases, etc.).
+- Para qualquer funcionalidade que precise existir uma única vez e ser globalmente acessível.
+
+**Quando NÃO usar:**
+
+- Para lógica de gameplay local que pertence a uma cena específica ou a um nó específico. Se a funcionalidade pode ser destruída e recriada com a cena, ela não deve ser um Autoload.
+- Para evitar a passagem de referências. Abusar de Autoloads pode levar ao "Singleton Monstro", um Autoload gigante que sabe e faz demais, quebrando o princípio da Responsabilidade Única.
+
+```gdscript
+# Exemplo: Um GameManager Autoload para controlar o estado do jogo
+# global.gd (ou game_manager.gd, configurado como Autoload "Global")
+extends Node
+
+var current_score: int = 0
+var current_level: int = 1
+
+func add_score(amount: int) -> void:
+    current_score += amount
+    print("Pontuação atual: ", current_score)
+
+func go_to_next_level() -> void:
+    current_level += 1
+    # Global.SceneLoader.change_scene("res://level_" + str(current_level) + ".tscn")
+    print("Indo para o nível: ", current_level)
+```
+
+**Como configurar um Autoload:**
+
+1. Vá em `Project -> Project Settings -> Autoload`.
+2. Clique no ícone de pasta para selecionar seu script ou cena.
+3. Dê um `Node Name` (ex: `Global` ou `SoundManager`).
+4. Clique em `Add`. Agora ele estará disponível globalmente pelo nome que você deu.
+
+`
+
+### 1.4. Inner Class (`class Nome:`)
+
+**O que é?**
+Uma Inner Class (ou classe aninhada) é uma classe definida dentro de outra classe ou script. Ela é útil para agrupar dados ou funcionalidades que estão estritamente relacionadas à classe externa e não precisam ser expostas globalmente.
+
+**Visão Machi:**
+Considere as Inner Classes como **Structs/Helpers locais**. Elas são perfeitas para encapsular dados complexos temporários ou lógica auxiliar que é restrita a um único arquivo. Isso ajuda a manter o namespace limpo e a coesão do código.
+
+**Quando usar:**
+
+- Para definir estruturas de dados personalizadas (similar a `structs` em outras linguagens) que serão usadas apenas dentro daquele script.
+- Para agrupar constantes ou enumerações que são específicas da classe externa.
+- Para criar pequenos helpers de lógica que não precisam ser instanciados como `Nodes` ou `Resources` separados e não serão reutilizados por outros scripts.
+
+**Quando NÃO usar:**
+
+- Se a classe precisa ser usada por outros scripts, Nodes ou Resources. Nesse caso, ela deve ser extraída para um arquivo `.gd` próprio e, se necessário, registrada como uma `class_name`.
+- Para lógica que precisa interagir com a `SceneTree` ou ter um ciclo de vida independente (use `Node` ou `Resource`).
+
+```gdscript
+# Exemplo: Usando Inner Class para definir um tipo de item dentro de um inventário
+# inventory.gd
+extends Node
+
+class ItemSlot:
+    var item_id: String
+    var quantity: int
+
+    func _init(id: String, qty: int):
+        item_id = id
+        quantity = qty
+
+var slots: Array[ItemSlot] = []
+
+func add_item(id: String, qty: int) -> void:
+    var new_slot = ItemSlot.new(id, qty)
+    slots.append(new_slot)
+    print("Item adicionado: ", new_slot.item_id, " x ", new_slot.quantity)
+
+# Exemplo de acesso (apenas dentro do script inventory.gd ou instâncias dele)
+# func _ready():
+#    add_item("sword_of_fire", 1)
+#    add_item("potion_hp", 5)
+#
+#    for slot in slots:
+#        print("Slot: ", slot.item_id, ", Qty: ", slot.quantity)
+```
+
+## Com esta seção, encerramos a primeira parte do nosso guia arquitetural. Entender a finalidade e as limitações de cada uma dessas estruturas é o primeiro passo para construir jogos robustos e escaláveis.
+
+## 2. Scripts vs. Classes: Desmistificando o GDScript
+
+**O que é?**
+No Godot, a distinção entre um "script" e uma "classe" é fundamental para entender a arquitetura do motor. Muitos iniciantes se referem a arquivos `.gd` como "scripts", mas na realidade, **todo arquivo `.gd` é implicitamente uma classe**.
+
+**Visão Machi:**
+Quando você anexa um arquivo `.gd` a um `Node` na Godot, você não está simplesmente "adicionando um comportamento". Você está, na verdade, transformando aquele nó em uma **instância da classe** definida no seu arquivo `.gd`. Isso significa que seu nó herda todas as propriedades e métodos da classe base (`Node`, `Sprite2D`, `CharacterBody2D`, etc.) e adiciona suas próprias definições.
+
+- Você não precisa de `class_name` para usar um script. Ao anexar `player.gd` a um Node, aquele Node se torna uma instância daquela classe anônima.
+- A linha `extends CharacterBody2D` (ou qualquer outro nó) é crucial: ela estabelece a hierarquia de herança, definindo o "É um" relacionamento (ex: "Meu `Player` **É UM** `CharacterBody2D`").
+
+**Analogia:**
+Pense em um blueprint de uma casa (a classe) e a casa construída a partir dele (a instância). Quando você "anexa um script", é como pegar um blueprint especializado de "Casa do Jogador" e dizer que o seu "Nó Genérico de Casa" agora **é** essa "Casa do Jogador", com todas as suas características e funcionalidades.
+
+**Exemplo:**
+
+```gdscript
+# meu_personagem.gd
+extends CharacterBody2D # Meu personagem É UM CharacterBody2D
+
+var velocidade_movimento: float = 100.0
+
+func _physics_process(delta: float) -> void:
+    var input_direction = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+    velocity = input_direction * velocidade_movimento
+    move_and_slide()
+```
+
+Neste exemplo, ao anexar `meu_personagem.gd` a um `CharacterBody2D` na sua cena, você está dizendo que aquele nó agora é uma instância da classe `MeuPersonagem`. Ele tem acesso a `velocity`, `move_and_slide()` (do `CharacterBody2D`) e à nova variável `velocidade_movimento` e ao método `_physics_process` que você definiu.
+
+Compreender essa natureza de "classe" dos seus scripts é o primeiro passo para pensar em termos de Programação Orientada a Objetos na Godot, um pilar fundamental do Godot MBA.
+
+`
+
+`
+
+`
 
 ---
 
-## 3. O Poder das Anotações (`@`)
+## 3. O Poder das Anotações (`@`): Comandos ao Compilador e Editor
 
-O GDScript moderno utiliza anotações para configurar comportamento no editor e compilador.
+**O que são Anotações?**
+No GDScript moderno, as anotações (prefixadas com `@`) são mais do que simples comentários. Elas são diretivas poderosas que comunicam intenções tanto para o compilador do GDScript quanto para o editor da Godot, configurando o comportamento do seu script de maneiras que vão além da lógica de execução. Elas permitem que você adicione metadados e controle aspectos como a visibilidade de variáveis no Inspector, a execução de código no editor, ou a imposição de contratos de herança.
 
-| Anotação          | Uso Principal                                                   | Exemplo                                                                 |
-| :---------------- | :-------------------------------------------------------------- | :---------------------------------------------------------------------- |
-| `@tool`           | **Rodar no Editor.** Permite que o script execute sem dar Play. | Ferramentas de Level Design ou visualizar mudanças de UI em tempo real. |
-| `@export`         | **Expor ao Inspector.**                                         | `@export_category("Stats")`, `@export_range(0, 100)`                    |
-| `@onready`        | **Inicialização Segura.**                                       | `@onready var sprite = $Sprite2D` (Garante que o nó filho já existe).   |
-| `@icon`           | **Identidade Visual.**                                          | `@icon("res://icons/enemy.svg")` para diferenciar classes no editor.    |
-| `@warning_ignore` | **Controle de Linter.**                                         | `@warning_ignore("unused_parameter")`                                   |
-| `@abstract`       | **Classes Bases.**                                              | `@abstract`                                                             |
+**Visão Machi:**
+Dominar as anotações é essencial para escrever código limpo, auto-documentado e para tirar o máximo proveito das ferramentas visuais da Godot. Em vez de usar `setget` complexos ou workarounds no editor, as anotações oferecem uma forma declarativa e eficiente de alcançar seus objetivos.
 
-### Classes Abstratas (Godot 4.5+)
+A seguir, exploraremos as anotações mais cruciais para o desenvolvimento profissional na Godot:
 
-Use `@abstract` para criar contratos rígidos e impedir o uso indevido de classes base.
+`
+
+### 3.5. `@warning_ignore`: Gerenciando Advertências do Linter
+
+**O que é?**
+A anotação `@warning_ignore` permite que você suprima advertências específicas do linter do GDScript para o escopo de um script, função ou até mesmo uma linha. O linter é uma ferramenta de análise estática que verifica seu código em busca de problemas de estilo, erros potenciais ou inconsistências, e as advertências são mensagens que ele gera.
+
+**Visão Machi:**
+Embora o linter seja uma ferramenta valiosa para manter a qualidade do código, há situações legítimas em que uma advertência pode ser ignorada, especialmente em código específico do jogo onde a regra do linter pode não se aplicar ou onde uma otimização peculiar é intencional. O `@warning_ignore` é uma ferramenta para manter seu console limpo, mas deve ser usado com parcimônia e justificativa, para não esconder problemas reais.
+
+**Quando usar:**
+
+- Quando uma variável ou parâmetro de função é intencionalmente não utilizado (ex: em um slot de sinal que recebe muitos parâmetros, mas você só precisa de um ou dois).
+- Quando você está desenvolvendo uma funcionalidade rapidamente e quer focar na lógica principal antes de refatorar e remover as advertências.
+- Para casos muito específicos onde o linter está gerando um falso positivo ou onde a regra interfere com um padrão de design específico que você está implementando.
+
+**Quando NÃO usar:**
+
+- Para esconder preguiça ou má prática. Sempre prefira refatorar o código para resolver a advertência em vez de simplesmente ignorá-la.
+- Em excesso. Se você está ignorando muitas advertências, é um sinal de que algo pode estar errado com seu código ou com sua compreensão dos padrões.
+
+**Exemplo:**
 
 ```gdscript
-@abstract
+# my_node.gd
+extends Node
+
+# Ignora a advertência para um parâmetro não utilizado em uma função específica
+func _on_area_entered(area: Area2D, area_owner: Node2D, other_area: Area2D, other_area_owner: Node2D): #line
+    @warning_ignore("unused_parameter")
+    print("Área ", area.name, " entrou. Owner: ", area_owner.name)
+    # Apenas 'area' e 'area_owner' são usados aqui, os outros são ignorados
+
+# Ignora a advertência de variável não utilizada para todo o script
+@warning_ignore("unused_private_class_variable")
+var _minha_variavel_secreta: String = "valor" # Pode ser usada mais tarde ou via reflexão
+```
+
+### 3.6. `@abstract`: Classes Abstratas e Contratos (Godot 4.5+)
+
+**O que é?**
+Introduzida em versões mais recentes do GDScript, a anotação `@abstract` permite definir uma classe (ou método) que não pode ser instanciada diretamente, servindo apenas como um modelo ou "contrato" para classes derivadas.
+
+**Visão Machi:**
+Classes abstratas são a pedra fundamental para arquiteturas polimórficas seguras. Elas impedem que desenvolvedores (incluindo você no futuro) usem classes base de forma errada (ex: colocar um `Inimigo` genérico na cena em vez de um `Goblin` ou `Orc`). Além disso, métodos abstratos forçam as classes filhas a implementar comportamentos específicos, garantindo que todas as variações do objeto sigam as mesmas regras.
+
+**Quando usar:**
+
+- Para criar classes base genéricas que nunca devem existir sozinhas no jogo (`Enemy`, `Weapon`, `Interactable`).
+- Para definir um "contrato" de interface, obrigando todas as subclasses a terem certas funções (ex: todo `Inimigo` _precisa_ ter uma função `atacar()`).
+
+**Quando NÃO usar:**
+
+- Para classes concretas que você pretende instanciar.
+- Se você não precisa impor regras estritas de herança.
+
+**Exemplo:**
+
+```gdscript
+# animal.gd
+@abstract # Ninguém pode fazer: var a = Animal.new() (Erro!)
 class_name Animal extends Node
 
 # Obriga quem herdar a implementar esta função
 @abstract
-func make_sound() -> void
+func make_sound() -> void:
+    pass
+
+# dog.gd
+class_name Dog extends Animal
+
+# O compilador vai reclamar se você esquecer de implementar isso:
+func make_sound() -> void:
+    print("Woof!")
 ```
 
-Isso garante que ninguém coloque um "Animal" genérico na cena, apenas "Dog" ou "Cat".
+Com `@abstract`, você constrói uma fundação sólida onde o compilador trabalha a seu favor, prevenindo erros lógicos de arquitetura antes mesmo de o jogo rodar.
 
 ---
 
-## 4. Ciclo de Vida e Funções Especiais
+## 4. O Ciclo da Vida de um Nó: Inicialização, Loop e Morte
 
-Entenda a ordem de execução para evitar bugs de "Node not found" e problemas de performance.
+Entender a ordem exata em que as coisas acontecem na Godot (o "Life Cycle") é o que separa quem chuta soluções de quem resolve problemas. Muitos bugs de "Node not found" ou comportamentos estranhos de física vêm simplesmente de tentar fazer a coisa certa no momento errado.
 
-### Ciclo de Inicialização e Destruição
+Nesta aula, vamos dissecar os momentos cruciais da existência de um Nó.
 
-| Função          | Quando roda?                          | Uso Kaffyn                                               |
-| :-------------- | :------------------------------------ | :------------------------------------------------------- |
-| `_init()`       | Ao criar o objeto (`.new()`).         | Configuração interna. O nó **NÃO** está na árvore ainda. |
-| `_enter_tree()` | Assim que entra na SceneTree.         | Registro em Managers globais.                            |
-| `_ready()`      | Após todos os filhos estarem prontos. | Inicialização de gameplay, acesso a `@onready`.          |
-| `_exit_tree()`  | Logo antes de sair da árvore.         | Desregistrar de Managers, salvar dados parciais.         |
+### 4.1. Inicialização e Destruição: Do Nascimento ao Fim
 
-### Loops de Processamento (Game Loop)
+Use esta referência para saber **onde** colocar seu código de setup.
 
-| Função                    | Frequência                      | Uso Principal                                                      |
-| :------------------------ | :------------------------------ | :----------------------------------------------------------------- |
-| `_process(delta)`         | A cada frame visual (variável). | Animações manuais, interpolação de UI, input contínuo.             |
-| `_physics_process(delta)` | Taxa fixa (padrão 60fps).       | **Toda** lógica de movimento e colisão (CharacterBody, RigidBody). |
+**A. `_init()` - O Construtor**
 
-### Entrada de Dados (Input)
+- **Quando roda:** No momento exato em que o objeto é criado na memória (`.new()` ou instanciado).
+- **Estado:** O nó ainda **NÃO** está na `SceneTree`. Ele não tem pai, não tem filhos acessíveis e não sabe onde está no mundo.
+- **Uso Machi:** Configuração interna pura (inicializar arrays, dicionários). Evite interagir com outros nós aqui.
 
-- **`_input(event)`:** Captura bruta. Use para atalhos globais ou debug.
-- **`_unhandled_input(event)`:** Captura o que a UI não consumiu. **Use para gameplay** (pular, atirar) para evitar que o clique no botão "Pause" dispare a arma.
+**B. `_enter_tree()` - A Chegada**
 
-### Controle de Fluxo e Memória
+- **Quando roda:** Assim que o nó é adicionado à árvore de cenas, mas _antes_ de seus filhos.
+- **Estado:** O nó tem acesso à `SceneTree` e ao seu `Viewport`, mas seus filhos ainda não estão prontos.
+- **Uso Machi:** Registro em Managers globais (ex: `GameManager.register_enemy(self)`).
 
-- **`queue_free()`:** Marca o nó para ser deletado no final do frame. Nunca use `free()` direto em Nodes.
-- **`call_deferred("func")`:** Agenda a execução para um momento seguro (útil ao manipular física/UI dentro de threads ou loops).
-- **`await`:** Pausa a execução até um sinal. Ex: `await get_tree().create_timer(1.0).timeout`.
-- **`static func`:** Funções puras que não precisam de instância. Ex: `MathUtils.get_random()`.
+**C. `_ready()` - O Despertar**
 
----
+- **Quando roda:** Apenas depois que **todos** os filhos do nó também entraram na árvore e rodaram seus próprios `_ready()`. É uma ordem "de baixo para cima" (filhos primeiro, pai depois).
+- **Estado:** Tudo está pronto. Você pode acessar filhos (`$Sprite`), pais e autoloads com segurança.
+- **Uso Machi:** Inicialização de gameplay, acesso a `@onready`, conexões de sinais locais e configuração visual inicial.
 
-## 5. Tipagem Estrita (Static Typing)
+**D. `_exit_tree()` - A Despedida**
 
-Na Kaffyn, **tipagem explícita é obrigatória**. Código não tipado é considerado dívida técnica imediata.
+- **Quando roda:** Logo antes do nó ser removido da árvore (por troca de cena ou `queue_free()`).
+- **Uso Machi:** Limpeza obrigatória. Desregistrar de Managers, desconectar sinais manuais (se necessário), salvar dados parciais antes da morte.
 
-### Regras de Ouro
+### 4.2. O Game Loop: `_process` vs `_physics_process`
 
-1. **Sempre defina o tipo da variável:**
+A confusão entre esses dois é a causa #1 de "jitter" (tremulação) em jogos Godot.
 
-   ```gdscript
-   # Errado
-   var score = 0
+**A. `_process(delta)` - O Loop Visual**
 
-   # Certo
-   var score: int = 0
-   ```
+- **Frequência:** Variável. Tenta rodar o mais rápido possível (depende do FPS, VSync e lag da GPU).
+- **O que é `delta`?** O tempo (em segundos) que passou desde o último frame.
+- **Uso Machi:** Coisas que precisam parecer suaves visualmente, mas não afetam a simulação física.
+  - Animações manuais de UI.
+  - Interpolação de câmera.
+  - Rotação de itens colecionáveis.
+  - Input contínuo (verificação de teclas pressionadas).
 
-2. **Sempre defina tipos de argumentos e retorno:**
+**B. `_physics_process(delta)` - O Loop Físico**
 
-   ```gdscript
-   func take_damage(amount: int) -> bool:
-       return true
-   ```
+- **Frequência:** Fixa (padrão 60 ticks por segundo). Configurável em Project Settings.
+- **O que é `delta`?** É constante (geralmente 0.0166s).
+- **Uso Machi:** **Toda** lógica que envolve movimento e colisão.
+  - Mover `CharacterBody2D` ou `RigidBody`.
+  - Detecção de Raycasts.
+  - Lógica de Estado que precisa ser determinística.
 
-3. **Casting Seguro (Safe Cast):**
-   Ao carregar Resources ou interagir com nós genéricos, force o tipo para garantir autocomplete e segurança.
+**Regra de Ouro:** Se mexe o corpo do personagem (`move_and_slide`), vai no `physics`. Se mexe apenas o sprite ou a UI, vai no `process`.
 
-   ```gdscript
-   # Loading seguro
-   var stats: EnemyStats = load("res://goblin.tres") as EnemyStats
+### 4.3. Input: Capturando a Intenção do Jogador
 
-   # Interação física
-   func _on_body_entered(body: Node2D) -> void:
-       var enemy := body as Enemy # Tenta converter
-       if enemy:
-           enemy.take_damage(10)
-   ```
+A Godot tem uma hierarquia de quem "come" o evento de input primeiro. Entender isso evita que seu personagem pule quando você clica no botão de Pause.
 
----
+1. **`_input(event)`**: O primeiro a saber. Captura tudo, antes da UI.
 
-## 6. Padrões de Comunicação
+   - **Uso:** Atalhos globais de debug, screenshots, input que deve ignorar a UI.
 
-A regra de ouro para evitar "Spaghetti Code": **Call Down, Signal Up**.
+2. **Control Nodes (`_gui_input`)**: Se o mouse estiver sobre um botão, o botão consome o evento.
 
-- **Pai -> Filho:** O pai já conhece o filho (`$Child`). Chame funções diretamente: `$Weapon.shoot()`.
-- **Filho -> Pai:** O filho **NÃO** deve conhecer o pai. Emita um sinal: `signal ammo_depleted`. O pai conecta e reage.
-- **Irmão -> Irmão:** Nunca acesse diretamente. Use o Pai como mediador ou um **SignalBus** global.
-
----
-
-## 7. Exemplo Prático de Organização
-
-Cenário: Sistema de Inimigos para um RPG.
-
-1. **Resource (`EnemyStats.gd`):**
-   - Define a estrutura dos dados: `max_hp`, `move_speed`, `attack_range`.
-   - _Arquivos gerados:_ `goblin_stats.tres`, `orc_stats.tres`.
-2. **Global Class (`class_name Enemy extends CharacterBody2D`):**
-   - Define a lógica base: Movimento, receber dano, máquina de estados.
-   - _Código:_ `@export var stats: EnemyStats`.
-3. **Cena (`Goblin.tscn`):**
-   - Raiz tem script `Goblin.gd` (que faz `extends Enemy`).
-   - No Inspector, a propriedade `stats` recebe `goblin_stats.tres`.
-4. **Singleton (`EnemyManager`):**
-   - Gerencia o spawn e contagem de inimigos ativos na cena atual.
-
----
-
-## 8. Estrutura de Pastas (Feature-based)
-
-Na Kaffyn, organizamos arquivos por **Domínio**, não por Tipo.
-
-**Errado (Tutorial Style):**
-
-- 📁 scripts/
-- 📁 scenes/
-
-**Certo (Kaffyn Style):**
-
-- 📁 entities/
-  - 📁 enemy/
-    - 📄 Enemy.tscn
-    - 📄 Enemy.gd
-    - 🖼️ goblin.png
-
----
-
-## 9. Performance Essencial
-
-1. **Object Pooling:** Evite `instantiate()` e `queue_free()` em loops rápidos (tiros, partículas).
-2. **Tipagem Estrita:** Aumenta a performance do GDScript.
-3. **PhysicsServer:** Para >500 objetos, abandone `CharacterBody2D` e use a API de servidor.
-
----
-
-## 10. Estruturas de Dados: Resources vs Dictionaries
-
-| Estrutura      | Melhor Uso                                                                        | Exemplo                                                                    |
-| :------------- | :-------------------------------------------------------------------------------- | :------------------------------------------------------------------------- |
-| **Resource**   | **Dados Estáticos (Design).** Podem conter **Dictionaries** e **Funções Helper**. | Stats de Monstros, Definição de Itens, Árvores de Skill.                   |
-| **Dictionary** | **Dados Dinâmicos (Runtime).** Coisas que mudam e precisam ser salvas.            | Save Files, Inventário do Player (se tiver dados variáveis), JSON de APIs. |
-
-### Padrões Avançados de Resources
-
-1. **Nested Resources:**
-   Use Resources dentro de Resources para modularidade.
-
-   - Exemplo: `CharacterStats` (Resource) contém um slot para `WeaponData` (Resource), que contém um slot para `ElementalEffect` (Resource).
-
-2. **Lógica em Resources:**
-   Resources _podem_ ter funções, mas com limites estritos.
-   - **Permitido:** Funções que operam _apenas_ nos dados do próprio Resource (ex: `ItemData.get_display_name()`, `Upgrade.calculate_cost(level)`).
-   - **Proibido:** Acessar a `SceneTree`, `Input`, ou outros nós globais. O Resource deve ser agnóstico de onde está sendo usado.
-   - **Reatividade (Fluent Interface):** Funções que alteram dados devem retornar o próprio Resource ou o valor alterado para que sistemas possam reagir.
-     - _Ex:_ `func upgrade() -> ItemData:` (Retorna `self` após aumentar o nível, permitindo `inventory.update_ui(item.upgrade())`).
-
----
-
-## 11. UI e Theming
-
-A interface do usuário deve ser consistente e fácil de manter.
-
-- **Themes (Obrigatório):** Nunca ajuste fontes, cores ou bordas diretamente nas propriedades de um `Label` ou `Button`. Crie um `Theme` Resource (`main_theme.tres`) e aplique na raiz da sua UI.
-  - _Vantagem:_ Alterar a fonte do jogo inteiro leva 10 segundos.
-- **Variações:** Use "Theme Variations" para criar estilos derivados (ex: `HeaderLabel` herda de `Label` mas tem fonte maior).
-- **Separation of Concerns:** A lógica da UI (`MainMenu.gd`) não deve saber sobre a cor do botão. Ela apenas conecta o sinal `pressed`.
-
----
-
-## 12. Arquitetura de Áudio
-
-Evite espalhar `AudioStreamPlayer` por todas as cenas.
-
-- **Audio Buses:** Configure o layout de mixagem no painel "Audio" do Godot.
-  - `Master` -> `Music`, `SFX`, `UI`.
-  - Isso permite criar menus de volume facilmente.
-- **AudioManager (Singleton):** Crie um Autoload para tocar sons globais.
-  - `AudioManager.play_sfx("explosion")`
-  - Implemente **Pooling** de players de áudio para evitar instanciar nós a cada tiro.
-
----
-
-## 13. Internacionalização (i18n)
-
-Assim como separamos Dados (Resources) de Lógica (Nodes), separamos **Texto** de **Cenas**.
-
-- **A Regra:** Nunca escreva textos finais no Inspector ou Script. Use **Chaves**.
-
-  - _Errado:_ `Label.text = "Game Over"`
-  - _Certo:_ `Label.text = "UI_GAME_OVER"`
-
-- **O Formato (.po):**
-  Usamos arquivos Gettext (`.po`). O Godot importa automaticamente e substitui as chaves em tempo de execução baseada no locale do usuário.
-
-- **Benefício:** Seu jogo está pronto para localização desde o primeiro commit, e você não precisa caçar strings espalhadas em 50 cenas diferentes.
-
----
-
-## 14. Blueprints de Sistemas (Arquitetura de Referência)
-
-Não reinvente a roda. Use estes padrões aprovados para sistemas comuns.
-
-### Itens e Inventário
-
-- **Item:** Crie `class_name ItemData extends Resource`. (Nome, Ícone, Peso).
-- **Inventário:** Um `Resource` ou `Node` contendo `var items: Array[ItemData]` ou `Array[Dictionary]` para itens únicos/gerados.
-
-### Efeitos e Habilidades (Buffs/Debuffs)
-
-- **Arquitetura:** Use Composição.
-- **Data:** `EffectResource` (Define: Dano, Tipo Elemental, Duração).
-- **Runtime:** `StatusComponent` (Node) processa os efeitos a cada frame (dano contínuo) ou ao entrar (instantâneo).
-
-### Save System
-
-- **Formato:** Use `Dictionaries` para estruturar o save state.
-- **Persistência:** `FileAccess.store_var()` para binário (rápido) ou JSON (debugável).
-- **Regra:** Nunca salve Nodes inteiros (`PackedScene`). Salve apenas os dados necessários para reconstruí-los (posição, hp, path do resource).
-
-### Quests e Missões
-
-- **Quest:** `Resource` contendo título, descrição e condições.
-- **Manager:** Singleton que escuta sinais globais (`enemy_killed`, `item_collected`) e atualiza o estado das quests ativas.
-
-### Scene Control
-
-- **Manager:** `SceneLoader` (Singleton).
-- **Funcionalidade:** `change_scene_to_file(path)` com loading screen intermediária para carregar assets pesados.
-
-### State Machines (Máquinas de Estado)
-
-Não use `bool is_running`, `bool is_jumping`. Use Estados.
-
-1. **Game Flow (Global):**
-   Use para gerenciar o ciclo do jogo.
-
-   - Estados: `Menu`, `Loading`, `Gameplay`, `Paused`.
-   - Implementação: Autoload `GameStateMachine`.
-
-2. **Entity State (Local):**
-   Use Nodes para lógica complexa (`_physics_process`).
-
-   - Estrutura: Node Pai `StateMachine` com filhos `Idle`, `Walk`, `Attack`.
-
-3. **Resources em States (Kaffyn Style):**
-   Não hardcode valores nos estados. Injete Resources.
-   - _Cenário:_ Um Boss tem 3 fases.
-   - _Solução:_ O script `BossPhaseState` é genérico. Ele exporta `@export var config: BossPhaseResource`.
-   - _Resultado:_ Você cria 3 arquivos `.tres` (Fase 1, 2, 3) com HP, velocidade e ataques diferentes, e usa o mesmo script lógico.
-
----
-
-## 15. Extensibilidade: Plugins e GDExtensions
-
-Ferramentas customizadas aceleram a produção. Não tenha medo de estender o editor.
-
-### O Poder do `EditorPlugin`
-
-Para criar um plugin, crie uma pasta em `addons/nome_do_plugin/` e um script `plugin.gd` herdando de `EditorPlugin`.
-
-**Ciclo de Vida Crítico:**
-
-- `_enter_tree()`: Onde você inicializa sua ferramenta.
-- `_exit_tree()`: **OBRIGATÓRIO** limpar tudo o que você criou (remover docks, desfazer gizmos). Se esquecer, o editor vaza memória e trava ao recarregar o plugin.
-
-### Criando Painéis (Custom Docks)
-
-Você pode injetar suas próprias interfaces no editor da Godot.
-
-1. **A Cena:** Crie uma cena normal (`MyTool.tscn`) com raiz em `Control`. Use `VBoxContainer`, `Button`, etc.
-2. **O Script:** Adicione lógica (`MyTool.gd`) conectando sinais dos botões. Use `tool` no topo se precisar rodar no editor.
-3. **A Integração:**
+3. **`_unhandled_input(event)`**: O mais importante para Gameplay. Só roda se ninguém acima consumiu o evento.
+   - **Uso Machi:** **Sempre use este para gameplay** (pular, atirar, interagir). Assim, se o jogador clicar em um menu, o personagem não atira sem querer.
 
 ```gdscript
-@tool
-extends EditorPlugin
-
-var dock_instance
-
-func _enter_tree() -> void:
-    # Carrega e instancia sua cena
-    dock_instance = preload("res://addons/my_tool/MyTool.tscn").instantiate()
-    # Adiciona em um slot do editor (Ex: Esquerda Superior)
-    add_control_to_dock(EditorPlugin.DOCK_SLOT_LEFT_UL, dock_instance)
-
-func _exit_tree() -> void:
-    # Limpeza essencial
-    remove_control_from_docks(dock_instance)
-    dock_instance.free()
+func _unhandled_input(event: InputEvent) -> void:
+    if event.is_action_pressed("jump"):
+        jump()
 ```
 
-### Registrando Nós Customizados (`add_custom_type`)
+### 4.4. Controle de Fluxo e Memória
 
-Embora `class_name` seja suficiente para a maioria dos casos internos, plugins podem registrar nós explicitamente para distribuição ou organização.
+Comandos essenciais para gerenciar a existência dos seus objetos.
+
+- **`queue_free()` vs `free()`**:
+
+  - `free()`: Deleta IMEDIATAMENTE. Perigoso se o nó estiver sendo usado ou processando física. Pode crashar o jogo.
+  - `queue_free()`: Agenda a morte para o final do frame ("Obrigado pelos serviços, pode ir embora quando acabar o expediente"). **Sempre use este para Nodes.**
+
+- **`call_deferred("funcao")`**:
+
+  - Pede para a Godot rodar essa função em um momento seguro (geralmente no próximo frame ocioso). Essencial quando você precisa alterar a física ou a árvore de cenas de dentro de um sinal ou thread que não permite modificações imediatas.
+
+- **`await`**:
+  - Pausa a execução da função atual (corrotina) até que um sinal seja emitido.
+  - Exemplo: `await get_tree().create_timer(1.0).timeout` (Espera 1 segundo antes de continuar).
+
+---
+
+---
+
+## 5. Tipagem Estrita: O Hábito dos Profissionais
+
+GDScript é uma linguagem dinâmica, mas permite tipagem estática opcional. No Machi Game Style, **a tipagem estática não é opcional, é lei**.
+
+**Por que?**
+
+1. **Autocomplete:** O editor sabe o que `body` é, então ele sugere `body.take_damage()` automaticamente.
+2. **Segurança:** Evita erros bobos como somar texto com número (`"10" + 5`).
+3. **Performance:** O GDScript compilado com tipos é mais rápido.
+
+### As Regras de Ouro da Tipagem
+
+**1. Variáveis Tipadas**
+Nunca declare uma variável sem dizer o que ela é. Se o valor inicial não deixar óbvio, force o tipo.
 
 ```gdscript
-func _enter_tree():
-    # Nome, Nó Pai, Script, Ícone
-    add_custom_type("MySuperNode", "Node2D", preload("my_super_node.gd"), preload("icon.svg"))
+# Ruim (Infernir o tipo é aceitável, mas explícito é melhor)
+var score = 0
 
-func _exit_tree():
-    # Limpeza obrigatória
-    remove_custom_type("MySuperNode")
+# Bom
+var score: int = 0
+var player_name: String = "Hero"
+var enemies_nearby: Array[Node2D] = [] # Typed Array!
 ```
 
-### GDExtension
-
-Use GDExtension para escrever código em C++ (ou Rust) que se comporta como nativo.
-
-- **Quando usar:** Cálculos matemáticos pesados, geração de mesh em tempo real, ou integração com SDKs de terceiros.
-- **Vantagem:** Performance de C++ com a facilidade de uso de Nodes/Resources no editor.
-
----
-
-## 16. Debugging e Profiling
-
-"Se você não pode medir, você não pode melhorar."
-
-### Monitores Customizados
-
-Não adivinhe o que está pesando. Crie monitores para ver no gráfico de performance do editor.
+**2. Funções com Contrato Claro**
+Sempre defina o que entra e o que sai. Se não retorna nada, retorne `void`.
 
 ```gdscript
-func _ready():
-    # Aparece na aba "Monitors" do Debugger
-    Performance.add_custom_monitor("Game/Enemies Active", func(): return EnemyManager.active_count)
+# Ruim
+func take_damage(amount):
+    hp -= amount
+
+# Bom
+func take_damage(amount: int) -> bool:
+    hp -= amount
+    return hp <= 0 # Retorna true se morreu
 ```
 
-### Visual Profiler
+**3. Safe Casting (`as`)**
+Ao receber um objeto genérico (como em sinais de colisão), converta-o para o tipo esperado para ganhar o autocomplete.
 
-Use a aba **Profiler** e **Visual Profiler** para identificar gargalos.
+```gdscript
+func _on_body_entered(body: Node2D) -> void:
+    # Tenta converter 'body' para 'Enemy'. Se falhar, retorna null.
+    var enemy := body as Enemy
 
-- **CPU Time:** Se alto, otimize seus scripts (`_process`).
-- **GPU Time:** Se alto, reduza draw calls, luzes ou complexidade de shaders.
-
----
-
-## 17. Qualidade e Testes (QA)
-
-A arquitetura Kaffyn facilita testes.
-
-### GUT (Godot Unit Test)
-
-Recomendamos o uso do addon **GUT** para testes automatizados.
-
-### Testabilidade
-
-- **Resources:** São perfeitos para testes unitários pois não dependem da SceneTree.
-  - _Ex:_ Testar a fórmula de evolução de nível de um RPG apenas instanciando o Resource e chamando funções.
-- **Nodes:** Use testes de integração para validar se sua State Machine transita corretamente de `Idle` para `Walk`.
+    if enemy:
+        enemy.take_damage(10) # O editor sabe que 'Enemy' tem essa função!
+```
 
 ---
 
-## 18. Padrões Ouro (Gold Standards)
+---
 
-Referência rápida dos "building blocks" padrão da Kaffyn.
+## 6. Arquitetura de Sinais: Call Down, Signal Up
 
-### 1. AutoLoads (Singletons)
+Como seus nós conversam sem virar uma macarronada? Seguindo esta regra sagrada:
 
-Não crie Singletons aleatórios. Use estes canônicos:
+**O Mantra:**
 
-- **`Global` (ou `Game`):** O cérebro. State Machine do jogo (Menu/Game), Score, Pause.
-- **`Config` (ou `Settings`):** Persistência de preferências (Volume, Resolução, Keybindings). Carrega no boot.
-- **`SoundManager`:** Camada acima do `AudioServer`. Toca sons, gerencia buses e pooling.
-- **`SceneLoader`:** Gerencia `change_scene`, telas de loading e transições.
-- **`SaveSystem`:** Serializa e deserializa o `user://savegame.dat`. Não guarda estado, apenas grava/lê.
+> _"O Pai manda no Filho. O Filho avisa o Pai."_
 
-> **Nota sobre Comunicação:** Na Kaffyn, **não usamos `SignalBus` genéricos**.
->
-> - **Global:** Acesse AutoLoads diretamente (`Global.score += 10`). Eles existem para isso.
-> - **Local:** Use detecção de física (`Area2D`) e verificação de tipos (`if body is Enemy`) ou Grupos.
+### A. Call Down (Pai chama Filho)
 
-### 2. UI & HUD (Interface)
+O pai (quem está acima na árvore) detém a referência aos seus filhos. Ele tem autoridade para executar comandos diretamente neles.
 
-Organize sua UI em camadas usando **CanvasLayers** com Z-Index definidos:
+_Exemplo:_ O `Player` diz para a `Gun`: "Atire agora!".
 
-1. **`WorldLayer` (Z 0):** O jogo em si.
-2. **`HUDLayer` (Z 10):** Vida, Munição. Fixo na tela, não segue a câmera.
-3. **`MenuLayer` (Z 20):** Pause, Inventário. Bloqueia input do HUD.
-4. **`OverlayLayer` (Z 100):** Transições (Fade), Debug Console, Mouse Customizado.
+```gdscript
+# No script do Player
+$Gun.shoot()
+```
 
-**Regras de Ouro de UI:**
+### B. Signal Up (Filho avisa Pai)
 
-- **Containers:** Proibido posicionar na mão. Use `VBoxContainer`, `HBoxContainer`, `GridContainer`.
-- **Safe Area:** Tudo começa dentro de um `MarginContainer`.
-- **Componentização:** Uma `HealthBar` deve ser um componente isolado que funciona tanto no HUD (Player) quanto no Mundo (sobre a cabeça do Inimigo).
+O filho (quem está abaixo) **NUNCA** deve saber quem é seu pai. Se você fizer `get_parent().score += 1`, seu código quebra assim que você mudar a estrutura da cena. Em vez disso, o filho grita (emite um sinal) e quem estiver interessado que ouça.
 
-### 3. Resources (Dados)
+_Exemplo:_ A `Gun` diz: "Estou sem munição!". Ela não sabe se o Player vai recarregar, tocar um som ou mostrar um ícone. Ela só avisa.
 
-- **`ItemData` / `EnemyData`:** Definições de entidades.
-- **`GameConfig`:** Resource global com constantes de balanceamento (gravidade, speed base) para fácil ajuste por designers.
-- **`Theme`:** `main_theme.tres` é obrigatório na raiz da UI.
+```gdscript
+# No script da Gun
+signal out_of_ammo
 
-### 4. Static Functions (Utils)
+func shoot():
+    if ammo <= 0:
+        out_of_ammo.emit() # Grita!
+```
 
-Classes utilitárias puras (não herdam de Node).
+### C. E os Irmãos?
 
-- **`MathUtils`:** `choose_random_weighted()`, `damp()`.
-- **`DebugUtils`:** `draw_sphere()`, `log_error()`.
-- **`FormatUtils`:** `format_currency()`, `format_time()`.
+Irmãos não devem se conversar diretamente. Eles brigam. Use o Pai como mediador.
+_Exemplo:_ Se a `Gun` precisa avisar a `UI` (que é irmã do Player), a `Gun` emite sinal para o `Player`, e o `Player` atualiza a `UI`. Ou use um `EventBus` global para sistemas distantes.
 
 ---
 
-## 19. Git e Versionamento
+---
 
-Mantenha o repositório limpo. Versionamos **Código** e **Assets Originais**, não artefatos gerados.
+## 7. Estudo de Caso: Arquitetando um Inimigo
 
-### O que IGNORAR (.gitignore)
+Vamos aplicar tudo o que aprendemos para criar um sistema de inimigos escalável.
 
-Na Kaffyn, a regra é estrita. Adicione ao seu `.gitignore`:
+**O Problema:**
+Precisamos de Goblins, Orcs e Trolls. Todos têm vida, movimento e ataque, mas com valores diferentes.
 
-- `.godot/` (Cache e imports internos).
-- `*.uid` (Identificadores únicos locais).
-- `*.import` (Configurações de importação locais).
+**A Solução Machi:**
 
-> **Nota:** Ignorar `*.import` e `*.uid` força que cada desenvolvedor reimporte os assets localmente, evitando conflitos de IDs e caminhos absolutos entre máquinas diferentes (Windows vs Linux).
+1. **Os Dados (`EnemyStats.gd` - Resource):**
+   Criamos a "Ficha de Personagem".
 
-### Git LFS (Large File Storage)
+   ```gdscript
+   class_name EnemyStats extends Resource
+   @export var max_hp: int = 10
+   @export var speed: float = 50.0
+   @export var texture: Texture2D
+   ```
 
-Arquivos binários não devem poluir o histórico do Git. Use LFS para:
+   _Resultado:_ Criamos `goblin.tres`, `orc.tres` no editor.
 
-- Imagens: `.png`, `.jpg`, `.tga`, `.psd`
-- Áudio: `.wav`, `.ogg`, `.mp3`
-- Modelos: `.blend`, `.fbx`, `.gltf`
+2. **A Lógica Base (`Enemy.gd` - Global Class):**
+   O cérebro genérico.
+
+   ```gdscript
+   class_name Enemy extends CharacterBody2D
+   @export var stats: EnemyStats # Injeção de Dependência!
+
+   func _ready():
+       # Configura-se baseado nos dados
+       $Sprite2D.texture = stats.texture
+   ```
+
+3. **A Cena (`Enemy.tscn`):**
+   Uma única cena genérica com `Sprite2D`, `CollisionShape2D`.
+   Para fazer um Goblin, instanciamos essa cena e arrastamos o `goblin.tres` para o slot `stats`.
+
+**Vantagem:** Não precisamos de `Goblin.tscn`, `Orc.tscn`. Uma cena serve para todos, apenas mudando o Resource.
 
 ---
 
-## 20. Nomenclatura e Convenções
+---
 
-Para que o código pareça escrito por uma única pessoa.
+## 8. Organização de Pastas: Por Domínio, Não por Tipo
 
-| Elemento              | Convenção                    | Exemplo                                   |
-| :-------------------- | :--------------------------- | :---------------------------------------- |
-| **Arquivos e Pastas** | `snake_case`                 | `enemy_controller.gd`, `main_menu.tscn`   |
-| **Classes**           | `PascalCase`                 | `EnemyController`, `ItemData`             |
-| **Variáveis**         | `snake_case`                 | `move_speed`, `current_hp`                |
-| **Privados**          | `_snake_case`                | `_recalculate_stats()`, `_internal_cache` |
-| **Constantes**        | `SCREAMING_SNAKE`            | `MAX_SPEED`, `DEFAULT_GRAVITY`            |
-| **Sinais**            | `snake_case` (Verbo Passado) | `died`, `item_collected`, `level_started` |
+A maioria dos tutoriais diz para criar pastas `Scripts`, `Scenes`, `Sprites`. **Isso é errado para projetos grandes.** Quando você quer mudar o Player, você tem que abrir 3 pastas diferentes.
+
+**O Jeito Machi (Feature-based):**
+Agrupe tudo que pertence a uma funcionalidade no mesmo lugar.
+
+```
+res://
+├── entities/           # Objetos do jogo
+│   ├── player/         # Tudo do Player aqui!
+│   │   ├── Player.tscn
+│   │   ├── player_controller.gd
+│   │   ├── player_skin.png
+│   │   └── PlayerStats.tres
+│   └── enemies/
+│       ├── goblin/
+│       └── orc/
+├── systems/            # Gerenciadores globais
+│   ├── audio/
+│   └── save_system/
+├── ui/                 # Interface
+│   ├── hud/
+│   └── menus/
+└── resources/          # Dados compartilhados globais
+    ├── items/
+    └── skills/
+```
+
+Assim, se você deletar a pasta `player`, o Player some completamente, sem deixar lixo para trás.
 
 ---
 
-## Apêndice A: Checklist de Inicialização (Dia 1)
+---
 
-Antes de escrever a primeira linha de código:
+## 9. Performance: Otimizando antes que trave
 
-1. [ ] **Git:** Criar repositório e adicionar `.gitignore` (Godot template).
+Não espere o jogo ficar lento. Adote estes hábitos:
+
+1. **Object Pooling (Reciclagem):**
+   Instanciar (`.instantiate()`) e deletar (`queue_free()`) é caro para a CPU. Para tiros, moedas e partículas, não destrua. Esconda e reutilize.
+
+2. **Servers API:**
+   Se você precisa de 10.000 balas, `Area2D` vai travar. Use `PhysicsServer2D` diretamente. É mais difícil de usar, mas 100x mais rápido.
+
+3. **Evite `_process` desnecessário:**
+   Se um objeto está fora da tela, use `VisibleOnScreenNotifier2D` para pausar a lógica dele.
+
+---
+
+---
+
+## 10. Dados: Resources vs Dictionaries
+
+A dúvida eterna: Onde guardo meus dados?
+
+| Estrutura      | O que é?                                                    | Uso Principal                                                                         | Exemplo                                                    |
+| :------------- | :---------------------------------------------------------- | :------------------------------------------------------------------------------------ | :--------------------------------------------------------- |
+| **Resource**   | Arquivo estático (`.tres`). Tipado e editável no Inspector. | **Dados de Design (ReadOnly).** Coisas que você (o dev) define antes do jogo começar. | Stats de Monstros, Árvore de Itens, Configurações de Arma. |
+| **Dictionary** | Estrutura chave-valor em memória. Flexível e dinâmica.      | **Estado de Runtime (SaveData).** Coisas que mudam enquanto o jogador joga.           | Inventário atual, Quests completadas, Posição do Player.   |
+
+### O Padrão ROP (Resource-Oriented Programming)
+
+No Machi Game Style, usamos Resources aninhados.
+
+- Um `CharacterStats` tem um slot para uma `WeaponResource`.
+- A `WeaponResource` tem um slot para um `ProjectileResource`.
+  Isso permite criar combinações infinitas apenas arrastando arquivos no editor.
+
+---
+
+---
+
+## 11. UI Profissional: Themes e Containers
+
+Criar UI na Godot não é arrastar coisas aleatoriamente.
+
+1. **Themes são Obrigatórios:**
+   Nunca mude a fonte de um `Label` individualmente. Crie um `Theme` global (`main_theme.tres`). Se quiser mudar a fonte do jogo todo, você muda em um lugar só.
+
+2. **Containers são Vida:**
+   Nunca posicione botões manualmente (pixel perfect). Use `VBoxContainer`, `HBoxContainer`, `GridContainer`. Eles se adaptam a diferentes resoluções automaticamente.
+
+3. **Separação Lógica/Visual:**
+   O script do Menu (`MainMenu.gd`) não deve saber a cor do botão. Ele só deve saber o que acontece quando o botão é clicado (`_on_start_pressed`).
+
+---
+
+---
+
+## 12. Áudio: Mais que Play e Stop
+
+Não espalhe `AudioStreamPlayer` em cada moeda.
+
+1. **Audio Buses (Mixer):**
+   Configure no painel inferior: `Master` -> `Music`, `SFX`, `UI`.
+   Isso permite criar um menu de "Volume" em 5 minutos.
+
+2. **O `SoundManager`:**
+   Crie um Autoload.
+   - Errado: `$CoinSound.play()` (em cada moeda).
+   - Certo: `SoundManager.play_sfx("coin_pickup")`. O Manager cuida de instanciar o player, tocar e deletar depois.
+
+---
+
+---
+
+## 13. i18n: Tradução desde o Dia 1
+
+Seu jogo vai ser em português? Ótimo. Mas não escreva português no código.
+
+**A Regra:** Use chaves (Keys).
+
+- Errado: `Label.text = "Jogo Acabou"`
+- Certo: `Label.text = "GAME_OVER_MSG"`
+
+O Godot usa arquivos CSV ou PO (Gettext) para trocar "GAME_OVER_MSG" por "Game Over" (EN) ou "Fim de Jogo" (PT) automaticamente. É fácil de configurar e salva semanas de refatoração depois.
+
+---
+
+---
+
+## 14. Blueprints: Receitas de Arquitetura
+
+Não reinvente a roda. Use estes padrões validados.
+
+- **Inventário:** `Resource` (ItemData) + `Array` (Mochila).
+- **Habilidades:** `Resource` (Efeito) + `Node` (Processador de Efeito).
+- **Save System:** `Dictionary` -> `FileAccess`. Salve dados, não nós.
+- **Quests:** `Resource` (Dados da Quest) + `Autoload` (QuestManager).
+- **Máquina de Estados:** Nodes filhos (`Idle`, `Walk`, `Attack`) gerenciados por um Pai (`StateMachine`).
+
+---
+
+---
+
+## 15. Extensibilidade: Criando suas Próprias Ferramentas
+
+O Godot é feito em Godot. Você pode criar janelas, docks e inspetores customizados.
+
+1. **EditorPlugins:** Crie ferramentas para sua equipe. Um editor de diálogos, um gerador de fases, um painel de debug.
+2. **GDExtension:** Precisa de performance bruta (C++/Rust)? Use GDExtension. É como escrever código nativo da engine, mas compilado como uma DLL dinâmica.
+
+---
+
+---
+
+## 16. Debugging: Se não medir, não melhora
+
+"Está lento" não é feedback técnico.
+
+1. **Monitores Customizados:**
+   Adicione gráficos no debugger para acompanhar quantas balas existem, quantos inimigos estão vivos.
+
+   ```gdscript
+   Performance.add_custom_monitor("Inimigos Vivos", func(): return enemies.size())
+   ```
+
+2. **Profiler:**
+   Use as abas **Profiler** (CPU) e **Visual Profiler** (GPU) para achar o gargalo exato.
+
+---
+
+---
+
+## 17. QA: Testes Automatizados
+
+A arquitetura Machi facilita testes porque desacopla dados de lógica.
+
+- **Ferramenta:** Use o addon **GUT** (Godot Unit Test).
+- **Estratégia:**
+  - Teste seus `Resources` (Cálculos de dano, evolução de XP) isoladamente.
+  - Teste suas `StateMachines` simulando inputs.
+
+---
+
+---
+
+## 18. O Manifesto da Qualidade
+
+Para um código ser considerado "Machi Style", ele deve obedecer:
+
+1. **Zero Warnings:** O console deve estar limpo. Se tem warning, tem bug potencial.
+2. **Typed Everything:** Nenhuma variável ou função sem tipo explícito.
+3. **Resource First:** Dados sempre em `.tres`, nunca hardcoded em scripts.
+4. **Separation:** UI não contém lógica de jogo. Lógica de jogo não acessa UI diretamente.
+
+---
+
+---
+
+## 19. Git: O Seguro de Vida do Projeto
+
+Versionamos **Código** e **Assets Originais**. Nunca artefatos gerados.
+
+**Obrigatório no `.gitignore`:**
+
+- `.godot/` (Cache gigante, nunca commite isso).
+- `*.uid` (Evita conflitos de merge em IDs).
+
+**Use Git LFS para binários:**
+
+- `.png`, `.wav`, `.blend`, `.fbx`.
+
+---
+
+---
+
+## 20. Style Guide: Falando a Mesma Língua
+
+| O quê          | Como                         | Exemplo                |
+| :------------- | :--------------------------- | :--------------------- |
+| **Arquivos**   | `snake_case`                 | `player_controller.gd` |
+| **Classes**    | `PascalCase`                 | `EnemyStats`           |
+| **Variáveis**  | `snake_case`                 | `move_speed`           |
+| **Privadas**   | `_snake_case`                | `_internal_timer`      |
+| **Constantes** | `SCREAMING_SNAKE`            | `MAX_SPEED`            |
+| **Sinais**     | `snake_case` (verbo passado) | `level_completed`      |
+
+---
+
+---
+
+## Sua Primeira Missão (Checklist Dia 1)
+
+Antes de codar, prepare o terreno:
+
+1. [ ] **Git Init:** Crie o repo e adicione o `.gitignore` padrão da Godot.
 2. [ ] **Project Settings:**
-   - Definir Resolução e Stretch Mode (`canvas_items` para Pixel Art).
-   - Configurar **Input Map** (pular, atirar).
-   - Nomear **Collision Layers** (Player, Enemy, World, Hitbox).
-3. [ ] **Estrutura de Pastas:**
-   - `assets/`, `entities/`, `resources/`, `ui/`, `systems/`.
-4. [ ] **Style:**
-   - Definir `class_name` para as entidades principais.
-   - Configurar o `Theme` padrão da UI.
+   - Setar resolução (ex: 1920x1080).
+   - Configurar Input Map (`ui_accept`, `jump`, `fire`).
+   - Nomear Collision Layers (Layer 1: World, Layer 2: Player...).
+3. [ ] **Pastas:** Crie `entities/`, `resources/`, `ui/`, `assets/`.
+4. [ ] **Theme:** Crie um `main_theme.tres` e defina a fonte padrão.
+
+Agora você está pronto. Bem-vindo à elite. 🚀
