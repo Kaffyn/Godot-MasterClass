@@ -43,8 +43,8 @@ Este código é difícil de ler, de depurar e de estender. Adicionar um novo com
 
 Uma Máquina de Estado Finita (FSM) é um modelo matemático de computação. Ela pode estar em apenas um **estado** por vez. Pode mudar de um estado para outro (uma **transição**) em resposta a certas entradas ou condições.
 
--   **Estados**: `IDLE`, `CHASE`, `ATTACK`, `DEAD`.
--   **Transições**: `IDLE -> CHASE` (se o player for detectado), `CHASE -> ATTACK` (se o player estiver perto).
+- **Estados**: `IDLE`, `CHASE`, `ATTACK`, `DEAD`.
+- **Transições**: `IDLE -> CHASE` (se o player for detectado), `CHASE -> ATTACK` (se o player estiver perto).
 
 ## 3. Os 3 Níveis de Máquinas de Estado em Godot
 
@@ -54,11 +54,12 @@ A Godot oferece flexibilidade para implementar FSMs, desde a abordagem mais simp
 
 Esta é a forma mais direta de implementar uma FSM e é um excelente ponto de partida para comportamentos simples.
 
--   **Como Funciona**: Você define os estados usando um `enum`. No `_process` (ou `_physics_process`), você usa uma estrutura `match` para executar a lógica correspondente ao `current_state`.
--   **Vantagens**: Simples de entender e implementar, rápido para protótipos e pequenos comportamentos.
--   **Desvantagens**: A lógica de todos os estados vive no mesmo script, tornando-o grande e difícil de manter. As transições são implícitas nas condições `if` dentro de cada `case`.
+- **Como Funciona**: Você define os estados usando um `enum`. No `_process` (ou `_physics_process`), você usa uma estrutura `match` para executar a lógica correspondente ao `current_state`.
+- **Vantagens**: Simples de entender e implementar, rápido para protótipos e pequenos comportamentos.
+- **Desvantagens**: A lógica de todos os estados vive no mesmo script, tornando-o grande e difícil de manter. As transições são implícitas nas condições `if` dentro de cada `case`.
 
-*Exemplo (revisado de Fundamentos_Godot.md):*
+_Exemplo (revisado de Fundamentos_Godot.md):_
+
 ```gdscript
 extends CharacterBody2D
 
@@ -96,11 +97,12 @@ func _process_attack_state(delta):
 
 Esta abordagem implementa o padrão de design "State". Cada estado é uma **classe (ou nó) separada**, encapsulando sua própria lógica de `_enter`, `_process` e `_exit`.
 
--   **Como Funciona**: Você tem um nó `StateMachine` central que gerencia uma lista de nós-filhos, onde cada filho é um estado. O `StateMachine` apenas delega o processamento ao estado atual.
--   **Vantagens**: Clareza na separação de responsabilidades. Cada script de estado é pequeno e focado. Fácil de adicionar novos estados.
--   **Desvantagens**: Pode gerar muito boilerplate (código repetitivo) para a criação de cada arquivo de estado. A lógica ainda é totalmente baseada em código, dificultando o ajuste por game designers.
+- **Como Funciona**: Você tem um nó `StateMachine` central que gerencia uma lista de nós-filhos, onde cada filho é um estado. O `StateMachine` apenas delega o processamento ao estado atual.
+- **Vantagens**: Clareza na separação de responsabilidades. Cada script de estado é pequeno e focado. Fácil de adicionar novos estados.
+- **Desvantagens**: Pode gerar muito boilerplate (código repetitivo) para a criação de cada arquivo de estado. A lógica ainda é totalmente baseada em código, dificultando o ajuste por game designers.
 
-*Exemplo Conceitual:*
+_Exemplo Conceitual:_
+
 ```gdscript
 # state_machine.gd (No Player ou Inimigo)
 extends Node
@@ -121,6 +123,7 @@ func change_state(new_state_node: Node):
 func _process(delta):
     current_state.process(delta) # Delega a lógica
 ```
+
 ```gdscript
 # idle_state.gd (Nó-filho de StateMachine)
 extends Node
@@ -144,15 +147,16 @@ func process(delta):
 
 Esta é a abordagem mais poderosa e alinhada com a ROP (Programação Orientada a Resources) e a filosofia da SoftEngine. **Cada estado é um `Resource`**, permitindo que game designers ajustem o comportamento via Inspector, sem tocar em código.
 
--   **Como Funciona**: Um `StateComponent` central gerencia uma biblioteca de `StateResource`s. Cada `StateResource` define dados (animação, velocidade, duração) e pode até conter pequenas funções para lógicas específicas desse estado. As transições são definidas como dados no `StateResource`.
--   **Vantagens**:
-    -   **Data-Driven**: Game designers podem criar e ajustar estados diretamente no editor.
-    -   **Reusabilidade Extrema**: Um `IdleStateResource` pode ser compartilhado por dezenas de inimigos.
-    -   **Desacoplamento**: A lógica do estado é separada do controlador.
-    -   **Integração com Save**: Fácil de serializar e carregar estados de jogo.
--   **Desvantagens**: Mais complexo para configurar inicialmente, exige um entendimento profundo de ROP.
+- **Como Funciona**: Um `StateComponent` central gerencia uma biblioteca de `StateResource`s. Cada `StateResource` define dados (animação, velocidade, duração) e pode até conter pequenas funções para lógicas específicas desse estado. As transições são definidas como dados no `StateResource`.
+- **Vantagens**:
+  - **Data-Driven**: Game designers podem criar e ajustar estados diretamente no editor.
+  - **Reusabilidade Extrema**: Um `IdleStateResource` pode ser compartilhado por dezenas de inimigos.
+  - **Desacoplamento**: A lógica do estado é separada do controlador.
+  - **Integração com Save**: Fácil de serializar e carregar estados de jogo.
+- **Desvantagens**: Mais complexo para configurar inicialmente, exige um entendimento profundo de ROP.
 
-*Exemplo Conceitual (similar ao `ROP.md` e `softengine_machines`):*
+_Exemplo Conceitual (similar ao `ROP.md` e `softengine_machines`):_
+
 ```gdscript
 # idle_state_resource.gd
 extends Resource
@@ -167,6 +171,7 @@ func get_transition_condition(pawn_data: Dictionary) -> String:
         return "chase_state_id" # Retorna o ID do próximo estado
     return "" # Sem transição
 ```
+
 ```gdscript
 # character_fsm_controller.gd (Anexado ao Player/Inimigo)
 extends Node
@@ -203,10 +208,10 @@ func _process(delta):
 
 Transições são as regras que ditam quando mudar de um estado para outro. Elas podem ser:
 
--   **Baseadas em Tempo**: "Ataque dura 0.5 segundos". (`Timer` ou `await get_tree().create_timer(duration).timeout`)
--   **Baseadas em Eventos**: "Player detectado" (sinais de `Area2D` ou `_player_detected()`).
--   **Baseadas em Animação**: "Animação de ataque terminou" (`await anim_player.animation_finished`).
--   **Baseadas em Input**: "Botão de pulo pressionado" (`Input.is_action_just_pressed("jump")`).
+- **Baseadas em Tempo**: "Ataque dura 0.5 segundos". (`Timer` ou `await get_tree().create_timer(duration).timeout`)
+- **Baseadas em Eventos**: "Player detectado" (sinais de `Area2D` ou `_player_detected()`).
+- **Baseadas em Animação**: "Animação de ataque terminou" (`await anim_player.animation_finished`).
+- **Baseadas em Input**: "Botão de pulo pressionado" (`Input.is_action_just_pressed("jump")`).
 
 No Nível Avançado, essas condições podem ser definidas como **dados** dentro dos `StateResource`s ou como funções que os `StateResource`s chamam (delegam) do controlador.
 
@@ -216,15 +221,15 @@ No Nível Avançado, essas condições podem ser definidas como **dados** dentro
 
 Um estado pode ter sua própria FSM interna.
 
--   **Exemplo**: O estado `ATTACK` de um inimigo pode ter sub-estados: `ATTACK_MELEE`, `ATTACK_RANGED`, `ATTACK_CHARGE`. A lógica do FSM principal apenas diz "estou atacando", e o FSM aninhado dentro do estado `ATTACK` cuida dos detalhes de como ele ataca.
--   **Vantagens**: Reduz a complexidade do FSM principal, organiza a lógica de sub-comportamentos.
+- **Exemplo**: O estado `ATTACK` de um inimigo pode ter sub-estados: `ATTACK_MELEE`, `ATTACK_RANGED`, `ATTACK_CHARGE`. A lógica do FSM principal apenas diz "estou atacando", e o FSM aninhado dentro do estado `ATTACK` cuida dos detalhes de como ele ataca.
+- **Vantagens**: Reduz a complexidade do FSM principal, organiza a lógica de sub-comportamentos.
 
 ### 5.2. FSMs Paralelas
 
 Múltiplas FSMs independentes rodando simultaneamente na mesma entidade.
 
--   **Exemplo**: Um jogador pode ter uma `MovementFSM` (Idle, Walk, Run, Jump) rodando em paralelo com uma `CombatFSM` (Unarmed, Sword, Bow, Spell). O estado `Sword` na `CombatFSM` não afeta o `Walk` na `MovementFSM`, exceto talvez por regras de animação ou velocidade.
--   **Vantagens**: Gerencia comportamentos independentes sem criar um "super-estado" que tenta descrever todas as combinações.
+- **Exemplo**: Um jogador pode ter uma `MovementFSM` (Idle, Walk, Run, Jump) rodando em paralelo com uma `CombatFSM` (Unarmed, Sword, Bow, Spell). O estado `Sword` na `CombatFSM` não afeta o `Walk` na `MovementFSM`, exceto talvez por regras de animação ou velocidade.
+- **Vantagens**: Gerencia comportamentos independentes sem criar um "super-estado" que tenta descrever todas as combinações.
 
 ## Conclusão: Disciplina e Flexibilidade
 
