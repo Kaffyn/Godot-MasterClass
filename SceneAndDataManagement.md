@@ -1,11 +1,18 @@
-# Gerenciamento e Persistência de Dados: A Espinha Dorsal do seu Jogo
+# Godot MBA: Gestão de Cenas e Persistência de Dados
+
+> **Instrutor:** Machi
+> **Objetivo:** Unificar os conceitos de fluxo de cenas, carregamento de dados e salvamento de estado para criar uma arquitetura de jogo robusta e escalável.
+
+---
+
+## Gerenciamento e Persistência de Dados: A Espinha Dorsal do seu Jogo
 
 > **De:** Machi
 > **Para:** Você, que está prestes a parar de tratar dados como um detalhe.
 >
 > A lógica do seu jogo é o músculo. Os gráficos são a pele. Mas os dados são a espinha dorsal. Uma espinha dorsal fraca ou malformada e todo o corpo desmorona no primeiro sinal de estresse. Aprenda a arquitetar seus dados e você construirá sistemas que não apenas funcionam, mas que duram e escalam.
 
-## 1. A Separação Sagrada de Dados e Lógica
+### 1. A Separação Sagrada de Dados e Lógica
 
 Um dos saltos mais importantes para um desenvolvedor amadurecer é entender a **separação entre dados e lógica**.
 
@@ -16,7 +23,7 @@ Um projeto onde os dados estão misturados com a lógica (ex: `var max_hp = 100`
 
 A arquitetura profissional isola os dados em arquivos próprios, permitindo que a equipe de design itere e balanceie o jogo sem precisar de um programador.
 
-## 2. O Arsenal de Dados da Godot: Um Guia Comparativo
+### 2. O Arsenal de Dados da Godot: Um Guia Comparativo
 
 A Godot oferece múltiplas ferramentas para gerenciar dados. Saber quando usar cada uma é crucial.
 
@@ -28,7 +35,7 @@ A Godot oferece múltiplas ferramentas para gerenciar dados. Saber quando usar c
 | **Dictionary**          | Estrutura chave-valor dinâmica, em memória.               | **Estado de Runtime.** O inventário _atual_ do jogador, quests ativas, estado do mundo. É o formato perfeito para ser serializado em um arquivo de save.                  | Para definir conteúdo de jogo (falta de tipagem, não é amigável para designers no Inspector).                         |
 | **Array**               | Lista ordenada de itens, em memória.                      | Quando a **ordem importa**. Caminhos de patrulha, sequências de diálogo, um baralho de cartas. Use `Array[Tipo]` para segurança.                                          | Quando você precisa de acesso rápido por uma chave única (use Dictionary).                                            |
 
-## 3. Uma Analogia de Banco de Dados: Resource (Schema) vs. JSON (Tabela)
+### 3. Uma Analogia de Banco de Dados: Resource (Schema) vs. JSON (Tabela)
 
 Para solidificar o entendimento, vamos usar uma analogia do mundo de banco de dados.
 
@@ -42,7 +49,7 @@ Agora, pense em um `Resource` da Godot como um **Schema de Banco de Dados** comp
 
 Enquanto o `JSON` foi criado para ser transformado em objetos JavaScript genéricos, o `Resource` foi criado para ser a espinha dorsal de um ecossistema de objetos de jogo ricos e interconectados, em um padrão de excelência muito superior para o design de games.
 
-## 4. O Padrão Ouro: ROP (Resource-Oriented Programming) em Ação
+### 4. O Padrão Ouro: ROP (Resource-Oriented Programming) em Ação
 
 A filosofia do Godot MBA e da SoftEngine é clara: **use `Resource`s para tudo que for conteúdo de design**. Isso significa que, em vez de apenas guardar dados, os `Resource`s se tornam blocos de construção.
 
@@ -62,11 +69,11 @@ No editor, você agora pode ter vários arquivos:
 
 Um designer pode criar centenas de combinações de personagens e armas **sem escrever uma linha de código**, apenas criando e arrastando esses arquivos `.tres` no Inspector. Isso é ROP em sua forma mais pura.
 
-## 5. Persistência de Dados: Salvando o Estado do Jogo
+### 5. Persistência de Dados: Salvando o Estado do Jogo
 
 Arquitetar seus dados é apenas metade da batalha. A outra metade é garantir que o estado do seu jogo possa ser salvo e carregado de forma confiável, segura e flexível.
 
-### 5.1. O Que Salvar? (Estado vs. Cena)
+#### 5.1. O Que Salvar? (Estado vs. Cena)
 
 **NUNCA** tente salvar a árvore de nós (`PackedScene.pack(root)`). Isso salva lixo, texturas, scripts e coisas que não deveriam estar no save.
 
@@ -77,7 +84,7 @@ Salve apenas **DADOS DE ESTADO**:
 - Flags de progresso (`"boss_1_killed": true`)
 - Stats atuais (HP, XP, Nível)
 
-### 5.2. A Estrutura Interna do Arquivo de Save
+#### 5.2. A Estrutura Interna do Arquivo de Save
 
 Usamos um **Dictionary** como raiz do nosso save. É flexível e fácil de serializar.
 
@@ -101,7 +108,7 @@ var save_data = {
 }
 ```
 
-### 5.3. O Gerenciador de Save (`SaveManager` Autoload)
+#### 5.3. O Gerenciador de Save (`SaveManager` Autoload)
 
 A espinha dorsal do seu sistema de persistência será um **Autoload** (`SaveManager`). Ele centraliza a API de save/load.
 
@@ -141,7 +148,7 @@ func load_game() -> Dictionary:
     return data
 ```
 
-### 5.4. O Padrão "Saveable Node" (Coletando Dados)
+#### 5.4. O Padrão "Saveable Node" (Coletando Dados)
 
 Como o `SaveManager` coleta os dados que estão espalhados por todo o jogo?
 Não faça o `SaveManager` vasculhar a árvore de cenas. Use um padrão onde os próprios nós se declaram "salváveis".
@@ -198,7 +205,7 @@ func apply_save_snapshot(snapshot: Dictionary):
             node.load_save_data(snapshot[node.unique_id])
 ```
 
-### 5.5. ROP e Save (Serializando Resources)
+#### 5.5. ROP e Save (Serializando Resources)
 
 Se você usa `Resources` para o estado de runtime (ex: um `InventoryResource` que guarda `ItemInstance`s), você não pode simplesmente salvar o `Resource` direto com `store_var` se ele tiver scripts atrelados ou referências à SceneTree (risco de segurança, referência circular).
 
@@ -224,7 +231,7 @@ static func from_dictionary(data: Dictionary) -> ItemInstance:
     return item
 ```
 
-### 5.6. Versionamento de Save (Compatibilidade Futura)
+#### 5.6. Versionamento de Save (Compatibilidade Futura)
 
 Se você lançar a v1.0 e depois na v1.1 adicionar um novo campo (`mana_regen`) ao player, o save antigo pode falhar ao carregar.
 
@@ -251,7 +258,7 @@ Se você lançar a v1.0 e depois na v1.1 adicionar um novo campo (`mana_regen`) 
       return data
   ```
 
-## Conclusão: A Ferramenta Certa para o Trabalho Certo
+### Conclusão: A Ferramenta Certa para o Trabalho Certo
 
 - **Para definir "o que é" um item/inimigo/skill (dados de design):** Use `Resource` (`.tres`).
 - **Para guardar as configurações do jogador (volume, teclas):** Use `ConfigFile` (`.cfg`).
@@ -259,3 +266,136 @@ Se você lançar a v1.0 e depois na v1.1 adicionar um novo campo (`mana_regen`) 
 - **Para guardar o estado "vivo" e mutável do seu jogo (o que está acontecendo agora):** Use `Dictionary` e `Array` em memória, e serializáveis para o seu arquivo de save.
 
 Dominar esse fluxo é dominar a arquitetura de dados e garantir a persistência e a evolução do seu jogo.
+
+---
+## Gerenciamento de Cenas (Scene Flow)
+
+> **Objetivo:** Controlar o fluxo do jogo. Loading Screens, transições suaves e carregamento em background.
+
+---
+
+### 1. O Básico: `change_scene_to_file`
+
+Para protótipos, `get_tree().change_scene_to_file("res://level2.tscn")` funciona.
+**Problema:** O jogo trava (congela) enquanto carrega a nova cena. Se for pesada, o jogador acha que crashou.
+
+---
+
+### 2. Carregamento Assíncrono (Background Loading)
+
+A Godot tem a classe `ResourceLoader` que permite carregar em uma thread separada.
+
+#### O `SceneLoader` (Singleton)
+
+Vamos criar um Autoload robusto.
+
+```gdscript
+# scene_loader.gd
+extends Node
+
+var _loading_path: String = ""
+var _loading_status: int = 0
+var _progress: Array = []
+
+func load_scene(path: String):
+    _loading_path = path
+    # Inicia o carregamento em background
+    ResourceLoader.load_threaded_request(path)
+
+    # Troca para uma cena de "Loading..." temporária
+    get_tree().change_scene_to_file("res://ui/loading_screen.tscn")
+
+    # Liga o processamento para checar o progresso a cada frame
+    set_process(true)
+
+func _process(delta):
+    if _loading_path == "":
+        set_process(false)
+        return
+
+    # Consulta o status atual
+    _loading_status = ResourceLoader.load_threaded_get_status(_loading_path, _progress)
+
+    # Atualiza a barra de progresso (se existir na cena atual)
+    # _progress[0] vai de 0.0 a 1.0
+    var loading_screen = get_tree().current_scene
+    if loading_screen.has_method("update_bar"):
+        loading_screen.update_bar(_progress[0])
+
+    if _loading_status == ResourceLoader.THREAD_LOAD_LOADED:
+        # Terminou!
+        set_process(false)
+
+        # Pega o recurso carregado
+        var new_scene_resource = ResourceLoader.load_threaded_get(_loading_path)
+
+        # Troca a cena manualmente
+        get_tree().change_scene_to_packed(new_scene_resource)
+        _loading_path = ""
+```
+
+---
+
+### 3. Estrutura de Mundos (World vs UI)
+
+Em jogos complexos, você não quer destruir TUDO ao trocar de fase.
+Exemplo: O HUD e o Player podem persistir.
+
+**Estrutura da Main.tscn:**
+
+```
+Main (Node)
+├── UILayer (CanvasLayer) -> Nunca é destruído
+├── MusicLayer (Node) -> Nunca é destruído
+└── WorldContainer (Node) -> Aqui trocamos as fases
+    └── Level01 (Node3D)
+```
+
+#### Script de Troca Local
+
+```gdscript
+func change_level(level_packed: PackedScene):
+    # Remove fase antiga
+    var old_level = $WorldContainer.get_child(0)
+    old_level.queue_free()
+
+    # Adiciona nova
+    var new_level = level_packed.instantiate()
+    $WorldContainer.add_child(new_level)
+```
+
+Isso mantém a música tocando sem cortes e o HUD intacto.
+
+---
+
+### 4. Passando Dados entre Cenas
+
+Como dizer para o "Level 2" que o player deve spawnar na "Porta B" e não na "Porta A"?
+Não use globais (`Global.next_spawn_point`).
+
+Use um **Payload** ou **Contexto**.
+
+Se estiver usando o `SceneLoader` acima, adicione um parâmetro `params: Dictionary`.
+Após instanciar a nova cena, injete os dados.
+
+```gdscript
+# No SceneLoader
+func _on_load_complete(resource):
+    var new_scene = resource.instantiate()
+
+    # Injeção de Dependência
+    if new_scene.has_method("setup"):
+        new_scene.setup(_saved_params)
+
+    get_tree().root.add_child(new_scene)
+    get_tree().current_scene = new_scene
+```
+
+**No Level Script:**
+
+```gdscript
+func setup(params):
+    var spawn_id = params.get("spawn_point", 0)
+    var point = get_node("Spawns/Point_" + str(spawn_id))
+    $Player.global_position = point.global_position
+```
