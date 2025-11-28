@@ -72,7 +72,7 @@ Explore os documentos mestres que detalham cada pilar da nossa arquitetura.
 
 ### 🏛️ Fundamentos
 
-- [Fundamentos Godot](Fundamentos_Godot.md): POO, GDScript, Sinais, Nós e SceneTree.
+- [Fundamentos Godot](GodotFundamentals.md): POO, GDScript, Sinais, Nós e SceneTree.
 
 ### 🏗️ Arquitetura Core
 
@@ -105,7 +105,7 @@ Explore os documentos mestres que detalham cada pilar da nossa arquitetura.
 
 ### 🎓 Projetos Práticos (Capstone)
 
-- [A Ficha de RPG Suprema](FichaRPG.md): Integração total de ROP, UI, i18n e Save System.
+- [A Ficha de RPG Suprema](CharacterSheet.md): Integração total de ROP, UI, i18n e Save System.
 
 ---
 
