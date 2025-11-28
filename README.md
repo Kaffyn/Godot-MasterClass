@@ -72,14 +72,14 @@ Explore os documentos mestres que detalham cada pilar da nossa arquitetura.
 
 ### 🏛️ Fundamentos
 
-- [POO e A Filosofia dos Nós](POO.md): Entenda Nodes, SceneTree e Sinais.
-- [GDScript Essentials](GDScript.md): O básico bem feito (Movimento, Combate, IA simples).
+- [Fundamentos Godot](Fundamentos_Godot.md): POO, GDScript, Sinais, Nós e SceneTree.
 
 ### 🏗️ Arquitetura Core
 
 - [Programação Orientada a Resources (ROP)](ROP.md): O coração do Machi Game Style.
 - [Singletons & Autoloads](Singletons.md): Os Gerentes Globais do seu Jogo.
 - [Arquitetura de Dados](DataManagement.md): A Espinha Dorsal do seu Jogo.
+- [Máquinas de Estado](StateMachines.md): A Arte de Orquestrar o Comportamento.
 - [Sistemas de Spawn e Fábricas](Spawning.md): Instanciando cenas dinamicamente.
 - [Gerenciamento de Cenas](SceneManagement.md): Loading screens e troca de fases.
 
@@ -88,6 +88,7 @@ Explore os documentos mestres que detalham cada pilar da nossa arquitetura.
 - [Sistema de Inventário](Inventory.md): Do básico ao estilo RPG/Survival.
 - [Sistema de Save/Load](SaveSystem.md): Serialização segura e versionamento.
 - [Internacionalização (i18n)](i18n.md): Tradução e localização desde o dia 1.
+- [Testes e Qualidade (QA)](Testing_QA.md): Garantindo a Robustez do seu Jogo.
 
 ### 🎨 Audiovisual
 
