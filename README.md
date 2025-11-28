@@ -72,36 +72,32 @@ Explore os documentos mestres que detalham cada pilar da nossa arquitetura.
 
 ### 🏛️ Fundamentos
 
-- [Fundamentos Godot](GodotFundamentals.md): POO, GDScript, Sinais, Nós e SceneTree.
+- [Fundamentos Godot](GodotFundamentals.md): POO, GDScript, Sinais, Nós, SceneTree e Sistemas de Spawn.
 
 ### 🏗️ Arquitetura Core
 
-- [Programação Orientada a Resources (ROP)](ROP.md): O coração do Machi Game Style.
+- [Programação Orientada a Resources (ROP)](ResourceOrientedProgramming.md): O coração do Machi Game Style.
 - [Singletons & Autoloads](Singletons.md): Os Gerentes Globais do seu Jogo.
-- [Arquitetura de Dados](DataManagement.md): A Espinha Dorsal do seu Jogo.
+- [Gestão de Cenas e Persistência de Dados](SceneAndDataManagement.md): Loading screens, troca de fases e a espinha dorsal do seu jogo.
 - [Máquinas de Estado](StateMachines.md): A Arte de Orquestrar o Comportamento.
-- [Sistemas de Spawn e Fábricas](Spawning.md): Instanciando cenas dinamicamente.
-- [Gerenciamento de Cenas](SceneManagement.md): Loading screens e troca de fases.
 
 ### 📦 Sistemas de Produção
 
 - [Sistema de Inventário](Inventory.md): Do básico ao estilo RPG/Survival.
 - [Sistema de Save/Load](SaveSystem.md): Serialização segura e versionamento.
-- [Internacionalização (i18n)](i18n.md): Tradução e localização desde o dia 1.
+- [Tradução e Localização (i18n)](Translations.md): Tradução e localização desde o dia 1.
 - [Testes e Qualidade (QA)](Testing_QA.md): Garantindo a Robustez do seu Jogo.
 
-### 🎨 Audiovisual
+### 🎨 Audiovisual & Experiência
 
-- [UI Profissional](UI.md): Containers, Themes e Design Responsivo.
-- [Animação & Motion](Animation.md): AnimationPlayer vs Tweens.
-- [Áudio Dinâmico](Audio.md): AudioStreamRandomizer e Buses.
+- [Game Feel & Juice](GameFeel.md): Animação, Áudio e UI para uma experiência imersiva e polida.
 - [Shaders & Materiais](Shaders.md): Introdução a VFX.
 
 ### 🚀 Tópicos Avançados
 
 - [Plugins & Modularidade](Plugins.md): Estendendo a Engine com suas próprias ferramentas.
 - [GDExtensions & Performance](GDExtensions.md): Quando descer para C++/Rust.
-- [Rust & IA (Deep Dive)](Rust_AI_Deep_Dive.md): Uma introdução à IA em jogos com Rust.
+- [GDExtension para IA com Rust](RustAIExtension.md): Uma introdução à IA em jogos com Rust.
 
 ### 🎓 Projetos Práticos (Capstone)
 
