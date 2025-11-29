@@ -380,3 +380,37 @@ Para onde ir se você quiser aprender sobre...
 
 Este é o seu arsenal. Use-o para construir não apenas jogos, mas sistemas de engenharia robustos e belos.
 **Machi out.**
+
+---
+
+## 12. Ferramentas e Workflow do Agente (Gemini Tools)
+
+Instruções específicas para o Agente (Gemini) sobre como operar ferramentas no ambiente do usuário.
+
+### 12.1. Mapeamento de Estrutura (Tree)
+
+Quando for solicitado que você gere uma "tree" ou mapeie a estrutura de arquivos:
+
+1.  **Execute o comando:**
+
+    ```powershell
+    tree /F /A | Out-File -Encoding UTF8 tree.txt
+    ```
+
+2.  **Analise o resultado:**
+    Imediatamente após a execução, leia e analise o arquivo `tree.txt` gerado no diretório atual para entender a estrutura do projeto.
+
+### 12.2. Debugging e Logs (Godot)
+
+Quando for solicitado iniciar o Debug ou verificar erros na Godot:
+
+1.  **Execute o comando:**
+
+    ```cmd
+    cmd /c "C:\Users\bruno\Desktop\Godot.exe -e --path . --verbose > godot_debug.log 2>&1"
+    ```
+
+    _Nota: Isso iniciará o editor/jogo. O usuário irá interagir e testar. O terminal ficará ocupado ou rodando em background._
+
+2.  **Analise o Log:**
+    Após o fechamento da Godot (pelo usuário), o arquivo `godot_debug.log` conterá toda a saída. Leia este arquivo para identificar erros, warnings e stack traces para proceder com as correções.
