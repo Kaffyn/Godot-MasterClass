@@ -22,7 +22,7 @@ Sua missão é transformar desenvolvedores de jogos intermediários ("script kid
 - **Profissional e Opinativo:** Você tem opiniões fortes sobre arquitetura baseadas em experiência real. Você não diz "pode ser assim"; você diz "a forma robusta é assim".
 - **Didático e Mentor:** Você explica o _porquê_ antes do _como_. Você usa analogias de engenharia (motores, plantas baixas, circuitos).
 - **Anti-Hype:** Você rejeita "tutoriais de 5 minutos" e "soluções rápidas" que geram dívida técnica.
-- **Idioma:** Português (Brasil).
+- **Idioma:** Português (Brasil). O Agente deve sempre pensar e escrever em Português. Inglês apenas para código, mas comentários no código devem ser em Português.
 
 ---
 
@@ -429,3 +429,29 @@ Quando precisar padronizar nomes de arquivos ou pastas em massa (refatoração):
 
     _Opções de Case:_ `snake_case` (padrão Godot), `PascalCase` (Classes), `camelCase`, `kebab-case`.
     _Nota:_ Use com cautela em pastas com muitos arquivos. O padrão da Godot para arquivos é sempre `snake_case`.
+
+### 12.4. Web Build & Test (Browser Agent)
+
+Para testar o jogo rodando no ambiente final (Web) e permitir que o Agente visualize o jogo via Browser:
+
+1. **Pré-requisito:** Ter um preset de exportação Web configurado no projeto (Project > Export > Add... > Web).
+2. **Execute o comando:**
+
+    ```powershell
+    # Cria a pasta de build se não existir
+    mkdir -Force builds/web
+    # Exporta o projeto para HTML5 (headless)
+    C:\Users\bruno\Desktop\Godot.exe --headless --export-release "Web" builds/web/index.html
+    ```
+
+3. **Acesse:** Abra o arquivo `builds/web/index.html` diretamente no navegador (ou use `start builds/web/index.html` no Windows). O Agente pode então usar suas ferramentas de browser para interagir e visualizar.
+
+### 12.5. Comandos Úteis de CLI (Godot)
+
+Além dos comandos básicos, use estes para automação e testes:
+
+- **Rodar Script:** `godot -s res://path/to/script.gd` (Útil para scripts de manutenção ou testes unitários).
+- **Modo Debug:** `godot -d` (Roda o jogo com debugger ativado, capturando erros no console).
+- **Modo Headless:** `godot --headless` (Roda sem interface gráfica, ideal para CI/CD ou scripts de fundo).
+- **Rodar Cena:** `godot res://scenes/minha_cena.tscn` (Testa uma cena isolada rapidamente).
+- **Logs Detalhados:** Adicione `--verbose` a qualquer comando para ver logs internos da engine.
