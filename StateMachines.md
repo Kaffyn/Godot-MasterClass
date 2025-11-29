@@ -231,6 +231,94 @@ Múltiplas FSMs independentes rodando simultaneamente na mesma entidade.
 - **Exemplo**: Um jogador pode ter uma `MovementFSM` (Idle, Walk, Run, Jump) rodando em paralelo com uma `CombatFSM` (Unarmed, Sword, Bow, Spell). O estado `Sword` na `CombatFSM` não afeta o `Walk` na `MovementFSM`, exceto talvez por regras de animação ou velocidade.
 - **Vantagens**: Gerencia comportamentos independentes sem criar um "super-estado" que tenta descrever todas as combinações.
 
-## Conclusão: Disciplina e Flexibilidade
+## 6. Estudo de Caso: O StateEngineering (Arquitetura de Contexto)
+
+> **Nível 4: O Fim das Transições Manuais**
+>
+> Se o Nível 3 (FSM baseada em Resources) é a "graduação", o **StateEngineering** é o Mestrado. Ele resolve o maior problema das máquinas de estado complexas: a **explosão combinatória de transições**.
+
+### 6.1. A Filosofia: Filtragem > Transição
+
+Em uma FSM tradicional, você diz: *"Se estou em Idle e aperto Espaço, vá para Jump"*.
+No StateEngineering, você diz: *"O Jogador apertou Espaço. Qual é o melhor estado para agora?"*
+
+Mudamos a pergunta de **"Para onde vou?"** para **"Quem sou eu agora?"**.
+
+Imagine um **Motor de Busca** (como o Google) dentro do seu personagem.
+Quando o contexto muda (ex: o jogador aperta Ataque enquanto cai), o sistema pergunta:
+> *"Tenho uma Katana. Estou no Ar. Apertei Ataque. O que se encaixa?"*
+
+O sistema filtra sua biblioteca de estados e encontra:
+1.  `SwordGroundAttack`? ❌ Rejeitado (Requer: Chão).
+2.  `KatanaAirAttack`? ✅ Aceito (Requer: Ar, Katana).
+
+### 6.2. Os Dados: O Resource como Regra (`AttackData`)
+
+Em vez de código, nossos ataques são definidos por **Requisitos**.
+Veja como um `AttackData.tres` se parece na prática (simplificado):
+
+```gdscript
+class_name AttackData extends Resource
+
+# --- QUEM SOU EU? ---
+@export var animation_name: String = "air_slash_v1"
+@export var damage: int = 15
+
+# --- QUANDO POSSO EXISTIR? (O Filtro) ---
+@export_group("Requirements")
+@export var req_motion: StateMachine.Motion = StateMachine.Motion.ANY
+@export var req_physics: StateMachine.Physics = StateMachine.Physics.AIR # Só funciona no ar!
+@export var req_weapon: StateMachine.Weapon = StateMachine.Weapon.KATANA # Só com Katana!
+
+# --- REGRAS DE SOBREVIVÊNCIA (Reatividade) ---
+@export_group("Reaction Rules")
+# Se eu tocar no chão no meio do ataque, o que acontece?
+@export var on_physics_change: StateMachine.Reaction = StateMachine.Reaction.CANCEL
+```
+
+**A Análise do Machi:**
+Note que **não há `if (is_on_floor())`** em lugar nenhum. O Resource declara suas necessidades. Se o requisito `req_physics` não bater com o contexto atual, esse estado nem entra na lista de candidatos.
+
+### 6.3. O Cérebro: O Sistema de Pontuação (Score System)
+
+E se tivermos dois estados válidos?
+1.  `GenericAirAttack` (Requer: Ar)
+2.  `KatanaAirAttack` (Requer: Ar + Katana)
+
+O algoritmo `find_best_match()` no `Machine.gd` não pega o primeiro que acha. Ele dá **Pontos** por especificidade.
+
+- **Match Genérico (ANY):** 0 pontos.
+- **Match Exato:** 1 ponto.
+
+**Resultado:** O `KatanaAirAttack` ganha porque é mais específico para a arma atual. Isso permite que você crie um "Ataque Genérico" como fallback e depois "especialize" o jogo criando Resources mais detalhados, sem nunca quebrar o código existente.
+
+### 6.4. Reatividade Declarativa
+
+O maior causador de bugs em jogos de ação é o cancelamento de estados.
+*Exemplo: O jogador toma dano no meio de um ataque.*
+
+No jeito antigo, todo estado precisaria checar: `if took_damage: change_state(HURT)`.
+No StateEngineering, definimos isso no Resource:
+
+```gdscript
+@export var on_take_damage: StateMachine.Reaction = StateMachine.Reaction.CANCEL
+```
+
+O `MachineComponent` observa o contexto global. Se o contexto mudar para `Status: STUNNED`, ele olha para o estado atual, vê a regra `CANCEL`, e mata o estado imediatamente.
+
+### Conclusão do Estudo
+
+O StateEngineering remove a necessidade de escrever código de transição.
+- Quer um novo ataque? Crie um `.tres`.
+- Quer que o ataque pare de funcionar na água? Mude o filtro no Inspector.
+- Quer um combo? Crie um estado que requer `Attack: Combo2`.
+
+É a aplicação máxima de **Dados sobre Lógica**.
+
+---
+
+
+
+## 7. Conclusão: Disciplina e Flexibilidade
 
 Máquinas de Estado são ferramentas poderosas para impor disciplina ao comportamento do seu jogo. Ao escolher o nível certo de abstração (enum, classes ou Resources), você pode criar sistemas que são fáceis de entender, de depurar e, o mais importante, de estender e balancear, seja você um programador ou um game designer.
