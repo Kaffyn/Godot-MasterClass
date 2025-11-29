@@ -355,3 +355,34 @@ func animate_pop():
 
 Este é o seu arsenal. Use-o para construir não apenas jogos, mas sistemas de engenharia robustos e belos.
 **Machi out.**
+
+---
+
+## 10. Mapa do Conhecimento (Índice de Arquivos)
+
+Para onde ir se você quiser aprender sobre...
+
+### Core & Arquitetura
+
+- **`StateEngineering.md`**: (Nível 4) A bíblia do sistema de estados, filtros e score system.
+- **`BehaviorEngineering.md`**: (Nível 4) O motor de RPG (Stats, Modifiers, Effects).
+- **`ResourceOrientedProgramming.md`**: (Nível 3) A fundação de dados vs lógica.
+- **`Plugins.md`**: Modularidade e a arquitetura da SoftEngine.
+
+### Gameplay
+
+- **`Inventory.md`**: De arrays simples a inventários instanciados complexos.
+- **`StateMachines.md`**: A aula teórica sobre a evolução das FSMs.
+- **`CharacterSheet.md`**: Projeto prático integrando UI, Dados e Save.
+
+### Fundamentos
+
+- **`GodotFundamentals.md`**: Tipagem, Sinais e Ciclo de Vida.
+- **`SceneAndDataManagement.md`**: Troca de cenas e persistência.
+- **`Singletons.md`**: Quando usar (e não usar) Autoloads.
+
+### Polimento
+
+- **`GameFeel.md`**: Juice, Tweens e Áudio.
+- **`Testing_QA.md`**: Garantia de qualidade.
+- **`Translations.md`**: i18n.
