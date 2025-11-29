@@ -149,29 +149,36 @@ O `softengine_core` resolve problemas que todo jogo tem, para que você não pre
       print("Jogo salvo com sucesso!")
   ```
 
-### Machines: O Cérebro Orquestrador
+### Machines: O Cérebro Orquestrador (State Engineering)
 
-O `softengine_machines` controla o **fluxo e os estados** do jogo. Ele decide "o que está acontecendo agora?".
+O `softengine_machines` é a implementação da arquitetura **State Engineering**, um salto quântico nas Máquinas de Estado. Em vez de gerenciar transições rígidas entre estados, este plugin atua como um **motor de busca e filtragem**, determinando o estado atual com base em um **contexto** dinâmico. Ele responde à pergunta: "Dentre todos os comportamentos possíveis, qual é o mais adequado para a situação atual?"
 
-- **Responsabilidades**:
-  - Fornecer o `StateComponent`, um nó para criar Máquinas de Estado Finitas (FSM) para personagens (parado, andando, atacando).
-  - Implementar a `GameMachine`, que gerencia o estado global do jogo (MainMenu, InGame, Paused).
-- **Exemplo de Uso**: Controlar o estado de um personagem com base no input.
+-   **Filosofia Central**: Abandona-se a ideia de transições manuais. O sistema busca o "melhor" estado (`Resource`) que satisfaça o contexto atual (ex: `Arma: Katana`, `Física: Ar`, `Input: Ataque`). Um `Score System` interno desempata estados mais genéricos de mais específicos.
+-   **Responsabilidades**:
+    *   Fornecer a **infraestrutura central** (`StateMachine.gd` com enums globais, `StateCompose.gd` para coleções de estados, `Machine.gd` com o algoritmo de filtragem).
+    *   Gerenciar o **estado global do jogo** (`GameMachine`), controlando transições de cenas, pausas e fluxos de menu de forma declarativa via `GameData` Resources.
+    *   Orquestrar **comportamentos de personagens** (`PlayerMachine`, `EnemyMachine`), onde os estados (movimentos, ataques, habilidades) são definidos como `Resources` de dados (ex: `AttackData`, `MoveData`).
+-   **Como Funciona (Visão Geral)**:
+    1.  O sistema mantém um `Context` atual (ex: `Weapon: Katana`, `Physics: AIR`).
+    2.  Quando uma ação ou input ocorre (ex: "Input: Ataque"), o `Machine` recebe a requisição.
+    3.  Ele busca em uma coleção de `Data Resources` (ex: todos os `AttackData` do personagem).
+    4.  Cada `Data Resource` (como um `AttackData`) possui **Requisitos** (`req_weapon`, `req_physics`).
+    5.  O `Machine` filtra os `Resources` que **não** atendem aos requisitos do contexto.
+    6.  Dos `Resources` restantes, o que tiver a maior pontuação (mais requisitos de contexto atendidos de forma específica) é escolhido e ativado.
+-   **Exemplo Simplificado de um `Data Resource` (`AttackData`)**:
+    ```gdscript
+    # AttackData.gd (Resource)
+    class_name AttackData extends Resource
 
-  ```gdscript
-  # No script do Player, que tem um StateComponent como filho
-  @onready var state_component: StateComponent = $StateComponent
+    @export_group("Requirements")
+    @export var req_physics: StateMachine.Physics = StateMachine.Physics.AIR # Requer estar no ar
+    @export var req_weapon: StateMachine.Weapon = StateMachine.Weapon.KATANA # Requer Katana
+    // ... outras propriedades de animação, dano, etc.
+    ```
+    Neste exemplo, um `AttackData` só seria considerado se o personagem estivesse no ar e com uma Katana.
+-   **Reatividade Declarativa**: Os `Data Resources` também definem **Regras de Reação** (ex: `on_physics_change: StateMachine.Reaction.CANCEL`). Se o contexto mudar inesperadamente (ex: personagem cai no chão durante um ataque aéreo), o sistema automaticamente reage conforme a regra definida no Resource, sem `if/else` explícitos no código do estado.
 
-  func _physics_process(_delta):
-      var move_input = Input.get_vector("left", "right", "up", "down")
-      if move_input.length() > 0:
-          state_component.request_state("Run")
-      else:
-          state_component.request_state("Idle")
-
-      if Input.is_action_just_pressed("attack"):
-          state_component.request_state("Attack")
-  ```
+Com esta abordagem, a adição de novos comportamentos ou variações de estados se torna uma tarefa de **criação e configuração de Resources no editor**, minimizando a necessidade de alterações no código do controlador e evitando a "espiral do `if/else`".
 
 ### Behavior: A Alma dos Personagens
 
