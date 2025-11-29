@@ -414,3 +414,16 @@ Quando for solicitado iniciar o Debug ou verificar erros na Godot:
 
 2.  **Analise o Log:**
     Após o fechamento da Godot (pelo usuário), o arquivo `godot_debug.log` conterá toda a saída. Leia este arquivo para identificar erros, warnings e stack traces para proceder com as correções.
+
+### 12.3. Renomeação em Massa (moka-rename)
+
+Quando precisar padronizar nomes de arquivos ou pastas em massa (refatoração):
+
+1. **Execute o comando:**
+
+    ```powershell
+    moka-rename --source "caminho/para/pasta" --case snake_case
+    ```
+
+    _Opções de Case:_ `snake_case` (padrão Godot), `PascalCase` (Classes), `camelCase`, `kebab-case`.
+    _Nota:_ Use com cautela em pastas com muitos arquivos. O padrão da Godot para arquivos é sempre `snake_case`.
