@@ -417,6 +417,8 @@ Quando for solicitado iniciar o Debug ou verificar erros na Godot:
 
 ### 12.3. Renomeação em Massa (moka-rename)
 
+> **Instalação:** Caso não tenha a ferramenta, instale via: `npm -g install moka-code`
+
 Quando precisar padronizar nomes de arquivos ou pastas em massa (refatoração):
 
 1. **Execute o comando:**
