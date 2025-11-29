@@ -7,12 +7,12 @@
 
 ---
 
-## 1. O Problema do `if/else` Infinito (Spaghetti Code do Comportamento)
+## 1. O Problema do `if/else` Infinito (Complexidade Ciclomática do Comportamento)
 
 Quando o comportamento de uma entidade é governado por uma longa cadeia de `if/else`, a complexidade escala exponencialmente.
 
 ```gdscript
-# inimigo_spaghetti.gd
+# inimigo_monolitico.gd
 func _process(delta):
     if is_alive:
         if is_idle:

@@ -6,10 +6,10 @@
 
 ---
 
-## 1. O Fim do "Spaghetti de Transições"
+## 1. O Fim do "Caos de Transições"
 
 Você já escreveu uma State Machine tradicional. Você sabe como funciona:
-_"Se estou Idle e aperto Espaço, vou para Jump"_.
+*"Se estou Idle e aperto Espaço, vou para Jump"*.
 _"Se estou Jump e toco no chão, vou para Idle"_.
 
 Isso funciona bem até você ter 50 estados.

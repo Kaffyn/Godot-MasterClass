@@ -182,7 +182,7 @@ func interact(user: Node2D):
 
 ### 4.3. Sinais: A Arte da Comunicação Desacoplada
 
-Como os nós conversam sem criar dependências "Spaghetti"?
+Como os nós conversam sem criar dependências rígidas?
 **Regra de Ouro:** _"O Pai manda no Filho. O Filho avisa o Pai."_
 
 - **Call Down (Pai chama Filho):** O Pai sabe quem é o filho (`$Filho`) e pode chamar funções dele diretamente.

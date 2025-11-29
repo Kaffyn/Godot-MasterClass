@@ -7,7 +7,7 @@
 >
 > Forjado nas trincheiras do desenvolvimento profissional, o **Machi Game Style** é o seu guia para transcender o "fazer funcionar" e construir sistemas escaláveis, modulares e performáticos na Godot Engine.
 >
-> Se você está pronto para abandonar o "spaghetti code" e se tornar um arquiteto de software de jogos, bem-vindo ao seu MBA.
+> Se você está pronto para abandonar o "código frágil" e se tornar um arquiteto de software de jogos, bem-vindo ao seu MBA.
 
 ---
 
@@ -53,7 +53,7 @@ Explore os documentos mestres que detalham cada pilar da nossa arquitetura.
 
 ## 1. Escolhendo a Estrutura Certa: Um Guia de Decisão Arquitetural
 
-Na Godot, existem diversas formas de organizar seu código e seus dados. A escolha da ferramenta certa para cada problema é crucial para evitar o "spaghetti code" e garantir a escalabilidade do seu projeto.
+Na Godot, existem diversas formas de organizar seu código e seus dados. A escolha da ferramenta certa para cada problema é crucial para evitar o "código desorganizado" e garantir a escalabilidade do seu projeto.
 
 ### 1.1. Global Class & Singletons: O Poder do `class_name`
 
