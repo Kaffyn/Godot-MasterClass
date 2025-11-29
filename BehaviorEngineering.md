@@ -2,168 +2,155 @@
 
 > **De:** Machi
 > **Nível:** Arquiteto (Level 4)
-> **Objetivo:** Criar um motor de RPG robusto. Sair de `var strength = 10` para um sistema de **Atributos**, **Modificadores** e **Efeitos** que permite buffs, debuffs, equipamentos e escalabilidade infinita.
+> **Objetivo:** Dominar a engenharia de entidades vivas. O Behavior Engineering é o sistema central que define **quem** um personagem é (Atributos, Itens, Progressão) e **o que** ele faz (Ações, Movimento, Combate).
 
 ---
 
-## 1. O Problema dos "Números Soltos"
+## 1. O Domínio do Comportamento
 
-Em jogos simples, você faz:
-```gdscript
-var damage = 10
-var speed = 100
-```
+O **Behavior Engineering** é o plugin responsável por dar vida e regras a qualquer personagem do seu jogo (Player, Inimigos, NPCs).
 
-Em um RPG ou jogo sistêmico, isso quebra rápido.
-- O jogador pega uma espada (+5 Dano).
-- Toma uma poção (+10% Dano por 30s).
-- Entra na lama (-50% Speed).
-- Upa de nível (Base Dano aumenta).
+Ele não é apenas uma "State Machine". É um motor completo de RPG e Lógica de Entidade.
 
-Se você tentar gerenciar isso com variáveis soltas (`base_damage`, `bonus_damage`, `temp_damage`), você cria um inferno de manutenção. Você precisa de **Behavior Engineering**.
+### O Que Ele Faz (Escopo)
 
----
+- **Atributos (Stats):** Vida, Força, Velocidade, Mana. Com suporte a modificadores e histórico.
+- **Ações (Actions):** O antigo conceito de "States". Movimento, Pulo, Ataque, Dash. Tudo decidido por contexto.
+- **Itens e Inventário (Dados):** A definição do que são os itens e o container lógico que os guarda.
+- **Efeitos (Effects):** As consequências de ações (Dano, Cura, Status Effect).
+- **Progressão:** Níveis, XP, Árvores de Habilidade.
 
-## 2. A Arquitetura do Sistema de Stats
+### O Que Ele NÃO Faz (Fronteiras)
 
-Não guarde números. Guarde **Históricos de Modificação**.
-
-### 2.1. Attribute (O Container Inteligente)
-Um Atributo não é um `int`. É um Objeto que sabe calcular seu valor final.
-
-Fórmula Universal de RPG:
-`Valor Final = (Base + Add) * Multiplicadores`
-
-### 2.2. Modifier (A Regra - Resource)
-Em vez de mudar o valor diretamente (`damage += 5`), nós **aplicamos um Modificador**.
-Isso permite rastrear a origem ("Isso veio da Espada", "Isso veio da Poção") e remover depois.
-
-```gdscript
-class_name StatModifier extends Resource
-
-enum Type { FLAT, PERCENT_ADD, PERCENT_MULT }
-@export var id: String = "modifier_id"
-@export var stat_key: String = "strength"
-@export var type: Type = Type.FLAT
-@export var value: float = 10.0
-```
-
-### 2.3. StatsComponent (O Gerente)
-Um nó no Player que segura todos os atributos.
-Quando alguém pede `stats.get_value("strength")`, ele roda o cálculo.
+- **NÃO tem UI:** Ele não desenha barras de vida nem slots de inventário. Ele apenas fornece os dados para a UI desenhar.
+- **NÃO tem World Data:** Ele não sabe o que é uma "Fase" ou onde estão os Spawns.
+- **NÃO tem IA Avançada:** Ele toma decisões reativas ("Devo atacar agora?"), mas não planeja estratégias complexas de navegação (isso é domínio de IA/World).
+- **NÃO tem Física:** Ele diz "Mova-se", mas a física real (`move_and_slide`) é delegada ao corpo do personagem.
 
 ---
 
-## 3. Arquitetura de Efeitos (O "O Que Acontece")
+## 2. Arquitetura de Dados (ROP)
 
-O Behavior Engineering também resolve **Ações**.
-Um ataque não causa "dano". Um ataque aplica um **Efeito de Dano**.
+Tudo no Behavior Engineering começa com **Resources**.
 
-### 3.1. Effect (Resource)
-Define *o que* acontece, mas não *como*.
+### 2.1. CharacterProfile (A Ficha)
 
-```gdscript
-class_name Effect extends Resource
+O Resource mestre que define um personagem.
 
-@export var id: String = "fire_damage"
-@export var type: String = "damage"
-@export var value: float = 10.0
-@export var element: String = "fire"
-```
+- **Base Attributes:** Vida: 100, Força: 10.
+- **Action Library (Compose):** Lista de ações que ele sabe fazer.
+- **Inventory Profile:** Tamanho e regras do inventário inicial.
 
-### 3.2. Integração com State Engineering
-Aqui a mágica acontece.
-- O **State Engineering** (Machine) decide **QUANDO** atacar (animação, hitbox).
-- O **Behavior Engineering** decide **QUANTO** dói (cálculo de stats).
+### 2.2. Atributos e Modificadores
 
-O `AttackData` (do State) carrega um `Effect` (do Behavior).
-Quando a espada bate:
-1. `Machine` detecta colisão.
-2. `Machine` pega o `Effect` do ataque atual.
-3. `Machine` passa o `Effect` para o `StatsComponent` do alvo.
-4. `StatsComponent` do alvo processa (aplica armadura, resistências) e reduz o HP.
+Números soltos (`var damage = 10`) são proibidos.
+Usamos um sistema de **Atributos** que suporta **Modificadores**.
 
----
+- **Attribute:** Objeto que calcula `(Base + Flat) * Multiplicadores`.
+- **StatModifier:** Resource que altera um atributo (ex: "Espada de Ferro" dá `+5 Flat` em Força).
 
-## 4. Implementação de Referência
+### 2.3. Actions (O Novo "State")
 
-### 4.1. Attribute Class (Inner Class ou Helper)
+Esqueça transições manuais (`Idle -> Run`).
+Uma **Action** é um Resource que define um comportamento isolado e seus requisitos.
 
 ```gdscript
-class Attribute:
-	var base_value: float
-	var _modifiers: Array[StatModifier] = []
-	var _cached_value: float
-	var _is_dirty: bool = true
+class_name ActionData extends Resource
 
-	func get_value() -> float:
-		if _is_dirty: _recalculate()
-		return _cached_value
+@export_group("Requisitos (Filtros)")
+# Só posso rodar se estiver no chão e com espada
+@export var req_physics: BehaviorTags.Physics = BehaviorTags.Physics.GROUND
+@export var req_weapon: BehaviorTags.Weapon = BehaviorTags.Weapon.SWORD
 
-	func add_modifier(mod: StatModifier):
-		_modifiers.append(mod)
-		_is_dirty = true
-
-	func remove_modifier(mod: StatModifier):
-		_modifiers.erase(mod)
-		_is_dirty = true
-
-	func _recalculate():
-		var flat = 0.0
-		var mult = 1.0
-		
-		for mod in _modifiers:
-			if mod.type == StatModifier.Type.FLAT: flat += mod.value
-			elif mod.type == StatModifier.Type.PERCENT_ADD: mult += mod.value # Ex: 0.1 para +10%
-			
-		_cached_value = (base_value + flat) * mult
-		_is_dirty = false
-```
-
-### 4.2. StatsComponent (O Nó)
-
-```gdscript
-class_name StatsComponent extends Node
-
-# Dicionário de Atributos (String -> Attribute)
-var attributes: Dictionary = {}
-
-func get_stat(key: String) -> float:
-	if attributes.has(key):
-		return attributes[key].get_value()
-	return 0.0
-
-func add_modifier(mod: StatModifier):
-	if attributes.has(mod.stat_key):
-		attributes[mod.stat_key].add_modifier(mod)
-
-# Exemplo de Processamento de Efeito
-func apply_effect(effect: Effect, source_stats: StatsComponent):
-	if effect.type == "damage":
-		var dmg = effect.value
-		
-		# Exemplo: Adicionar Força do atacante
-		if source_stats:
-			dmg += source_stats.get_stat("strength") * 0.5
-			
-		# Exemplo: Reduzir Defesa do alvo (eu)
-		dmg -= get_stat("defense")
-		
-		_take_damage(max(0, dmg))
-
-func _take_damage(amount: float):
-	var hp = attributes["health"]
-	hp.base_value -= amount # Dano altera o BASE, não é um modificador temporário
-	print("Took damage: ", amount)
+@export_group("Reatividade")
+# Se eu sair do chão (cair), cancele esta ação
+@export var on_physics_change: BehaviorTags.Reaction = BehaviorTags.Reaction.CANCEL
 ```
 
 ---
 
-## 5. Conclusão
+## 3. O Cérebro: BehaviorController
 
-O **Behavior Engineering** transforma a matemática do jogo em **Dados**.
-- Uma "Maldição" não é um script que roda a cada segundo. É um `Modifier` (-5 Str) anexado ao `StatsComponent`.
-- Quando a maldição acaba, removemos o `Modifier`, e o `Attribute` se recalcula automaticamente para o valor original.
-- Zero bugs de "o status ficou negativo pra sempre".
+Cada personagem tem um nó `BehaviorController`. Ele é o gerente que conecta tudo.
 
-Isso é controle total sobre a progressão do jogo.
+### 3.1. O Ciclo de Vida
+
+1.  **Inicialização:** Lê o `CharacterProfile`, cria os Atributos e carrega a Biblioteca de Ações.
+2.  **Contexto:** Monitora o estado do mundo (`No Chão`, `Com Arma`, `Atordoado`).
+3.  **Decisão (Score System):** Quando o jogador aperta um botão, o Controller pergunta:
+    > _"Qual ação da minha biblioteca melhor atende aos meus requisitos atuais e ao input?"_
+
+### 3.2. O Algoritmo de Score
+
+Se duas ações servirem (ex: "Ataque Genérico" e "Ataque de Espada"), o sistema dá pontos por especificidade. O mais específico vence. Isso permite especializar personagens sem quebrar a lógica base.
+
+---
+
+## 4. Integração de Sistemas
+
+### 4.1. Itens e Inventário
+
+O Inventário é apenas uma lista de dados (`ItemInstance`).
+Quando você equipa um item:
+
+1.  O Item injeta **Tags** no Contexto (`Weapon: SWORD`).
+2.  O Item aplica **Modificadores** nos Atributos (`+5 Força`).
+3.  O `BehaviorController` reavalia as Ações disponíveis (agora ele pode usar "Ataque de Espada").
+
+### 4.2. Efeitos e Consequências
+
+Ações causam Efeitos.
+
+- **Ataque:** Gera um `DamageEffect`.
+- **Poção:** Gera um `HealEffect` ou `BuffEffect`.
+
+O `BehaviorController` recebe esses efeitos e os aplica aos Atributos (reduz vida, aumenta força temporariamente).
+
+---
+
+## 5. Implementação de Referência
+
+### A. ActionData (O Comportamento)
+
+```gdscript
+class_name ActionData extends Resource
+
+@export var id: String
+@export var animation: String
+@export var priority: int = 0
+
+# Requisitos para esta ação ser válida
+@export var req_tags: Dictionary = {} # {"Physics": "GROUND", "Weapon": "SWORD"}
+
+# Efeitos que esta ação aplica ao executar
+@export var effects: Array[Effect]
+```
+
+### B. BehaviorController (O Gerente)
+
+```gdscript
+class_name BehaviorController extends Node
+
+var attributes: Dictionary # Mapa de Attribute
+var context: Dictionary # Mapa de Tags atuais
+var action_library: BehaviorCompose
+
+func perform_action(input_tag: String):
+    # Busca a melhor ação baseada no input e no contexto atual
+    var action = _find_best_action(input_tag)
+    if action:
+        _execute_action(action)
+
+func apply_effect(effect: Effect):
+    # Processa dano, cura ou buffs
+    match effect.type:
+        EffectType.DAMAGE:
+            var hp = attributes["health"]
+            hp.current_value -= effect.value
+```
+
+---
+
+## 6. Conclusão
+
+O **Behavior Engineering** é a espinha dorsal lógica do personagem. Ele centraliza a matemática (RPG) e o fluxo de decisão (Ações), permitindo que você crie sistemas complexos e profundos apenas manipulando Resources, sem escrever código novo para cada item ou habilidade.

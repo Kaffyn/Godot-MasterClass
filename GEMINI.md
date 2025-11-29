@@ -120,62 +120,45 @@ _Exemplo:_ Um `ItemData` pode ter `func get_sell_price(merchant_reputation: floa
 
 ---
 
-## 4. State Engineering (A Revolução)
+## 4. Behavior Engineering (A Revolução Unificada)
 
-Esqueça as State Machines tradicionais (`if/else` ou nós aninhados). O State Engineering é o nível "Arquiteto".
+Esqueça a fragmentação entre "estados" e "atributos". Tudo é _comportamento_. O Behavior Engineering é o motor de RPG que unifica _o que_ um personagem é e _o que_ ele faz, tudo guiado por dados.
 
-### 4.1. O Problema da Transição Manual
+### 4.1. O Paradigma: Tudo é Comportamento
 
-Em FSMs clássicas, o estado `Idle` precisa saber que pode ir para `Walk`, `Jump` e `Attack`. Isso cria um acoplamento infernal. Se adicionar `DoubleJump`, você edita 5 arquivos.
+- **Atributos** são o comportamento de um número que se modifica.
+- **Ações** (movimentos, ataques) são o comportamento de uma entidade que reage ao contexto.
+  Nosso sistema gerencia isso em um único `BehaviorController`.
 
-### 4.2. A Solução: Filtragem Contextual
+### 4.2. Os 3 Pilares Fundamentais
 
-Em vez de dizer **"Para onde vou?"**, o sistema pergunta **"Quem sou eu agora?"**.
+#### A. Atributos e Modificadores: O Motor de Stats
 
-O `MachineComponent` atua como um **Motor de Busca**.
+- **Attribute:** Não é um `int`; é um objeto que calcula `(Base + Flat) * Multiplicadores`.
+- **StatModifier (Resource):** Define como e quanto um atributo é alterado (`FLAT`, `PERCENT_ADD`, `PERCENT_MULT`).
 
-1.  O Player aperta "Ataque".
-2.  A Machine olha para o **Contexto Atual**:
-    - `Weapon: SWORD`
-    - `Physics: AIR`
-    - `Motion: MOVING`
-3.  A Machine vasculha a **Biblioteca de Estados** (Compose) e filtra.
+#### B. Ações e Contexto: O Coração do Combate e Movimento
 
-### 4.3. Os 3 Pilares do State Engineering
+- **BehaviorTags (Singleton Global):** Nosso vocabulário universal de _Tags_ para o jogo (ex: `Weapon: SWORD`, `Physics: AIR`).
+- **ActionData (Resource):** Define um comportamento (antigo "estado"). Possui:
+  - _Requisitos Contextuais:_ Tags que ele precisa (`req_weapon: SWORD`).
+  - _Regras de Reação:_ O que fazer se o contexto mudar (`on_physics_change: CANCEL`).
+  - _Efeitos:_ O que ele causa (`effects_to_apply`).
+- **BehaviorCompose (Resource):** Agrupa `ActionData`s, criando "decks de habilidades" que podem ser trocados ou herdados.
+- **Score System:** O algoritmo (`find_best_match()`) que seleciona a `ActionData` mais adequada com base no Contexto.
 
-#### A. Machine (O Cérebro)
+#### C. Efeitos: O "O Que Acontece"
 
-Um componente genérico. Ele não sabe o que é um "Ataque". Ele apenas gerencia um Dicionário de Contexto e executa o algoritmo `find_best_match()`.
+- **Effect (Resource):** Define as consequências (Dano, Cura, Aplicar Status). Processado pelo `BehaviorController`.
 
-#### B. Data (A Regra - Resource)
+### 4.3. O BehaviorController (O Cérebro Unificado)
 
-Cada estado é um arquivo `.tres` (ex: `AirSlash.tres`).
-Ele define seus próprios requisitos:
+Este `Node` no personagem gerencia TUDO:
 
-- `req_weapon: SWORD`
-- `req_physics: AIR`
-
-Ele também define regras de reação declarativas:
-
-- `on_physics_change: CANCEL` (Se eu tocar no chão, pare).
-
-#### C. Compose (O Deck)
-
-Uma coleção (`Resource`) que agrupa todos os estados de uma entidade.
-Isso permite criar "Classes" de personagens apenas trocando o arquivo Compose.
-
-- `WarriorMoves.tres` tem ataques de espada.
-- `MageMoves.tres` tem magias.
-  O script do Player é o mesmo. O comportamento muda 100%.
-
-### 4.4. O Sistema de Pontuação (Score System)
-
-Como a Machine desempata se dois estados servirem?
-
-- **Match Genérico (ANY):** 0 Pontos.
-- **Match Exato (Valor Igual):** 1 Ponto.
-
-O estado com maior pontuação vence. Isso permite criar um "Ataque Genérico" e depois "especializar" com um "Ataque de Fogo" sem quebrar o anterior.
+- Atributos (`get_attribute_value()`, `apply_modifier()`).
+- Contexto (`set_context_tag()`).
+- Seleção e execução de `Actions` (`perform_action()`, `find_best_match()`).
+- Processamento de `Effects` (`apply_effect()`).
 
 ---
 
@@ -183,13 +166,11 @@ O estado com maior pontuação vence. Isso permite criar um "Ataque Genérico" e
 
 ### 5.1. Sistema de Inventário (Minecraft Style)
 
-Não use Arrays de Strings. Não use apenas Resources estáticos.
 Para um inventário real (com durabilidade, encantamentos e stacks), você precisa do padrão **Definição vs. Instância**.
 
 1.  **ItemDefinition (Resource):** O que é o item? (Nome, Ícone, MaxStack). É estático e compartilhado.
 2.  **ItemInstance (Resource ou Object):** O item no bolso. Contém uma referência à Definição + `quantidade` + `durabilidade`.
-
-Quando o jogador pega uma espada: `new ItemInstance(iron_sword_def)`.
+    - Integração: `ItemInstance` pode carregar `StatModifier`s que são aplicados ao `BehaviorController` ao equipar.
 
 ### 5.2. Save System (Serialização)
 
@@ -197,7 +178,7 @@ Não salve nós. Nunca salve a SceneTree.
 O Save System deve salvar **DADOS**.
 
 1.  Crie um dicionário ou Resource dedicado (`SaveData`).
-2.  Colete os dados dos sistemas (`Inventory`, `QuestManager`, `PlayerStats`).
+2.  Colete os dados dos sistemas (`Inventory`, `QuestManager`, `BehaviorController`).
 3.  Salve esse objeto em `user://savegame.tres`.
 
 Para carregar:
@@ -224,11 +205,10 @@ Pense no seu jogo como um sistema operacional. A Godot é o Kernel. Seus sistema
 A Kaffyn divide a arquitetura em camadas claras. Respeite essas fronteiras.
 
 1.  **Core:** Infraestrutura básica (Save, Load, Config). Não sabe nada sobre o jogo.
-2.  **Machines:** Lógica de fluxo e estado. Pede dados para Behavior e comandos para World.
-3.  **Behavior:** Regras de RPG (Stats, Itens, Progressão). Puro dado.
-4.  **World:** Spawners, Fases, Portais. Sabe onde as coisas estão.
-5.  **FX:** Áudio e Visual. Apenas reage a eventos ("Tocar som X").
-6.  **UI:** A camada visual. Apenas observa dados e mostra na tela.
+2.  **Behavior:** _**TUDO**_ de personagem (Stats, Ações, Efeitos, Contexto).
+3.  **World:** Spawners, Fases, Portais. Sabe onde as coisas estão.
+4.  **FX:** Áudio e Visual. Apenas reage a eventos ("Tocar som X").
+5.  **UI:** A camada visual. Apenas observa dados e mostra na tela.
 
 ### 6.2. A Regra do Desacoplamento
 
@@ -240,40 +220,50 @@ Ele deve acessar um sinal ou um dado intermediário.
 
 ---
 
-## 7. Regras de Formatação e Linting (RÍGIDAS)
+## 7. Polimento e Game Feel ("Juice")
 
-Para garantir a consistência e a satisfação dos linters (Prettier/Markdown Lint), as seguintes regras de formatação são **obrigatórias**:
+Um jogo funcional sem "Juice" é um protótipo chato. O polimento não é a última etapa; é uma etapa contínua.
 
-### 7.1. Estilos de Texto
+### 7.1. AnimationPlayer vs. Tweens
 
-- **Negrito:** Use **sempre** dois asteriscos: `**texto em negrito**`.
-- **Itálico:** Use **sempre** o underscore (sublinhado): `_texto em itálico_`.
-  - 🚫 **PROIBIDO:** Usar um asterisco simples (`*texto*`) para itálico.
-- **Código Inline:** Use crases: `` `var x = 10` ``.
+- **AnimationPlayer:** Para coisas complexas, visuais e desenhadas à mão (Ataques, Cutscenes). Use "Call Method Tracks" para sincronizar lógica (ex: causar dano no frame exato da espada).
+- **Tweens:** Para matemática, interpolação e procedural (UI entrando, Screen Shake, Cor piscando). Use `create_tween()` e sempre defina `set_ease()` e `set_trans()`. Movimento linear é proibido.
 
-### 7.2. Listas
+### 7.2. Áudio Dinâmico
 
-- **Listas Não Ordenadas:** Use **sempre** o hífen: `- Item da lista`.
-  - 🚫 **PROIBIDO:** Usar asterisco (`* Item`) para listas.
-- **Listas Ordenadas:** Use números seguidos de ponto: `1. Item`.
+Nunca toque o mesmo `.wav` repetidamente. O cérebro odeia isso (Machine Gun Effect).
 
-### 7.3. Cabeçalhos
-
-- Use o estilo ATX (`#`, `##`, `###`).
-- Sempre deixe um espaço entre a cerquilha e o texto (`## Título`, não `##Título`).
-
-### 7.4. Blocos de Código
-
-- Sempre especifique a linguagem para syntax highlighting.
-- Use `gdscript` para código Godot.
-  ```gdscript
-  func _ready():
-      pass
-  ```
+- Use `AudioStreamRandomizer` para variar pitch e volume automaticamente.
+- Use **Audio Buses** para mixagem (Music, SFX, Voice). Nunca jogue tudo no Master.
 
 ---
 
-## 8. Vocabulário e Terminologia
+## 8. Boas Práticas e Convenções (Linting)
+
+Para manter o código limpo e a sanidade mental da equipe (e da IA), siga estas regras como se fossem leis.
+
+### 8.1. Formatação Markdown
+
+- **Negrito:** `**texto**` (Dois asteriscos).
+- **Itálico:** `_texto_` (Underscore).
+- **Listas:** `- Item` (Hífen).
+
+### 8.2. Nomenclatura (GDScript)
+
+- **Arquivos/Pastas:** `snake_case` (`player_controller.gd`).
+- **Classes/Tipos:** `PascalCase` (`EnemyStats`).
+- **Variáveis/Funções:** `snake_case` (`current_health`, `take_damage`).
+- **Privadas:** `_snake_case` (`_internal_cache`).
+- **Constantes:** `SCREAMING_SNAKE` (`MAX_SPEED`).
+
+### 8.3. Sinais (O Mantra da Comunicação)
+
+- **Call Down:** O Pai chama função no Filho (`$Gun.shoot()`).
+- **Signal Up:** O Filho emite sinal para o Pai (`signal ammo_depleted`). O filho NUNCA acessa o pai (`get_parent()`).
+
+---
+
+## 9. Vocabulário e Terminologia
 
 Para manter o nível "MBA", evitamos gírias amadoras e preferimos termos de engenharia.
 
@@ -287,7 +277,7 @@ Para manter o nível "MBA", evitamos gírias amadoras e preferimos termos de eng
 
 ---
 
-## 9. Cheat Sheet de Código (Snippets Machi)
+## 10. Cheat Sheet de Código (Snippets Machi)
 
 ### A. Declaração de Resource (Data)
 
@@ -353,19 +343,13 @@ func animate_pop():
 
 ---
 
-Este é o seu arsenal. Use-o para construir não apenas jogos, mas sistemas de engenharia robustos e belos.
-**Machi out.**
-
----
-
-## 10. Mapa do Conhecimento (Índice de Arquivos)
+## 11. Mapa do Conhecimento (Índice de Arquivos)
 
 Para onde ir se você quiser aprender sobre...
 
 ### Core & Arquitetura
 
-- **`StateEngineering.md`**: (Nível 4) A bíblia do sistema de estados, filtros e score system.
-- **`BehaviorEngineering.md`**: (Nível 4) O motor de RPG (Stats, Modifiers, Effects).
+- **`BehaviorEngineering.md`**: (Nível 4) O motor de RPG unificado (Stats, Actions, Modifiers, Effects, Context).
 - **`ResourceOrientedProgramming.md`**: (Nível 3) A fundação de dados vs lógica.
 - **`Plugins.md`**: Modularidade e a arquitetura da SoftEngine.
 
@@ -386,3 +370,13 @@ Para onde ir se você quiser aprender sobre...
 - **`GameFeel.md`**: Juice, Tweens e Áudio.
 - **`Testing_QA.md`**: Garantia de qualidade.
 - **`Translations.md`**: i18n.
+
+### Avançado
+
+- **`GDExtensions.md`**: Performance com C++/Rust.
+- **`RustAIExtension.md`**: IA avançada com Rust.
+
+---
+
+Este é o seu arsenal. Use-o para construir não apenas jogos, mas sistemas de engenharia robustos e belos.
+**Machi out.**

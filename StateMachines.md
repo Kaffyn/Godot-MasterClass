@@ -231,93 +231,100 @@ Múltiplas FSMs independentes rodando simultaneamente na mesma entidade.
 - **Exemplo**: Um jogador pode ter uma `MovementFSM` (Idle, Walk, Run, Jump) rodando em paralelo com uma `CombatFSM` (Unarmed, Sword, Bow, Spell). O estado `Sword` na `CombatFSM` não afeta o `Walk` na `MovementFSM`, exceto talvez por regras de animação ou velocidade.
 - **Vantagens**: Gerencia comportamentos independentes sem criar um "super-estado" que tenta descrever todas as combinações.
 
-## 6. Estudo de Caso: O StateEngineering (Arquitetura de Contexto)
+## 6. Estudo de Caso: O Behavior Engineering (Arquitetura de Comportamento Unificado)
 
-> **Nível 4: O Fim das Transições Manuais**
+> **Nível 4: A Unificação Total**
 >
-> Se o Nível 3 (FSM baseada em Resources) é a "graduação", o **StateEngineering** é o Mestrado. Ele resolve o maior problema das máquinas de estado complexas: a **explosão combinatória de transições**.
+> Se o Nível 3 (FSM baseada em Resources) é a "graduação", o **Behavior Engineering** é o Mestrado definitivo. Ele unifica _o que_ um personagem é (seus atributos) e _o que_ ele faz (suas ações/estados) em um único domínio. Removemos a fragmentação e resolvemos o problema clássico da **explosão combinatória de transições** de uma vez por todas.
 
-### 6.1. A Filosofia: Filtragem > Transição
+### 6.1. A Filosofia: Filtragem por Contexto e Comportamento
 
-Em uma FSM tradicional, você diz: *"Se estou em Idle e aperto Espaço, vá para Jump"*.
-No StateEngineering, você diz: *"O Jogador apertou Espaço. Qual é o melhor estado para agora?"*
+Em uma FSM tradicional, você diz: _"Se estou em Idle e aperto Espaço, vá para Jump"_.
+No Behavior Engineering, a pergunta é: _"O Jogador apertou Espaço. Qual é a melhor **Ação** para agora, considerando meu contexto (atributos, equipamento, estado físico)?"_
 
-Mudamos a pergunta de **"Para onde vou?"** para **"Quem sou eu agora?"**.
+Mudamos a pergunta de **"Para onde vou?"** para **"Qual comportamento é o mais adequado?"**.
 
-Imagine um **Motor de Busca** (como o Google) dentro do seu personagem.
-Quando o contexto muda (ex: o jogador aperta Ataque enquanto cai), o sistema pergunta:
-> *"Tenho uma Katana. Estou no Ar. Apertei Ataque. O que se encaixa?"*
+Imagine um **Motor de Busca de Comportamentos** dentro do seu personagem.
+Quando o contexto muda (ex: o jogador aperta Ataque enquanto cai e está com pouca vida), o sistema pergunta:
 
-O sistema filtra sua biblioteca de estados e encontra:
+> _"Tenho uma Katana. Estou no Ar. Apertei Ataque. Estou com Pouca Vida. Qual **Ação** (comportamento) se encaixa melhor?"_
+
+O sistema vasculha sua biblioteca de `ActionData` Resources e encontra:
+
 1.  `SwordGroundAttack`? ❌ Rejeitado (Requer: Chão).
 2.  `KatanaAirAttack`? ✅ Aceito (Requer: Ar, Katana).
 
-### 6.2. Os Dados: O Resource como Regra (`AttackData`)
+### 6.2. Os Dados: O Resource como Regra (_ActionData_)
 
-Em vez de código, nossos ataques são definidos por **Requisitos**.
-Veja como um `AttackData.tres` se parece na prática (simplificado):
+Nossas ações são definidas por `ActionData` Resources, que agora podem incluir requisitos de atributos.
+Veja como um `ActionData.tres` se parece na prática (simplificado, combinando State e Behavior):
 
 ```gdscript
-class_name AttackData extends Resource
+class_name ActionData extends Resource
 
-# --- QUEM SOU EU? ---
+# --- QUEM SOU EU? (Identidade do Comportamento) ---
 @export var animation_name: String = "air_slash_v1"
-@export var damage: int = 15
+@export var base_damage_effect: Effect # O efeito que esta ação causa
 
-# --- QUANDO POSSO EXISTIR? (O Filtro) ---
+# --- QUANDO POSSO EXISTIR? (Requisitos de Contexto e Atributos) ---
 @export_group("Requirements")
-@export var req_motion: StateMachine.Motion = StateMachine.Motion.ANY
-@export var req_physics: StateMachine.Physics = StateMachine.Physics.AIR # Só funciona no ar!
-@export var req_weapon: StateMachine.Weapon = StateMachine.Weapon.KATANA # Só com Katana!
+@export var req_motion_tag: BehaviorTags.Motion = BehaviorTags.Motion.ANY
+@export var req_physics_tag: BehaviorTags.Physics = BehaviorTags.Physics.AIR # Só funciona no ar!
+@export var req_weapon_tag: BehaviorTags.Weapon = BehaviorTags.Weapon.KATANA # Só com Katana!
+@export var req_min_stamina: float = 10.0 # Requisito de Atributo!
 
-# --- REGRAS DE SOBREVIVÊNCIA (Reatividade) ---
+# --- REGRAS DE SOBREVIVÊNCIA (Reatividade Declarativa) ---
 @export_group("Reaction Rules")
-# Se eu tocar no chão no meio do ataque, o que acontece?
-@export var on_physics_change: StateMachine.Reaction = StateMachine.Reaction.CANCEL
+# O que acontece se eu tocar no chão no meio deste ataque aéreo?
+@export var on_physics_change_reaction: BehaviorTags.Reaction = BehaviorTags.Reaction.CANCEL
+# O que acontece se minha estamina acabar no meio da ação?
+@export var on_stamina_low_reaction: BehaviorTags.Reaction = BehaviorTags.Reaction.CANCEL
 ```
 
 **A Análise do Machi:**
-Note que **não há `if (is_on_floor())`** em lugar nenhum. O Resource declara suas necessidades. Se o requisito `req_physics` não bater com o contexto atual, esse estado nem entra na lista de candidatos.
+Note que _não há_ `if (get_attribute_value("stamina") < 10)` no seu código. O `ActionData` declara suas necessidades de contexto _e_ de atributos. Se o requisito `req_physics_tag` não bater, ou `req_min_stamina` não for atendido, essa ação nem entra na lista de candidatos.
 
 ### 6.3. O Cérebro: O Sistema de Pontuação (Score System)
 
-E se tivermos dois estados válidos?
+E se tivermos múltiplos comportamentos válidos que se encaixam?
+
 1.  `GenericAirAttack` (Requer: Ar)
 2.  `KatanaAirAttack` (Requer: Ar + Katana)
+3.  `DesperateAirStrike` (Requer: Ar + Katana + Vida Baixa)
 
-O algoritmo `find_best_match()` no `Machine.gd` não pega o primeiro que acha. Ele dá **Pontos** por especificidade.
+O algoritmo `find_best_match()` dentro do `BehaviorController` não pega o primeiro que acha. Ele dá **Pontos** por especificidade de contexto _e_ por requisitos de atributos.
 
 - **Match Genérico (ANY):** 0 pontos.
-- **Match Exato:** 1 ponto.
+- **Match Exato (Valor Igual):** 1 ponto por cada tag/atributo que corresponde.
 
-**Resultado:** O `KatanaAirAttack` ganha porque é mais específico para a arma atual. Isso permite que você crie um "Ataque Genérico" como fallback e depois "especialize" o jogo criando Resources mais detalhados, sem nunca quebrar o código existente.
+**Resultado:** O `DesperateAirStrike` ganharia se todas as condições (Ar, Katana, Vida Baixa) fossem atendidas, pois é o mais específico. Isso permite que você crie um "Ataque Genérico" como fallback e depois "especialize" o jogo com comportamentos mais detalhados para contextos específicos, sem nunca quebrar o código existente.
 
-### 6.4. Reatividade Declarativa
+### 6.4. Reatividade Declarativa e Processamento de Efeitos
 
-O maior causador de bugs em jogos de ação é o cancelamento de estados.
-*Exemplo: O jogador toma dano no meio de um ataque.*
+O maior causador de bugs em jogos de ação é o cancelamento de ações ou o processamento de efeitos.
+_Exemplo: O jogador toma dano no meio de um ataque._
 
 No jeito antigo, todo estado precisaria checar: `if took_damage: change_state(HURT)`.
-No StateEngineering, definimos isso no Resource:
+No Behavior Engineering, definimos isso declarativamente no `ActionData`:
 
 ```gdscript
-@export var on_take_damage: StateMachine.Reaction = StateMachine.Reaction.CANCEL
+@export var on_take_damage_reaction: BehaviorTags.Reaction = BehaviorTags.Reaction.CANCEL
 ```
 
-O `MachineComponent` observa o contexto global. Se o contexto mudar para `Status: STUNNED`, ele olha para o estado atual, vê a regra `CANCEL`, e mata o estado imediatamente.
+O `BehaviorController` observa o contexto global (incluindo mudanças em atributos). Se o contexto mudar para `Status: STUNNED` (ou se o HP cair para zero), ele olha para a ação atual, vê a regra `CANCEL`, e mata a ação imediatamente.
+
+Além disso, a `ActionData` agora contém referências a `Effect` Resources, que são processados diretamente pelo `BehaviorController` do alvo.
 
 ### Conclusão do Estudo
 
-O StateEngineering remove a necessidade de escrever código de transição.
-- Quer um novo ataque? Crie um `.tres`.
-- Quer que o ataque pare de funcionar na água? Mude o filtro no Inspector.
-- Quer um combo? Crie um estado que requer `Attack: Combo2`.
+O Behavior Engineering remove a necessidade de escrever código de transição e de gerenciamento manual de atributos.
 
-É a aplicação máxima de **Dados sobre Lógica**.
+- Quer um novo ataque que também aplique um veneno? Crie um `ActionData.tres` e injete um `PoisonEffect.tres`.
+- Quer que o ataque pare de funcionar se a estamina acabar? Adicione `req_min_stamina` e uma `on_stamina_low_reaction`.
+
+É a aplicação máxima de **Dados sobre Lógica** para o comportamento completo do jogo.
 
 ---
-
-
 
 ## 7. Conclusão: Disciplina e Flexibilidade
 

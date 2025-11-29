@@ -24,9 +24,8 @@ Explore os documentos mestres que detalham cada pilar da nossa arquitetura.
 - [Programação Orientada a Resources (ROP)](ResourceOrientedProgramming.md): O coração do Machi Game Style.
 - [Singletons & Autoloads](Singletons.md): Os Gerentes Globais do seu Jogo.
 - [Gestão de Cenas e Persistência de Dados](SceneAndDataManagement.md): Loading screens, troca de fases e a espinha dorsal do seu jogo.
-- [Máquinas de Estado](StateMachines.md): A Arte de Orquestrar o Comportamento.
-- [State Engineering (Referência)](StateEngineering.md): A arquitetura definitiva de estados da Kaffyn.
-- [Behavior Engineering (Referência)](BehaviorEngineering.md): Motor de regras de RPG (Stats, Modifiers, Effects).
+- [Máquinas de Estado](StateMachines.md): A aula teórica da evolução das FSMs.
+- [Behavior Engineering (Referência)](BehaviorEngineering.md): O motor de RPG unificado (Stats, Actions, Contexto).
 
 ### 📦 Sistemas de Produção
 
