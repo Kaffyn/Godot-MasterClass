@@ -295,6 +295,8 @@ func _perform_attack(id: String) -> void:
 2. **Visualização:** O Inspector mostra exatamente quais estados o personagem tem.
 3. **Separação:** O programador cuida do `_physics_process`, o Game Designer cuida de ajustar hitboxes e tempos de animação nos arquivos `.tres`.
 
+> **Nota do Arquiteto:** Esta abordagem (Resource-Based FSM) é considerada o **Nível 3** de maturidade em Godot. Se você quer ver o **Nível 4**, onde removemos até mesmo os `if/else` de transição em favor de um sistema de "Score e Filtragem Contextual", consulte o documento de **[State Engineering](StateEngineering.md)**.
+
 ---
 
 ### Caso B: Sistema de Inventário
