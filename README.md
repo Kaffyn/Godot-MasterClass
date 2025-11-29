@@ -26,6 +26,7 @@ Explore os documentos mestres que detalham cada pilar da nossa arquitetura.
 - [Gestão de Cenas e Persistência de Dados](SceneAndDataManagement.md): Loading screens, troca de fases e a espinha dorsal do seu jogo.
 - [Máquinas de Estado](StateMachines.md): A Arte de Orquestrar o Comportamento.
 - [State Engineering (Referência)](StateEngineering.md): A arquitetura definitiva de estados da Kaffyn.
+- [Behavior Engineering (Referência)](BehaviorEngineering.md): Motor de regras de RPG (Stats, Modifiers, Effects).
 
 ### 📦 Sistemas de Produção
 
