@@ -62,8 +62,8 @@ Como o `Machine` escolhe o estado certo? Ele roda um concurso.
 
 Imagine que o contexto é: **Arma = Espada**, **Física = Chão**. O jogador aperta Ataque.
 
-| Candidato         | Requisitos           | Resultado    | Pontos              |
-| :---------------- | :------------------- | :----------- | :------------------ |
+| Candidato         | Requisitos           | Resultado   | Pontos              |
+| :---------------- | :------------------- | :---------- | :------------------ |
 | `Soco Básico`     | `Arma: Any`          | ✅ Passou    | 0                   |
 | `Corte de Espada` | `Arma: Espada`       | ✅ Passou    | **1** (Match Exato) |
 | `Tiro de Pistola` | `Arma: Arma de Fogo` | ❌ Rejeitado | -                   |
@@ -100,9 +100,9 @@ enum Weapon { ANY = -1, NONE, SWORD, BOW, MAGIC }
 
 # Regras de Reação (O que fazer se o contexto mudar?)
 enum Reaction {
-	IGNORE,     # Continue rodando o estado atual
-	CANCEL,     # Pare agora (ex: tomou dano)
-	ADAPT,      # Tente achar um estado novo que sirva (ex: pulou com a espada -> ataque aéreo)
+    IGNORE,     # Continue rodando o estado atual
+    CANCEL,     # Pare agora (ex: tomou dano)
+    ADAPT,      # Tente achar um estado novo que sirva (ex: pulou com a espada -> ataque aéreo)
 }
 ```
 
@@ -127,7 +127,12 @@ class_name AttackData extends Resource
 
 @export_group("Reatividade")
 # Se eu cair no chão enquanto este ataque aéreo roda, o que acontece?
-@export var on_physics_change: StateMachine.Reaction = StateMachine.Reaction.CANCEL
+@export var on_physics_change: StateMachine.Reaction = StateMachine.Reaction.ADAPT
+
+@export_group("Cooldowns")
+# Impede que certas ações (ex: Dash) sejam spammadas
+@export var context_cooldown_filter: StateMachine.ContextFilter = StateMachine.ContextFilter.NONE
+@export var context_cooldown_time: float = 0.0
 ```
 
 ### 4.3. Compose: O Agrupador (`StateCompose.gd`)
@@ -143,7 +148,7 @@ class_name StateCompose extends Resource
 
 # Cache para acesso rápido (Opcional)
 func get_all() -> Array[Resource]:
-	return states
+    return states
 ```
 
 ### 4.4. Machine: O Motor de Busca (`Machine.gd`)
@@ -159,42 +164,42 @@ var context: Dictionary = {}
 var current_state: Resource
 
 func set_context(category: String, value: int) -> void:
-	if context.get(category) == value: return
-	context[category] = value
-	_on_context_updated(category, value)
+    if context.get(category) == value: return
+    context[category] = value
+    _on_context_updated(category, value)
 
 # O Algoritmo de Ouro
 func find_best_match(compose: StateCompose) -> Resource:
-	if not compose: return null
+    if not compose: return null
 
-	var best_res: Resource = null
-	var best_score: int = -1
+    var best_res: Resource = null
+    var best_score: int = -1
 
-	# Itera sobre o "Deck" de estados fornecido
-	for res in compose.get_all():
-		var score = 0
-		var possible = true
+    # Itera sobre o "Deck" de estados fornecido
+    for res in compose.get_all():
+        var score = 0
+        var possible = true
 
-		# Verifica cada requisito do Resource contra o Contexto Atual
-		if "req_weapon" in res:
-			if res.req_weapon != StateMachine.ANY:
-				if res.req_weapon != context.get("Weapon"):
-					possible = false # Falhou no requisito rígido
-				else:
-					score += 1 # Ganhou ponto por especificidade!
+        # Verifica cada requisito do Resource contra o Contexto Atual
+        if "req_weapon" in res:
+            if res.req_weapon != StateMachine.ANY:
+                if res.req_weapon != context.get("Weapon"):
+                    possible = false # Falhou no requisito rígido
+                else:
+                    score += 1 # Ganhou ponto por especificidade!
 
-		if "req_physics" in res:
-			if res.req_physics != StateMachine.ANY:
-				if res.req_physics != context.get("Physics"):
-					possible = false
-				else:
-					score += 1
+        if "req_physics" in res:
+            if res.req_physics != StateMachine.ANY:
+                if res.req_physics != context.get("Physics"):
+                    possible = false
+                else:
+                    score += 1
 
-		if possible and score > best_score:
-			best_score = score
-			best_res = res
+        if possible and score > best_score:
+            best_score = score
+            best_res = res
 
-	return best_res
+    return best_res
 ```
 
 ---
@@ -214,28 +219,28 @@ class_name PlayerMachine extends Machine
 @export var attack_library: StateCompose
 
 func _ready():
-	# Estado inicial
-	set_context("Weapon", StateMachine.Weapon.SWORD)
-	set_context("Physics", StateMachine.Physics.GROUND)
+    # Estado inicial
+    set_context("Weapon", StateMachine.Weapon.SWORD)
+    set_context("Physics", StateMachine.Physics.GROUND)
 
 func _unhandled_input(event):
-	if event.is_action_pressed("attack"):
-		_try_attack()
+    if event.is_action_pressed("attack"):
+        _try_attack()
 
 func _try_attack():
-	# O Player pede: "Dentro da minha biblioteca, o que serve para agora?"
-	var best = find_best_match(attack_library)
-	if best:
-		change_state(best)
-	else:
-		print("Nenhum ataque disponível para este contexto.")
+    # O Player pede: "Dentro da minha biblioteca, o que serve para agora?"
+    var best = find_best_match(attack_library)
+    if best:
+        change_state(best)
+    else:
+        print("Nenhum ataque disponível para este contexto.")
 
 func _on_physics_process(delta):
-	# Atualiza o contexto de física automaticamente
-	var is_grounded = owner.is_on_floor()
-	set_context("Physics",
-		StateMachine.Physics.GROUND if is_grounded else StateMachine.Physics.AIR
-	)
+    # Atualiza o contexto de física automaticamente
+    var is_grounded = owner.is_on_floor()
+    set_context("Physics",
+        StateMachine.Physics.GROUND if is_grounded else StateMachine.Physics.AIR
+    )
 ```
 
 ## 6. Conclusão do Módulo

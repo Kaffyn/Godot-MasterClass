@@ -176,7 +176,7 @@ O `softengine_machines` é a implementação da arquitetura **State Engineering*
     // ... outras propriedades de animação, dano, etc.
     ```
     Neste exemplo, um `AttackData` só seria considerado se o personagem estivesse no ar e com uma Katana.
--   **Reatividade Declarativa**: Os `Data Resources` também definem **Regras de Reação** (ex: `on_physics_change: StateMachine.Reaction.CANCEL`). Se o contexto mudar inesperadamente (ex: personagem cai no chão durante um ataque aéreo), o sistema automaticamente reage conforme a regra definida no Resource, sem `if/else` explícitos no código do estado.
+-   **Reatividade Declarativa**: Os `Data Resources` também definem **Regras de Reação** (ex: `on_physics_change: StateMachine.Reaction.ADAPT`). Se o contexto mudar inesperadamente (ex: personagem cai no chão durante um ataque aéreo), o sistema automaticamente reage conforme a regra definida no Resource, sem `if/else` explícitos no código do estado.
 
 Com esta abordagem, a adição de novos comportamentos ou variações de estados se torna uma tarefa de **criação e configuração de Resources no editor**, minimizando a necessidade de alterações no código do controlador e evitando a "espiral do `if/else`".
 

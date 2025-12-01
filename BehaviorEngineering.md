@@ -63,8 +63,8 @@ class_name ActionData extends Resource
 @export var req_weapon: BehaviorTags.Weapon = BehaviorTags.Weapon.SWORD
 
 @export_group("Reatividade")
-# Se eu sair do chão (cair), cancele esta ação
-@export var on_physics_change: BehaviorTags.Reaction = BehaviorTags.Reaction.CANCEL
+# Se eu sair do chão (cair), tente adaptar (ex: Ataque Aéreo)
+@export var on_physics_change: BehaviorTags.Reaction = BehaviorTags.Reaction.ADAPT
 ```
 
 ---
@@ -82,7 +82,12 @@ Cada personagem tem um nó `BehaviorController`. Ele é o gerente que conecta tu
 
 ### 3.2. O Algoritmo de Score
 
-Se duas ações servirem (ex: "Ataque Genérico" e "Ataque de Espada"), o sistema dá pontos por especificidade. O mais específico vence. Isso permite especializar personagens sem quebrar a lógica base.
+Se duas ações servirem (ex: "Ataque Genérico" e "Ataque de Espada"), o sistema dá pontos por especificidade:
+
+- **Match Exato:** +1 Ponto (ex: Requer `SWORD` e tem `SWORD`).
+- **Match Genérico:** 0 Pontos (ex: Requer `ANY`).
+
+O mais específico (maior pontuação) vence. Isso permite especializar personagens sem quebrar a lógica base.
 
 ---
 
