@@ -134,16 +134,41 @@ Isso permite que você construa sistemas complexos combinando peças menores (Le
 
 ---
 
-## 5. SceneTree: Gerenciamento de Ambientes
+## 5. SceneTree: O Gerenciador de Mundos
 
-A `SceneTree` é o "Mundo". É ela quem chama `_process` e `_physics_process` em todos os nós ativos.
+A `SceneTree` não é apenas uma lista de objetos. Ela é a estrutura que mantém seu jogo vivo.
 
-Entender a SceneTree é entender o **Ciclo de Vida**:
+Muitos iniciantes acham que a "Cena Principal" é o topo de tudo. **Errado.**
+Existe um nó acima de tudo, chamado **Root** (que é um `Window/Viewport`).
+
+A estrutura real do seu jogo rodando é assim:
+
+```text
+root (Window)
+├── Autoload_GlobalAudio (AudioStreamPlayer)
+├── Autoload_GameManager (Node)
+└── Current_Scene (Level_01)
+    ├── Player
+    └── Enemies
+```
+
+### O Segredo dos Autoloads (Singletons)
+
+Autoloads não são "mágica". Eles são apenas **Nodes normais** que a Godot injeta na árvore _antes_ da sua cena atual.
+
+- **Autoloads:** São irmãos da sua fase. Eles nunca morrem (a menos que você os mate).
+- **Current Scene:** É o nó que muda quando você chama `change_scene_to_file()`.
+
+Quando você troca de fase, a Godot deleta o nó `Current_Scene` e coloca o novo no lugar. Os Autoloads continuam lá, assistindo a tudo. É por isso que usamos Autoloads para tocar música contínua ou guardar inventário entre fases.
+
+### Ciclo de Vida (Lifecycle)
+
+Entender a árvore é entender a ordem dos eventos:
 
 1. `_init()`: O objeto nasce na memória (ainda fora da árvore).
-2. `_enter_tree()`: O objeto entra no mundo.
+2. `_enter_tree()`: O objeto foi plugado no pai.
 3. `_ready()`: O objeto e **todos os seus filhos** estão prontos. (Aqui começa o jogo).
-4. `_exit_tree()`: O objeto saiu do mundo (mas ainda pode existir na memória).
+4. `_exit_tree()`: O objeto foi desconectado (mas ainda existe na RAM).
 
 **Dica de Performance:** Adicionar e remover nós da SceneTree é custoso. Para projéteis e efeitos, use **Object Pooling** (esconder e reutilizar em vez de criar e destruir).
 
