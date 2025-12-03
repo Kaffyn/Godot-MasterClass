@@ -351,15 +351,15 @@ Para onde ir se você quiser aprender sobre...
 
 ### Core & Arquitetura
 
-- **`06_BehaviorEngineering.md`**: (Nível 4) O motor de RPG unificado (Stats, Actions, Modifiers, Effects, Context).
+- **`06_HashMap.md`**: A arte de organizar dados para performance extrema.
 - **`02_ResourceOrientedProgramming.md`**: (Nível 3) A fundação de dados vs lógica.
 - **`13_Plugins.md`**: Modularidade e a arquitetura da SoftEngine.
 
 ### Gameplay
 
-- **`08_Inventory.md`**: De arrays simples a inventários instanciados complexos.
+- **`07_Inventory.md`**: De arrays simples a inventários instanciados complexos.
 - **`05_StateMachines.md`**: A aula teórica da evolução das FSMs.
-- **`16_CharacterSheet.md`**: Projeto prático integrando UI, Dados e Save.
+- **`12_CharacterSheet.md`**: Projeto prático integrando UI, Dados e Save.
 
 ### Fundamentos
 
@@ -369,9 +369,9 @@ Para onde ir se você quiser aprender sobre...
 
 ### Polimento
 
-- **`11_GameFeel.md`**: Juice, Tweens e Áudio.
-- **`10_Testing_QA.md`**: Garantia de qualidade.
-- **`09_Translations.md`**: i18n.
+- **`10_GameFeel.md`**: Juice, Tweens e Áudio.
+- **`09_Testing_QA.md`**: Garantia de qualidade.
+- **`08_Translations.md`**: i18n.
 
 ### Avançado
 
