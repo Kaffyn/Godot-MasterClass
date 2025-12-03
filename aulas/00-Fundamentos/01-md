@@ -236,3 +236,6 @@ Em vez de usar `$Nó/Filho` (que quebra se você renomear o nó), exporte a depe
 Agora você arrasta o nó para o slot no Inspector. Se você mover ou renomear o nó na cena, a Godot atualiza a referência automaticamente. **Zero quebras.**
 
 > **Machi Way:** Se um script precisa de algo para funcionar, esse "algo" deve ser uma variável `@export`. Nunca assuma que um nó existe em um caminho fixo.
+
+---
+
