@@ -15,6 +15,30 @@ A Godot é inteiramente baseada em **Herança** e **Composição**.
 
 ---
 
+## 0. Herança: O DNA do seu Código
+
+Antes de falarmos de Godot, precisamos falar de Biologia (ou quase isso).
+
+**Herança** é a capacidade de uma Classe (Filho) receber todas as características e comportamentos de outra Classe (Pai).
+
+Quando dizemos que `Cachorro` herda de `Animal`:
+
+1. **Variáveis (O que ele tem):** Se `Animal` tem `vida` e `peso`, o `Cachorro` automaticamente tem `vida` e `peso`.
+2. **Funções (O que ele faz):** Se `Animal` tem `comer()` e `dormir()`, o `Cachorro` sabe `comer()` e `dormir()`.
+3. **Extensão:** O `Cachorro` pode adicionar coisas novas, como `latir()`.
+
+Na Godot, isso é definido pela palavra-chave `extends`.
+
+> **Conceito Chave:** Herança cria uma relação **"É UM"**.
+>
+> - O Player **É UM** CharacterBody2D.
+> - O Inimigo **É UM** CharacterBody2D.
+> - A Parede **É UM** StaticBody2D.
+
+Se você herda de algo, você ganha todos os poderes daquilo de graça. Mas cuidado: herança em excesso cria rigidez. Use com sabedoria.
+
+--
+
 ## 1. Nodes: Herança de Objetos
 
 Na Godot, quando você cria um script `player.gd` e o anexa a um `CharacterBody2D`, você não está "adicionando um script ao objeto".
@@ -54,12 +78,14 @@ Se você adicionar uma variável `armor` no script `EnemyStats.gd`, **todos** os
 Como fazer o `Player` avisar a `HealthBar` que tomou dano, sem que o Player saiba que a HealthBar existe?
 
 **Errado (Acoplado):**
+
 ```gdscript
 # player.gd
 get_parent().get_node("UI/HealthBar").update_health(hp) # Quebra se você mudar a UI de lugar
 ```
 
 **Certo (Sinais):**
+
 ```gdscript
 # player.gd
 signal health_changed(new_hp)
@@ -91,6 +117,7 @@ Faça: `Inimigo` com um nó filho `ShooterComponent` e um nó filho `FireDamageC
 A `SceneTree` é o "Mundo". É ela quem chama `_process` e `_physics_process` em todos os nós ativos.
 
 Entender a SceneTree é entender o **Ciclo de Vida**:
+
 1. `_init()`: O objeto nasce na memória (ainda fora da árvore).
 2. `_enter_tree()`: O objeto entra no mundo.
 3. `_ready()`: O objeto e **todos os seus filhos** estão prontos. (Aqui começa o jogo).
