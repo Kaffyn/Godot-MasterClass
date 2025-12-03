@@ -1,0 +1,26 @@
+# Godot Architeture
+
+Muitos acham que o diferencial da godot é só o gdscript, mas isso não é verdade.
+
+Uma das coisas mais importantes da godot é que Nodes não são meros objetos como em outras engines, Nodes são nada mais do que herança de classes.
+
+Sim, a godot inteira é baseada em herança, que dentro dela é o "Extends"
+
+Nodes = Herança de Objetos
+Resources = Herança de Dados
+Signals = Emissão de Eventos
+Scenes = Composição
+SceneTree = Gerenciamento de Ambientes
+Inspector = Editor de Propriedades
+
+## Nodes
+
+## Resources
+
+## Signals
+
+## Scenes
+
+## SceneTree
+
+## Inspector
