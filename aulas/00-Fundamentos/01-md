@@ -105,16 +105,32 @@ Isso é o **Padrão Observer**. O emissor não conhece o receptor. Isso permite 
 
 ---
 
-## 4. Scenes: Composição (Blueprints)
+## 4. Scenes: A Matrioska de Objetos
 
-Uma Cena (`.tscn`) não é um objeto. É uma **Planta Baixa (Blueprint)**.
+Aqui reside a maior diferença entre Godot e engines como GameMaker.
 
-Quando você arrasta a cena `Sword.tscn` para dentro da cena `Player.tscn`, você está usando **Composição**.
-O Player **TEM UMA** Espada.
+Muitos comparam Godot e GameMaker apenas pela linguagem (GDScript vs GML), concluindo erroneamente que são iguais. **Não são.**
 
-A arquitetura da Godot favorece Composição sobre Herança complexa.
-Em vez de: `Inimigo -> InimigoQueAtira -> InimigoQueAtiraFogo`
-Faça: `Inimigo` com um nó filho `ShooterComponent` e um nó filho `FireDamageComponent`.
+- **GameMaker (Modelo Plano):** Você tem uma `Room` (Sala) e joga `Objects` dentro dela. Um objeto não costuma ter outros objetos dentro dele de forma estrutural.
+- **Godot (Modelo Recursivo):** Tudo é um Node. Uma Cena é apenas um Node que contém outros Nodes.
+
+Isso significa que na Godot, a composição é **Infinita e Recursiva**.
+
+**Exemplo Prático:**
+No GameMaker, seu `Player` é um objeto com um sprite desenhado nele.
+Na Godot, seu `Player.tscn` é uma árvore:
+
+- `CharacterBody2D` (O Player em si)
+  - `Sprite2D` (A aparência)
+  - `CollisionShape2D` (A física)
+  - `AnimationPlayer` (O animador)
+  - `Sword.tscn` (Uma outra cena inteira dentro do player!)
+    - `Sprite2D` (A aparência da espada)
+    - `Area2D` (A hitbox da espada)
+
+Você não apenas "tem uma espada". Você tem uma **instância completa** da cena da espada dentro da cena do player.
+
+Isso permite que você construa sistemas complexos combinando peças menores (Lego), em vez de escrever códigos gigantescos em um único objeto monolítico.
 
 ---
 
