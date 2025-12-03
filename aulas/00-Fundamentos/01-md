@@ -39,37 +39,43 @@ Se você herda de algo, você ganha todos os poderes daquilo de graça. Mas cuid
 
 --
 
-## 1. Nodes: Herança de Objetos
+## 1. Nodes: A Cadeia de Especialização
 
-Na Godot, quando você cria um script `player.gd` e o anexa a um `CharacterBody2D`, você não está "adicionando um script ao objeto".
+Já entendemos que herança é "receber poderes". Na Godot, os Nodes são organizados em uma **Cadeia de Especialização**.
 
-Você está criando uma **Nova Classe** que herda de `CharacterBody2D`.
+Não olhe para um `CharacterBody2D` como uma peça única. Olhe para a árvore genealógica dele:
 
-```gdscript
-# player.gd
-extends CharacterBody2D
-```
+1. **Object:** A base de tudo (gerencia memória).
+2. **Node:** Entra na SceneTree, tem nome e parentesco.
+3. **Node2D:** Ganha `position`, `rotation`, `scale`.
+4. **CollisionObject2D:** Ganha formas de colisão.
+5. **CharacterBody2D:** Ganha `move_and_slide()`.
 
-Isso significa que seu Player **É UM** CharacterBody2D. Ele herda todas as propriedades (`velocity`, `position`) e métodos (`move_and_slide()`) do pai.
+Quando você faz `extends CharacterBody2D`, seu script é o próximo passo dessa evolução.
 
-**A Regra de Ouro:**
-Não use Nodes para guardar dados puros (como `max_health` ou `item_price`). Nodes são caros para a CPU. Eles servem para **fazer coisas** (mover, colidir, tocar som).
+**Por que isso importa?**
+Se você precisa apenas de uma posição no mundo, use `Node2D` (leve). Se precisa de física, use `CharacterBody2D` (pesado). Escolher o nó certo é escolher a "bagagem" certa de herança para carregar.
 
 ---
 
-## 2. Resources: Herança de Dados
+## 2. Resources: Polimorfismo e Dados
 
-Se Nodes são os "Operários", Resources são as "Pranchetas".
+Resources são dados, mas também são classes. Isso permite o **Polimorfismo**: a capacidade de substituir um objeto por outro mais complexo, sem que o sistema perceba.
 
-Um `Resource` é um objeto de dados serializável. Enquanto iniciantes usam JSON ou Dicionários, profissionais usam Resources porque eles suportam **Herança** e **Tipagem**.
+### O Caso do AudioStream
 
-**Exemplo:**
-Você cria um script `EnemyStats.gd` (`extends Resource`).
-Depois, cria arquivos `.tres` no editor: `goblin.tres`, `orc.tres`.
+Um `AudioStreamPlayer` precisa de um `AudioStream` para tocar.
+Normalmente, você arrasta um arquivo `.wav` (que é um `AudioStreamWAV`).
 
-Se você adicionar uma variável `armor` no script `EnemyStats.gd`, **todos** os arquivos `.tres` ganham esse campo automaticamente. Tente fazer isso com JSON e veja o caos.
+Mas a Godot tem um recurso nativo chamado **AudioStreamRandomizer**.
+Ele **herda** de `AudioStream`.
 
-> **Machi Way:** Use Resources para tudo que for "Design": atributos de personagens, tabelas de loot, configurações de armas.
+Isso significa que você pode colocar um `AudioStreamRandomizer` (que contém 10 sons diferentes e varia o pitch) no lugar onde iria um simples `.wav`.
+
+O `AudioStreamPlayer` não sabe a diferença. Ele só sabe "tocar o stream".
+Isso é arquitetura robusta: você aumentou a complexidade do som (Game Feel) sem mudar uma linha de código do player.
+
+> **Machi Way:** Use Resources para definir _comportamentos intercambiáveis_. Stats, Tabelas de Loot, e até IAs podem ser Resources.
 
 ---
 
