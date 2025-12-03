@@ -17,37 +17,38 @@ Explore os documentos mestres que detalham cada pilar da nossa arquitetura.
 
 ### 🏛️ Fundamentos
 
-- [Fundamentos Godot](GodotFundamentals.md): POO, GDScript, Sinais, Nós, SceneTree e Sistemas de Spawn.
+- [Fundamentos Godot](01_GodotFundamentals.md): POO, GDScript, Sinais, Nós, SceneTree e Sistemas de Spawn.
 
 ### 🏗️ Arquitetura Core
 
-- [Programação Orientada a Resources (ROP)](ResourceOrientedProgramming.md): O coração do Machi Game Style.
-- [Singletons & Autoloads](Singletons.md): Os Gerentes Globais do seu Jogo.
-- [Gestão de Cenas e Persistência de Dados](SceneAndDataManagement.md): Loading screens, troca de fases e a espinha dorsal do seu jogo.
-- [Máquinas de Estado](StateMachines.md): A aula teórica da evolução das FSMs.
-- [Behavior Engineering (Referência)](BehaviorEngineering.md): O motor de RPG unificado (Stats, Actions, Contexto).
+- [Programação Orientada a Resources (ROP)](02_ResourceOrientedProgramming.md): O coração do Machi Game Style.
+- [Singletons & Autoloads](03_Singletons.md): Os Gerentes Globais do seu Jogo.
+- [Gestão de Cenas e Persistência de Dados](04_SceneAndDataManagement.md): Loading screens, troca de fases e a espinha dorsal do seu jogo.
+- [Máquinas de Estado](05_StateMachines.md): A aula teórica da evolução das FSMs.
+- [Behavior Engineering (Referência)](06_BehaviorEngineering.md): O motor de RPG unificado (Stats, Actions, Contexto).
+- [Query Hash Map (O(1))](07_HashMap.md): A arte de organizar dados para performance extrema.
 
 ### 📦 Sistemas de Produção
 
-- [Sistema de Inventário](Inventory.md): Do básico ao estilo RPG/Survival.
+- [Sistema de Inventário](08_Inventory.md): Do básico ao estilo RPG/Survival.
 - [Sistema de Save/Load](SaveSystem.md): Serialização segura e versionamento.
-- [Tradução e Localização (i18n)](Translations.md): Tradução e localização desde o dia 1.
-- [Testes e Qualidade (QA)](Testing_QA.md): Garantindo a Robustez do seu Jogo.
+- [Tradução e Localização (i18n)](09_Translations.md): Tradução e localização desde o dia 1.
+- [Testes e Qualidade (QA)](10_Testing_QA.md): Garantindo a Robustez do seu Jogo.
 
 ### 🎨 Audiovisual & Experiência
 
-- [Game Feel & Juice](GameFeel.md): Animação, Áudio e UI para uma experiência imersiva e polida.
-- [Shaders & Materiais](Shaders.md): Introdução a VFX.
+- [Game Feel & Juice](11_GameFeel.md): Animação, Áudio e UI para uma experiência imersiva e polida.
+- [Shaders & Materiais](12_Shaders.md): Introdução a VFX.
 
 ### 🚀 Tópicos Avançados
 
-- [Plugins & Modularidade](Plugins.md): Estendendo a Engine com suas próprias ferramentas.
-- [GDExtensions & Performance](GDExtensions.md): Quando descer para C++/Rust.
-- [GDExtension para IA com Rust](RustAIExtension.md): Uma introdução à IA em jogos com Rust.
+- [Plugins & Modularidade](13_Plugins.md): Estendendo a Engine com suas próprias ferramentas.
+- [GDExtensions & Performance](14_GDExtensions.md): Quando descer para C++/Rust.
+- [GDExtension para IA com Rust](15_RustAIExtension.md): Uma introdução à IA em jogos com Rust.
 
 ### 🎓 Projetos Práticos (Capstone)
 
-- [A Ficha de RPG Suprema](CharacterSheet.md): Integração total de ROP, UI, i18n e Save System.
+- [A Ficha de RPG Suprema](16_CharacterSheet.md): Integração total de ROP, UI, i18n e Save System.
 
 ---
 

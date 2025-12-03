@@ -349,32 +349,34 @@ Para onde ir se você quiser aprender sobre...
 
 ### Core & Arquitetura
 
-- **`BehaviorEngineering.md`**: (Nível 4) O motor de RPG unificado (Stats, Actions, Modifiers, Effects, Context).
-- **`ResourceOrientedProgramming.md`**: (Nível 3) A fundação de dados vs lógica.
-- **`Plugins.md`**: Modularidade e a arquitetura da SoftEngine.
+### Core & Arquitetura
+
+- **`06_BehaviorEngineering.md`**: (Nível 4) O motor de RPG unificado (Stats, Actions, Modifiers, Effects, Context).
+- **`02_ResourceOrientedProgramming.md`**: (Nível 3) A fundação de dados vs lógica.
+- **`13_Plugins.md`**: Modularidade e a arquitetura da SoftEngine.
 
 ### Gameplay
 
-- **`Inventory.md`**: De arrays simples a inventários instanciados complexos.
-- **`StateMachines.md`**: A aula teórica sobre a evolução das FSMs.
-- **`CharacterSheet.md`**: Projeto prático integrando UI, Dados e Save.
+- **`08_Inventory.md`**: De arrays simples a inventários instanciados complexos.
+- **`05_StateMachines.md`**: A aula teórica da evolução das FSMs.
+- **`16_CharacterSheet.md`**: Projeto prático integrando UI, Dados e Save.
 
 ### Fundamentos
 
-- **`GodotFundamentals.md`**: Tipagem, Sinais e Ciclo de Vida.
-- **`SceneAndDataManagement.md`**: Troca de cenas e persistência.
-- **`Singletons.md`**: Quando usar (e não usar) Autoloads.
+- **`01_GodotFundamentals.md`**: Tipagem, Sinais e Ciclo de Vida.
+- **`04_SceneAndDataManagement.md`**: Troca de cenas e persistência.
+- **`03_Singletons.md`**: Quando usar (e não usar) Autoloads.
 
 ### Polimento
 
-- **`GameFeel.md`**: Juice, Tweens e Áudio.
-- **`Testing_QA.md`**: Garantia de qualidade.
-- **`Translations.md`**: i18n.
+- **`11_GameFeel.md`**: Juice, Tweens e Áudio.
+- **`10_Testing_QA.md`**: Garantia de qualidade.
+- **`09_Translations.md`**: i18n.
 
 ### Avançado
 
-- **`GDExtensions.md`**: Performance com C++/Rust.
-- **`RustAIExtension.md`**: IA avançada com Rust.
+- **`14_GDExtensions.md`**: Performance com C++/Rust.
+- **`15_RustAIExtension.md`**: IA avançada com Rust.
 
 ---
 
