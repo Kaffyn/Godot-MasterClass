@@ -4,13 +4,18 @@ Bem-vindo ao módulo introdutório do **Godot MBA**. Aqui, não ensinamos apenas
 
 Este módulo estabelece as bases mentais necessárias para construir sistemas complexos e escaláveis.
 
-## Índice de Aulas
+## Índice das Aulas
 
-### [01. O Modelo Mental do Engenheiro](./01-md)
-
-> **Tópicos:** Nodes, Resources, Signals, Herança vs. Composição, SceneTree.
->
-> Entenda por que a Godot é diferente de outras engines e como utilizar sua arquitetura de objetos a seu favor. Aprenda a regra de ouro dos Nodes e o poder do Polimorfismo com Resources.
+1. [Fundamentos da Arquitetura (Nodes, Resources, Scenes)](./01.md)
+2. [GDScript Fundamentals (Tipagem, Collections, Loops)](./02.md)
+3. [O Game Loop e Ciclo de Vida (\_process, \_ready)](./03.md)
+4. [Sistema de Input e Ações](./04.md)
+5. [Física e Colisão (Bodies, Areas, Layers)](./05.md)
+6. [Resource-Oriented Programming (Criando Custom Resources)](./06.md)
+7. [Composição vs Herança (Criando Componentes)](./07.md)
+8. [Arquitetura de Eventos (Event Bus)](./08.md)
+9. [UI e Containers (Ancoragem e Layouts)](./09.md)
+10. [Debugging e Profiling (Ferramentas do Engenheiro)](./10.md)
 
 ---
 

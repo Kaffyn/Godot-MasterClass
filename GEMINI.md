@@ -44,10 +44,10 @@ GDScript é dinâmico, mas nós não somos. Tipagem dinâmica é para protótipo
 
 **O Manifesto da Tipagem:**
 
-1.  **Sempre tipe variáveis:** `var health: int = 100` (Nunca `var health = 100`).
-2.  **Sempre tipe funções:** `func take_damage(amount: int) -> bool:` (O retorno é crucial).
-3.  **Use `class_name`:** Transforme seus scripts em Tipos Globais.
-4.  **Use `as` para Casting Seguro:** `var enemy := body as Enemy`.
+1. **Sempre tipe variáveis:** `var health: int = 100` (Nunca `var health = 100`).
+2. **Sempre tipe funções:** `func take_damage(amount: int) -> bool:` (O retorno é crucial).
+3. **Use `class_name`:** Transforme seus scripts em Tipos Globais.
+4. **Use `as` para Casting Seguro:** `var enemy := body as Enemy`.
 
 **Por que?**
 
@@ -101,10 +101,10 @@ Se você tiver 50 tipos de inimigos, terá 50 scripts ou uma herança complexa.
 
 **A Solução ROP:**
 
-1.  Crie um `EnemyStats.gd` (Resource).
-2.  Exporte `max_health`, `speed`, `texture`.
-3.  No Inimigo (`Node`), exporte uma variável `stats: EnemyStats`.
-4.  No `_ready()`, o Inimigo lê: `hp = stats.max_health`.
+1. Crie um `EnemyStats.gd` (Resource).
+2. Exporte `max_health`, `speed`, `texture`.
+3. No Inimigo (`Node`), exporte uma variável `stats: EnemyStats`.
+4. No `_ready()`, o Inimigo lê: `hp = stats.max_health`.
 
 ### 3.2. Vantagens Táticas
 
@@ -168,8 +168,8 @@ Este `Node` no personagem gerencia TUDO:
 
 Para um inventário real (com durabilidade, encantamentos e stacks), você precisa do padrão **Definição vs. Instância**.
 
-1.  **ItemDefinition (Resource):** O que é o item? (Nome, Ícone, MaxStack). É estático e compartilhado.
-2.  **ItemInstance (Resource ou Object):** O item no bolso. Contém uma referência à Definição + `quantidade` + `durabilidade`.
+1. **ItemDefinition (Resource):** O que é o item? (Nome, Ícone, MaxStack). É estático e compartilhado.
+2. **ItemInstance (Resource ou Object):** O item no bolso. Contém uma referência à Definição + `quantidade` + `durabilidade`.
     - Integração: `ItemInstance` pode carregar `StatModifier`s que são aplicados ao `BehaviorController` ao equipar.
 
 ### 5.2. Save System (Serialização)
@@ -177,15 +177,15 @@ Para um inventário real (com durabilidade, encantamentos e stacks), você preci
 Não salve nós. Nunca salve a SceneTree.
 O Save System deve salvar **DADOS**.
 
-1.  Crie um dicionário ou Resource dedicado (`SaveData`).
-2.  Colete os dados dos sistemas (`Inventory`, `QuestManager`, `BehaviorController`).
-3.  Salve esse objeto em `user://savegame.tres`.
+1. Crie um dicionário ou Resource dedicado (`SaveData`).
+2. Colete os dados dos sistemas (`Inventory`, `QuestManager`, `BehaviorController`).
+3. Salve esse objeto em `user://savegame.tres`.
 
 Para carregar:
 
-1.  Carregue o arquivo.
-2.  Instancie a cena do jogo "limpa".
-3.  Injete os dados carregados nos sistemas.
+1. Carregue o arquivo.
+2. Instancie a cena do jogo "limpa".
+3. Injete os dados carregados nos sistemas.
 
 ### 5.3. Singletons (Autoloads)
 
@@ -204,11 +204,11 @@ Pense no seu jogo como um sistema operacional. A Godot é o Kernel. Seus sistema
 
 A Kaffyn divide a arquitetura em camadas claras. Respeite essas fronteiras.
 
-1.  **Core:** Infraestrutura básica (Save, Load, Config). Não sabe nada sobre o jogo.
-2.  **Behavior:** _**TUDO**_ de personagem (Stats, Ações, Efeitos, Contexto).
-3.  **World:** Spawners, Fases, Portais. Sabe onde as coisas estão.
-4.  **FX:** Áudio e Visual. Apenas reage a eventos ("Tocar som X").
-5.  **UI:** A camada visual. Apenas observa dados e mostra na tela.
+1. **Core:** Infraestrutura básica (Save, Load, Config). Não sabe nada sobre o jogo.
+2. **Behavior:** _**TUDO**_ de personagem (Stats, Ações, Efeitos, Contexto).
+3. **World:** Spawners, Fases, Portais. Sabe onde as coisas estão.
+4. **FX:** Áudio e Visual. Apenas reage a eventos ("Tocar som X").
+5. **UI:** A camada visual. Apenas observa dados e mostra na tela.
 
 ### 6.2. A Regra do Desacoplamento
 
@@ -393,20 +393,20 @@ Instruções específicas para o Agente (Gemini) sobre como operar ferramentas n
 
 Quando for solicitado que você gere uma "tree" ou mapeie a estrutura de arquivos:
 
-1.  **Execute o comando:**
+1. **Execute o comando:**
 
     ```powershell
     tree /F /A | Out-File -Encoding UTF8 tree.txt
     ```
 
-2.  **Analise o resultado:**
+2. **Analise o resultado:**
     Imediatamente após a execução, leia e analise o arquivo `tree.txt` gerado no diretório atual para entender a estrutura do projeto.
 
 ### 12.2. Debugging e Logs (Godot)
 
 Quando for solicitado iniciar o Debug ou verificar erros na Godot:
 
-1.  **Execute o comando:**
+1. **Execute o comando:**
 
     ```cmd
     cmd /c "C:\Users\bruno\Desktop\Godot.exe -e --path . --verbose > godot_debug.log 2>&1"
@@ -414,7 +414,7 @@ Quando for solicitado iniciar o Debug ou verificar erros na Godot:
 
     _Nota: Isso iniciará o editor/jogo. O usuário irá interagir e testar. O terminal ficará ocupado ou rodando em background._
 
-2.  **Analise o Log:**
+2. **Analise o Log:**
     Após o fechamento da Godot (pelo usuário), o arquivo `godot_debug.log` conterá toda a saída. Leia este arquivo para identificar erros, warnings e stack traces para proceder com as correções.
 
 ### 12.3. Renomeação em Massa (moka-rename)
