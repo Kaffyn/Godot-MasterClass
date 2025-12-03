@@ -67,6 +67,21 @@ class_name ActionData extends Resource
 @export var on_physics_change: BehaviorTags.Reaction = BehaviorTags.Reaction.ADAPT
 ```
 
+### 2.4. Context Cooldowns (O Fim do Spam)
+
+Para evitar que ações sejam "spammadas" (ex: Dash infinito), o Behavior Engineering introduz **Cooldowns de Contexto**.
+
+- **Problema:** O jogador aperta Dash repetidamente.
+- **Solução:** O `ActionData` define um cooldown que bloqueia a _tag de contexto_ específica.
+
+```gdscript
+@export_group("Cooldowns")
+@export var context_cooldown_filter: BehaviorTags.ContextFilter = BehaviorTags.ContextFilter.MOTION
+@export var context_cooldown_time: float = 1.0
+```
+
+Se esta ação for executada, ela impede qualquer outra ação do tipo `MOTION` por 1.0 segundo. Isso é muito mais poderoso que um cooldown simples na ação, pois permite criar "Global Cooldowns" por categoria.
+
 ---
 
 ## 3. O Cérebro: BehaviorController
@@ -98,9 +113,9 @@ O mais específico (maior pontuação) vence. Isso permite especializar personag
 O Inventário é apenas uma lista de dados (`ItemInstance`).
 Quando você equipa um item:
 
-1.  O Item injeta **Tags** no Contexto (`Weapon: SWORD`).
-2.  O Item aplica **Modificadores** nos Atributos (`+5 Força`).
-3.  O `BehaviorController` reavalia as Ações disponíveis (agora ele pode usar "Ataque de Espada").
+1. **O Item injeta Tags no Contexto** (`Weapon: SWORD`).
+2. **O Item aplica Modificadores nos Atributos** (`+5 Força`).
+3. **O `BehaviorController` reavalia as Ações disponíveis** (agora ele pode usar "Ataque de Espada").
 
 ### 4.2. Efeitos e Consequências
 

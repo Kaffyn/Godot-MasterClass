@@ -62,8 +62,8 @@ Como o `Machine` escolhe o estado certo? Ele roda um concurso.
 
 Imagine que o contexto é: **Arma = Espada**, **Física = Chão**. O jogador aperta Ataque.
 
-| Candidato         | Requisitos           | Resultado   | Pontos              |
-| :---------------- | :------------------- | :---------- | :------------------ |
+| Candidato         | Requisitos           | Resultado    | Pontos              |
+| :---------------- | :------------------- | :----------- | :------------------ |
 | `Soco Básico`     | `Arma: Any`          | ✅ Passou    | 0                   |
 | `Corte de Espada` | `Arma: Espada`       | ✅ Passou    | **1** (Match Exato) |
 | `Tiro de Pistola` | `Arma: Arma de Fogo` | ❌ Rejeitado | -                   |

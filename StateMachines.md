@@ -251,8 +251,8 @@ Quando o contexto muda (ex: o jogador aperta Ataque enquanto cai e está com pou
 
 O sistema vasculha sua biblioteca de `ActionData` Resources e encontra:
 
-1.  `SwordGroundAttack`? ❌ Rejeitado (Requer: Chão).
-2.  `KatanaAirAttack`? ✅ Aceito (Requer: Ar, Katana).
+1. `SwordGroundAttack`? ❌ Rejeitado (Requer: Chão).
+2. `KatanaAirAttack`? ✅ Aceito (Requer: Ar, Katana).
 
 ### 6.2. Os Dados: O Resource como Regra (_ActionData_)
 
@@ -276,7 +276,7 @@ class_name ActionData extends Resource
 # --- REGRAS DE SOBREVIVÊNCIA (Reatividade Declarativa) ---
 @export_group("Reaction Rules")
 # O que acontece se eu tocar no chão no meio deste ataque aéreo?
-@export var on_physics_change_reaction: BehaviorTags.Reaction = BehaviorTags.Reaction.CANCEL
+@export var on_physics_change_reaction: BehaviorTags.Reaction = BehaviorTags.Reaction.ADAPT
 # O que acontece se minha estamina acabar no meio da ação?
 @export var on_stamina_low_reaction: BehaviorTags.Reaction = BehaviorTags.Reaction.CANCEL
 ```
@@ -284,20 +284,27 @@ class_name ActionData extends Resource
 **A Análise do Machi:**
 Note que _não há_ `if (get_attribute_value("stamina") < 10)` no seu código. O `ActionData` declara suas necessidades de contexto _e_ de atributos. Se o requisito `req_physics_tag` não bater, ou `req_min_stamina` não for atendido, essa ação nem entra na lista de candidatos.
 
-### 6.3. O Cérebro: O Sistema de Pontuação (Score System)
+### 6.3. O Cérebro: Hash Map O(1) e Scoring System
 
-E se tivermos múltiplos comportamentos válidos que se encaixam?
+Como o sistema encontra a ação certa sem testar todas as 500 ações da lista?
 
-1.  `GenericAirAttack` (Requer: Ar)
-2.  `KatanaAirAttack` (Requer: Ar + Katana)
-3.  `DesperateAirStrike` (Requer: Ar + Katana + Vida Baixa)
+1.  **Indexação (Hash Map O(1)):**
+    Ao iniciar, o sistema organiza as ações em "baldes" baseados em suas tags principais (ex: todas as ações de `AIR` vão para o balde `AIR`).
+    Quando o contexto muda para `AIR`, o sistema olha _apenas_ para esse balde. O custo de busca é constante, não importa quantas ações existam.
 
-O algoritmo `find_best_match()` dentro do `BehaviorController` não pega o primeiro que acha. Ele dá **Pontos** por especificidade de contexto _e_ por requisitos de atributos.
+2.  **Sistema de Pontuação (Scoring):**
+    Dentro do balde, se houver múltiplos candidatos, o sistema roda um concurso de especificidade:
 
-- **Match Genérico (ANY):** 0 pontos.
-- **Match Exato (Valor Igual):** 1 ponto por cada tag/atributo que corresponde.
+    - **Match Genérico (ANY):** 0 pontos.
+    - **Match Exato (Valor Igual):** +1 ponto por cada tag/atributo que corresponde exatamente.
 
-**Resultado:** O `DesperateAirStrike` ganharia se todas as condições (Ar, Katana, Vida Baixa) fossem atendidas, pois é o mais específico. Isso permite que você crie um "Ataque Genérico" como fallback e depois "especialize" o jogo com comportamentos mais detalhados para contextos específicos, sem nunca quebrar o código existente.
+    **Exemplo:**
+
+    - `GenericAirAttack` (Requer: Ar) -> Score 0 (Base)
+    - `KatanaAirAttack` (Requer: Ar + Katana) -> Score 1 (Ganhou ponto pela Katana)
+    - `DesperateAirStrike` (Requer: Ar + Katana + Vida Baixa) -> Score 2 (Ganhou ponto pela Vida Baixa)
+
+    **Resultado:** O `DesperateAirStrike` vence automaticamente se todas as condições forem atendidas. Isso permite "especialização progressiva" sem quebrar o código base.
 
 ### 6.4. Reatividade Declarativa e Processamento de Efeitos
 

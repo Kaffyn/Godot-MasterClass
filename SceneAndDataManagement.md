@@ -43,9 +43,9 @@ Pense em um `JSON` ou um `Dictionary` como uma **tabela de dados** ou uma planil
 
 Agora, pense em um `Resource` da Godot como um **Schema de Banco de Dados** completo. Ele é arquiteturalmente superior por várias razões:
 
-1.  **Ele Contém as Tabelas**: Um `Resource` pode, obviamente, conter todos os dados que uma tabela/JSON conteria.
-2.  **Ele Define as Regras entre Elas**: Mais importante, ele define a **estrutura**, os **tipos de dados** (`int`, `String`, `Vector2`), as **regras de validação** (via setters/getters) e os **relacionamentos** entre diferentes "tabelas" (um `Resource` contendo referências a outros `Resource`s).
-3.  **Ele é um Objeto Inteligente, não um Saco de Dados**: Quando a Godot carrega um `JSON`, você recebe um `Dictionary` genérico. Quando a Godot carrega um `.tres`, ela instancia um **objeto de uma classe específica**, com seus próprios métodos, herança e funcionalidades. Ele não é apenas "parseado", ele é "instanciado".
+1. **Ele Contém as Tabelas**: Um `Resource` pode, obviamente, conter todos os dados que uma tabela/JSON conteria.
+2. **Ele Define as Regras entre Elas**: Mais importante, ele define a **estrutura**, os **tipos de dados** (`int`, `String`, `Vector2`), as **regras de validação** (via setters/getters) e os **relacionamentos** entre diferentes "tabelas" (um `Resource` contendo referências a outros `Resource`s).
+3. **Ele é um Objeto Inteligente, não um Saco de Dados**: Quando a Godot carrega um `JSON`, você recebe um `Dictionary` genérico. Quando a Godot carrega um `.tres`, ela instancia um **objeto de uma classe específica**, com seus próprios métodos, herança e funcionalidades. Ele não é apenas "parseado", ele é "instanciado".
 
 Enquanto o `JSON` foi criado para ser transformado em objetos JavaScript genéricos, o `Resource` foi criado para ser a espinha dorsal de um ecossistema de objetos de jogo ricos e interconectados, em um padrão de excelência muito superior para o design de games.
 
@@ -57,8 +57,8 @@ O poder real vem da **composição**: `Resource`s que contêm outros `Resource`s
 
 **Exemplo Prático:**
 
-1.  Você cria um `WeaponData.gd` que herda de `Resource`. Ele tem `@export var damage: int`.
-2.  Você cria um `PlayerProfile.gd` que também herda de `Resource`. Dentro dele, você declara: `@export var equipped_weapon: WeaponData`.
+1. **Você cria um `WeaponData.gd`** que herda de `Resource`. Ele tem `@export var damage: int`.
+2. **Você cria um `PlayerProfile.gd`** que também herda de `Resource`. Dentro dele, você declara: `@export var equipped_weapon: WeaponData`.
 
 No editor, você agora pode ter vários arquivos:
 
@@ -83,6 +83,7 @@ Salve apenas **DADOS DE ESTADO**:
 - Inventário (Array de IDs e Quantidades)
 - Flags de progresso (`"boss_1_killed": true`)
 - Stats atuais (HP, XP, Nível)
+- **Behavior State:** Cooldowns ativos e Contexto persistente (se necessário).
 
 #### 5.2. A Estrutura Interna do Arquivo de Save
 
@@ -153,8 +154,8 @@ func load_game() -> Dictionary:
 Como o `SaveManager` coleta os dados que estão espalhados por todo o jogo?
 Não faça o `SaveManager` vasculhar a árvore de cenas. Use um padrão onde os próprios nós se declaram "salváveis".
 
-1.  **Adicione ao Grupo "Persist"**: Adicione todos os nós cujo estado precisa ser salvo a um grupo chamado "Persist".
-2.  **Contrato de Funções**: Obrigue esses nós a ter métodos `get_save_data() -> Dictionary` e `load_save_data(data: Dictionary) -> void`.
+1. **Adicione ao Grupo "Persist"**: Adicione todos os nós cujo estado precisa ser salvo a um grupo chamado "Persist".
+2. **Contrato de Funções**: Obrigue esses nós a ter métodos `get_save_data() -> Dictionary` e `load_save_data(data: Dictionary) -> void`.
 
 _Exemplo para o Player:_
 
@@ -268,6 +269,7 @@ Se você lançar a v1.0 e depois na v1.1 adicionar um novo campo (`mana_regen`) 
 Dominar esse fluxo é dominar a arquitetura de dados e garantir a persistência e a evolução do seu jogo.
 
 ---
+
 ## Gerenciamento de Cenas (Scene Flow)
 
 > **Objetivo:** Controlar o fluxo do jogo. Loading Screens, transições suaves e carregamento em background.
@@ -343,7 +345,7 @@ Exemplo: O HUD e o Player podem persistir.
 
 **Estrutura da Main.tscn:**
 
-```
+```text
 Main (Node)
 ├── UILayer (CanvasLayer) -> Nunca é destruído
 ├── MusicLayer (Node) -> Nunca é destruído
