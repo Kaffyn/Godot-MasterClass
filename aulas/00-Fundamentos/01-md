@@ -239,3 +239,22 @@ Agora você arrasta o nó para o slot no Inspector. Se você mover ou renomear o
 
 ---
 
+## 7. Graph: Criando suas Próprias Ferramentas
+
+A Godot é uma engine feita com a própria Godot. Isso significa que os nós usados para criar o Visual Shader ou o Visual Script estão disponíveis para você.
+
+Se você quer criar uma **Skill Tree**, um **Sistema de Diálogo** ou um **Behavior Tree Visual**, você não precisa desenhar retângulos e linhas na mão.
+
+Use a família de nós de Grafo (Graph):
+
+1. **GraphEdit:** O "canvas" infinito com grid, zoom e snap.
+2. **GraphElement:** A classe base para tudo que vai dentro do grafo.
+3. **GraphNode:** Os "nós" com slots de conexão (portas de entrada e saída).
+4. **GraphFrame (Novo no 4.3):** Um container redimensionável para agrupar nós visualmente (como os comentários no Unreal/Blender).
+
+### Por que isso é Arquitetura?
+
+Porque permite que você crie **Ferramentas para sua Equipe**.
+Em vez de pedir para o Game Designer editar um JSON gigante para os diálogos, você cria uma ferramenta visual usando `GraphEdit` onde ele conecta caixinhas de "Fala" e "Escolha".
+
+> **Machi Way:** Engenharia não é só código de gameplay. Engenharia é criar o pipeline que permite o jogo existir. Dominar os nós de UI (`Control`, `GraphEdit`) é essencial para criar editores customizados.
