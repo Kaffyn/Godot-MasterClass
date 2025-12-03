@@ -295,7 +295,7 @@ func _perform_attack(id: String) -> void:
 2. **Visualização:** O Inspector mostra exatamente quais estados o personagem tem.
 3. **Separação:** O programador cuida do `_physics_process`, o Game Designer cuida de ajustar hitboxes e tempos de animação nos arquivos `.tres`.
 
-> **Nota do Arquiteto:** Esta abordagem (Resource-Based FSM) é considerada o **Nível 3** de maturidade em Godot. Se você quer ver o **Nível 4**, onde removemos até mesmo os `if/else` de transição em favor de um sistema de "Score, Hash Map O(1) e Cooldowns de Contexto", consulte o documento de **[Behavior Engineering](06_BehaviorEngineering.md)**.
+> **Nota do Arquiteto:** Esta abordagem (Resource-Based FSM) é considerada o **Nível 3** de maturidade em Godot. Se você quer ver o **Nível 4**, onde otimizamos o acesso a dados usando Hash Maps O(1), consulte o documento de **[Query Hash Map](06_HashMap.md)**.
 
 ---
 
