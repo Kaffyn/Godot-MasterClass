@@ -79,31 +79,61 @@ Isso é arquitetura robusta: você aumentou a complexidade do som (Game Feel) se
 
 ---
 
-## 3. Signals: Emissão de Eventos (Observer Pattern)
+## 3. Signals: O Sistema Nervoso do Jogo
 
-Como fazer o `Player` avisar a `HealthBar` que tomou dano, sem que o Player saiba que a HealthBar existe?
+Sinais são a implementação do **Observer Pattern** na Godot. Eles permitem que objetos "gritem" que algo aconteceu, sem se importar com quem está ouvindo.
 
-**Errado (Acoplado):**
+### Por que usar Sinais? (Desacoplamento)
+
+Imagine que seu `Player` precisa avisar a `HealthBar` que tomou dano.
+
+**Jeito Errado (Acoplado):**
 
 ```gdscript
 # player.gd
-get_parent().get_node("UI/HealthBar").update_health(hp) # Quebra se você mudar a UI de lugar
+func take_damage(amount):
+    hp -= amount
+    # O Player precisa saber o caminho exato da UI. Se você mudar a UI, o jogo quebra.
+    get_parent().get_node("CanvasLayer/HealthBar").update_health(hp)
 ```
 
-**Certo (Sinais):**
+**Jeito Certo (Sinais):**
 
 ```gdscript
 # player.gd
-signal health_changed(new_hp)
+signal health_changed(new_hp, max_hp) # Define o "grito"
 
 func take_damage(amount):
     hp -= amount
-    health_changed.emit(hp) # O Player apenas "grita". Não importa quem ouve.
+    health_changed.emit(hp, max_hp) # Emite o sinal. O Player não sabe quem ouve.
 ```
 
-Isso é o **Padrão Observer**. O emissor não conhece o receptor. Isso permite que você delete a UI inteira e o Player continue funcionando sem erros.
+### Conectando Sinais
 
----
+Você pode conectar pelo Editor (aba Node) ou via Código (mais seguro e limpo).
+
+```gdscript
+# level_manager.gd
+func _ready():
+    var player = $Player
+    var hud = $CanvasLayer/HUD
+
+    # Conecta o sinal do player à função da HUD
+    player.health_changed.connect(hud._on_player_health_changed)
+```
+
+### Await: Esperando Sinais
+
+Sinais também servem para pausar a execução até que algo aconteça, usando `await`.
+
+```gdscript
+func attack():
+    play_animation("slash")
+    await animation_player.animation_finished # Espera a animação acabar
+    deal_damage()
+```
+
+Isso transforma código assíncrono complexo em uma leitura linear e limpa.
 
 ## 4. Scenes: A Matrioska de Objetos
 
@@ -174,15 +204,35 @@ Entender a árvore é entender a ordem dos eventos:
 
 ---
 
-## 6. Inspector: Editor de Propriedades
+## 6. Inspector: A Interface do Designer
 
-O Inspector não é apenas para ver valores. É a sua interface de **Injeção de Dependência**.
+O Inspector não é apenas um visualizador de variáveis. Ele é a ferramenta onde você constrói a **Interface de Uso** dos seus scripts para os Game Designers (ou para você mesmo no futuro).
 
-Em vez de buscar nós via código (`$Path/To/Node`), exporte variáveis:
+Um bom engenheiro cria scripts que são fáceis de configurar no Inspector.
+
+### O Poder do @export
+
+Use anotações para transformar variáveis simples em controles ricos:
 
 ```gdscript
-@export var gun: Weapon
-@export var stats: EnemyStats
+# Agrupa variáveis no Inspector para organização
+@export_category("Combat Stats")
+@export var max_health: int = 100
+@export_range(0.0, 10.0, 0.1) var attack_speed: float = 1.5 # Slider de 0 a 10
+
+@export_group("Dependencies")
+@export var weapon_data: WeaponResource # Arraste um .tres aqui
+@export var hit_particles: PackedScene # Arraste um .tscn aqui
 ```
 
-Isso permite que você arraste nós e resources diretamente no editor. Se você mudar o nome ou o caminho do nó, a referência **não quebra**. O Inspector é a ferramenta que conecta seus sistemas de forma segura.
+### Injeção de Dependência
+
+Em vez de usar `$Nó/Filho` (que quebra se você renomear o nó), exporte a dependência:
+
+```gdscript
+@export var animation_player: AnimationPlayer
+```
+
+Agora você arrasta o nó para o slot no Inspector. Se você mover ou renomear o nó na cena, a Godot atualiza a referência automaticamente. **Zero quebras.**
+
+> **Machi Way:** Se um script precisa de algo para funcionar, esse "algo" deve ser uma variável `@export`. Nunca assuma que um nó existe em um caminho fixo.
