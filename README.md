@@ -18,8 +18,17 @@ Se você está começando ou quer reforçar a base, comece por aqui.
 
 **Conteúdo do Curso:**
 
-- **Módulo 00:** Fundamentos da Arquitetura (Nodes, Resources, Signals, UI, etc.)
-- _(Novos módulos serão adicionados aqui)_
+- **Módulo 00:** [Fundamentos da Arquitetura](./aulas/00-Fundamentos/README.md)
+- **Módulo 01:** [A Tríade Arcade (Snake, Pong, Pacman)](./aulas/01-TriadeArcade/README.md)
+- **Módulo 02:** [Arquitetura de Entidades (Topdown Shooter)](./aulas/02-TopdownShooter/README.md)
+- **Módulo 03:** [UI e Sistemas de Dados (RPG Tático)](./aulas/03-RPGTatico/README.md)
+- **Módulo 04:** [Física Avançada e Estados (Metroidvania)](./aulas/04-Metroidvania/README.md)
+- **Módulo 05:** [Procedural Generation & Tilemaps (Roguelike)](./aulas/05-Roguelike/README.md)
+- **Módulo 06:** [3D Fundamentals (FPS Retro)](./aulas/06-FPSRetro/README.md)
+- **Módulo 07:** [Inteligência Artificial (Stealth Game)](./aulas/07-Stealth/README.md)
+- **Módulo 08:** [Networking & Multiplayer (Arena)](./aulas/08-Multiplayer/README.md)
+- **Módulo 09:** [Shaders & VFX (Juice)](./aulas/09-VFX/README.md)
+- **Módulo 10:** [TCC (Projeto Final)](./aulas/10-TCC/README.md)
 
 ---
 
