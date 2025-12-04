@@ -21,15 +21,15 @@ _O alicerce mental do engenheiro Godot._
 
 ---
 
-## 🟡 Módulo 01: Criando seu Primeiro Jogo (Pong/Breakout)
+## 🟡 Módulo 01: A Tríade Arcade (Snake, Pong, Pacman)
 
-_Aplicando os fundamentos em um ciclo completo de jogo._
+_Lógica de Grid, Física Básica e IA Simples._
 
 > _Em Breve_
 
 ---
 
-## 🟠 Módulo 02: Arquitetura de Entidades (Space Shooter)
+## 🟠 Módulo 02: Arquitetura de Entidades (Topdown Shooter)
 
 _Herança, Composição e Spawning em escala._
 
