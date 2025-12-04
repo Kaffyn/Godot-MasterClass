@@ -11,7 +11,7 @@ Vá em `Project > Project Settings > Input Map`.
 Aqui você define **O QUE** o jogador quer fazer, não **COMO**.
 
 - Crie uma ação: `jump`
-- Associe teclas: `Space`, `Gamepad Bottom Button` (X/A), `Mouse Left`.
+- Associe teclas: `Space`, `Gamepad Bottom Button` (X/A).
 
 Agora seu código responde a `jump`, não importa se veio do teclado ou do controle de Xbox.
 
