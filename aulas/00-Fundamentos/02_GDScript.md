@@ -8,6 +8,20 @@ Se você escreve GDScript como C#, seu jogo será robusto e escalável.
 
 ---
 
+## 0. O que é uma Variável?
+
+Antes de falar de tipos, precisamos entender o que é uma variável.
+Imagine que a memória do computador é um armário gigante cheio de gavetas.
+Uma **Variável** é uma etiqueta que você cola em uma dessas gavetas para guardar algo dentro.
+
+*   **Declaração (`var`)**: Você escolhe uma gaveta e cola a etiqueta.
+*   **Atribuição (`=`)**: Você abre a gaveta e coloca um valor lá dentro.
+*   **Acesso**: Quando você chama o nome da variável, o computador abre a gaveta e te entrega o que tem dentro.
+
+Sem variáveis, seu jogo não tem memória. Ele não sabe quanto de vida você tem, onde você está ou qual seu nome.
+
+---
+
 ## 1. Variáveis e Tipagem Estrita (Static Typing)
 
 A regra número 1 do MBA: **Sempre tipe suas variáveis.**

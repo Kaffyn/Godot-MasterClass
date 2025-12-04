@@ -13,9 +13,8 @@ Este módulo estabelece as bases mentais necessárias para construir sistemas co
 5. [Física e Colisão (Bodies, Areas, Layers)](./05_Physics.md)
 6. [Resource-Oriented Programming (Criando Custom Resources)](./06_ROP.md)
 7. [Composição vs Herança (Criando Componentes)](./07_Composition.md)
-8. [Arquitetura de Eventos (Event Bus)](./08_EventBus.md)
-9. [UI e Containers (Ancoragem e Layouts)](./09_UI.md)
-10. [Debugging e Profiling (Ferramentas do Engenheiro)](./10_Debugging.md)
+8. [UI e Containers (Ancoragem e Layouts)](./08_UI.md)
+9. [Debugging e Profiling (Ferramentas do Engenheiro)](./09_Debugging.md)
 
 ---
 

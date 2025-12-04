@@ -1,23 +1,40 @@
-# Módulo 00: Fundamentos da Arquitetura
+# Portal do Aluno: Godot MBA
 
-Bem-vindo ao módulo introdutório do **Godot MBA**. Aqui, não ensinamos apenas a usar a engine, mas a **pensar como um engenheiro** dentro dela.
+Bem-vindo à Graduação do Godot MBA. Aqui você encontrará o currículo prático, dividido em módulos progressivos.
 
-Este módulo estabelece as bases mentais necessárias para construir sistemas complexos e escaláveis.
+---
 
-## Índice das Aulas
+## 🟢 Módulo 00: Fundamentos da Arquitetura
+*O alicerce mental do engenheiro Godot.*
 
 1. [Fundamentos da Arquitetura (Nodes, Resources, Scenes)](./00-Fundamentos/01_Architecture.md)
 2. [GDScript Fundamentals (Tipagem, Collections, Loops)](./00-Fundamentos/02_GDScript.md)
-3. [O Game Loop e Ciclo de Vida (\_process, \_ready)](./00-Fundamentos/03_GameLoop.md)
+3. [O Game Loop e Ciclo de Vida (_process, _ready)](./00-Fundamentos/03_GameLoop.md)
 4. [Sistema de Input e Ações](./00-Fundamentos/04_Input.md)
 5. [Física e Colisão (Bodies, Areas, Layers)](./00-Fundamentos/05_Physics.md)
 6. [Resource-Oriented Programming (Criando Custom Resources)](./00-Fundamentos/06_ROP.md)
 7. [Composição vs Herança (Criando Componentes)](./00-Fundamentos/07_Composition.md)
-8. [Arquitetura de Eventos (Event Bus)](./00-Fundamentos/08_EventBus.md)
-9. [UI e Containers (Ancoragem e Layouts)](./00-Fundamentos/09_UI.md)
-10. [Debugging e Profiling (Ferramentas do Engenheiro)](./00-Fundamentos/10_Debugging.md)
+8. [UI e Containers (Ancoragem e Layouts)](./00-Fundamentos/08_UI.md)
+9. [Debugging e Profiling (Ferramentas do Engenheiro)](./00-Fundamentos/09_Debugging.md)
 
 ---
 
-> **Próximos Passos:**
-> Após dominar os fundamentos, avançaremos para a aplicação prática desses conceitos em sistemas reais.
+## 🟡 Módulo 01: Criando seu Primeiro Jogo (Pong/Breakout)
+*Aplicando os fundamentos em um ciclo completo de jogo.*
+> *Em Breve*
+
+---
+
+## 🟠 Módulo 02: Arquitetura de Entidades (Space Shooter)
+*Herança, Composição e Spawning em escala.*
+> *Em Breve*
+
+---
+
+## 🔴 Módulo 03: UI e Sistemas de Dados (RPG)
+*Inventários, Resources complexos e Interfaces ricas.*
+> *Em Breve*
+
+---
+
+> **Nota:** Para conceitos avançados de arquitetura, consulte a seção de **Pós-Graduação** na raiz do repositório.
