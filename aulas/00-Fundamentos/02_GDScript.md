@@ -87,6 +87,11 @@ const MAX_SPEED: float = 500.0
 Se variáveis são "Substantivos" (Vida, Velocidade), Funções são "Verbos" (Correr, Atacar, Morrer).
 Uma função é um bloco de código que faz uma tarefa específica.
 
+### A Função mais famosa: `print()`
+
+Antes de criar as nossas, saiba que a Godot já vem com várias prontas.
+`print("Texto")` é uma função que escreve algo no console de saída. É vital para debugar.
+
 ### Anatomia de uma Função
 
 ```gdscript
@@ -109,15 +114,21 @@ func take_damage(amount: int) -> bool:
 
 O código não precisa rodar linha por linha. Ele pode bifurcar.
 
-### If / Elif / Else (Se...)
+### If / Elif / Else (Se / Senão Se / Senão)
+
+Pense nisso como uma conversa em português:
+
+- **`if` (Se):** "Se a vida for maior que 50..."
+- **`elif` (Senão Se):** "Senão, se a vida for maior que 10..."
+- **`else` (Senão):** "Se não for nada disso..."
 
 ```gdscript
 if health > 50:
-    print("Estou bem!")
+    print("Estou bem!") # Só roda se health > 50
 elif health > 10:
-    print("Estou ferido...")
+    print("Estou ferido...") # Só roda se health <= 50 E health > 10
 else:
-    print("Vou morrer!")
+    print("Vou morrer!") # Roda se nenhuma das anteriores for verdade
 ```
 
 ### Match (O Switch Case)
