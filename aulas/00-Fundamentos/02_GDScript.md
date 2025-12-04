@@ -17,23 +17,24 @@ Mas na Engenharia de Software, não basta jogar coisas na gaveta. Você precisa 
 
 ### O Ciclo de Vida da Gaveta
 
-*   **Declaração (`var`)**: Você escolhe uma gaveta e cola a etiqueta.
-*   **Tipagem (`:`)**: Você instala divisórias na gaveta. Agora ela só aceita um tipo de coisa (ex: só cabe `int`).
-*   **Atribuição (`=`)**: Você abre a gaveta e coloca o valor lá dentro.
-*   **Acesso**: Você chama o nome, o computador abre e te entrega o valor.
-*   **Mutabilidade**: Você pode trocar o valor da gaveta, desde que respeite o tipo.
+- **Declaração (`var`)**: Você escolhe uma gaveta e cola a etiqueta.
+- **Tipagem (`:`)**: Você instala divisórias na gaveta. Agora ela só aceita um tipo de coisa (ex: só cabe `int`).
+- **Atribuição (`=`)**: Você abre a gaveta e coloca o valor lá dentro.
+- **Acesso**: Você chama o nome, o computador abre e te entrega o valor.
+- **Mutabilidade**: Você pode trocar o valor da gaveta, desde que respeite o tipo.
 
 ### Tipagem Estrita vs Dinâmica
 
 A regra número 1 do MBA: **Sempre tipe suas variáveis.**
 
-*   **Dinâmica (Amador):** A gaveta é um saco sem fundo. Cabe tudo.
-    *   `var vida = 100` (Hoje é número, amanhã pode virar texto "Cem").
-    *   *Problema:* Lento e inseguro. Se você somar "Banana" com 10, o jogo crasha.
+- **Dinâmica (Amador):** A gaveta é um saco sem fundo. Cabe tudo.
 
-*   **Estrita (Engenheiro):** A gaveta tem formato específico.
-    *   `var vida: int = 100` (Só cabe número inteiro).
-    *   *Vantagem:* Rápido e seguro. O compilador te avisa antes do jogo rodar se você tentar guardar a coisa errada.
+  - `var vida = 100` (Hoje é número, amanhã pode virar texto "Cem").
+  - _Problema:_ Lento e inseguro. Se você somar "Banana" com 10, o jogo crasha.
+
+- **Estrita (Engenheiro):** A gaveta tem formato específico.
+  - `var vida: int = 100` (Só cabe número inteiro).
+  - _Vantagem:_ Rápido e seguro. O compilador te avisa antes do jogo rodar se você tentar guardar a coisa errada.
 
 ```gdscript
 # AMADOR (Dinâmico - Perigoso)
