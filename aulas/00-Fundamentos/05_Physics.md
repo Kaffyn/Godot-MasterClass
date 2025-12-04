@@ -11,11 +11,13 @@ A física da Godot é poderosa, mas exige que você escolha a ferramenta certa p
 - **Comportamento:** Imóvel. Não se move, não sofre gravidade, não é empurrado.
 - **Uso:** Chão, Paredes, Plataformas fixas.
 - **Performance:** Extremamente leve.
+- **Variação:** `AnimatableBody` (Filho de StaticBody). Use para plataformas móveis ou portas que se movem via código/animação, mas que devem empurrar o jogador sem serem empurradas.
 
 ### RigidBody (A Bola de Futebol)
 
 - **Comportamento:** Controlado pela Física (Gravidade, Inércia, Forças). Você não define a posição dele; você aplica forças (`apply_force`).
 - **Uso:** Caixas, Pedras rolando, Ragdolls.
+- **Variação:** `PhysicalBone` (Filho de RigidBody). Usado especificamente para simular ossos em um esqueleto 3D (Ragdolls complexos).
 - **Cuidado:** Difícil de controlar para personagens (o jogador sente que está "escorregando").
 
 ### CharacterBody (O Herói)
