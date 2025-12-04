@@ -14,6 +14,7 @@ Imagine que você é um bibliotecário.
 
 - **A Abordagem da Lista (Array) - O(N):**
   Alguém pede o livro "O Senhor dos Anéis". Você tem uma pilha de 10.000 livros no chão. Você precisa pegar um por um, ler o título, e ver se é o que você quer.
+
   - Se o livro for o último da pilha, você leu 10.000 títulos.
   - Se a pilha dobrar de tamanho, seu trabalho dobra. Isso é **O(N)** (Linear).
 
@@ -51,6 +52,7 @@ var inventory = {
 ```
 
 Quando você escreve `inventory["potion"]`, a Godot não procura a string "potion" na lista. Ela:
+
 1. Calcula `hash("potion")`.
 2. Usa esse número para pular direto para o endereço de memória onde o valor `5` está guardado.
 

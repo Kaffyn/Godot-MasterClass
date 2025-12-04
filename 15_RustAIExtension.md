@@ -53,14 +53,14 @@ Para implementar essa arquitetura em Rust, usaremos um **Entity Component System
 
 Vamos fazer as duas ferramentas se falarem.
 
-1.  **Crie a Biblioteca Rust:**
+1. **Crie a Biblioteca Rust:**
     No diretório raiz do seu projeto Godot, rode:
 
     ```sh
     cargo new --lib colony_brain
     ```
 
-2.  **Configure o `Cargo.toml`:**
+2. **Configure o `Cargo.toml`:**
     Abra `colony_brain/Cargo.toml` e adicione:
 
     ```toml
@@ -80,7 +80,7 @@ Vamos fazer as duas ferramentas se falarem.
     bevy_ecs = "0.12"
     ```
 
-3.  **Crie a Ponte (`.gdextension`):**
+3. **Crie a Ponte (`.gdextension`):**
     Dentro da pasta do projeto **Godot**, crie o arquivo `colony_brain.gdextension` com o seguinte conteúdo. Ele diz à Godot como carregar sua biblioteca.
 
     ```ini
@@ -234,10 +234,10 @@ Este comando gera o arquivo `.dll`/`.so` na pasta `target/release/`, que a Godot
 
 Agora, na Godot, o trabalho é mínimo.
 
-1.  **Configure o Singleton:**
+1. **Configure o Singleton:**
     Vá em `Project -> Project Settings -> Autoload`. Adicione um novo Autoload. Em `Path`, selecione `colony_brain.gdextension`. Em `Node Name`, coloque `BrainServer`. Marque "Enable".
 
-2.  **Crie o `Pawn.tscn`:**
+2. **Crie o `Pawn.tscn`:**
     Uma cena simples com um `Sprite2D`. O script `Pawn.gd` é surpreendentemente simples:
 
     ```gdscript
@@ -263,7 +263,7 @@ Agora, na Godot, o trabalho é mínimo.
         self.modulate = Color(new_color[0], new_color[1], new_color[2])
     ```
 
-3.  **Crie a Comida (`Food.tscn`):**
+3. **Crie a Comida (`Food.tscn`):**
     Um sprite simples que, no `_ready()`, se registra no `BrainServer.create_food(position)`.
 
 ---

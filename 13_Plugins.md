@@ -159,12 +159,12 @@ O `softengine_machines` é a implementação da arquitetura **State Engineering*
   - Gerenciar o **estado global do jogo** (`GameMachine`), controlando transições de cenas, pausas e fluxos de menu de forma declarativa via `GameData` Resources.
   - Orquestrar **comportamentos de personagens** (`PlayerMachine`, `EnemyMachine`), onde os estados (movimentos, ataques, habilidades) são definidos como `Resources` de dados (ex: `AttackData`, `MoveData`).
 - **Como Funciona (Visão Geral)**:
-  1.  O sistema mantém um `Context` atual (ex: `Weapon: Katana`, `Physics: AIR`).
-  2.  Quando uma ação ou input ocorre (ex: "Input: Ataque"), o `Machine` recebe a requisição.
-  3.  Ele busca em uma coleção de `Data Resources` (ex: todos os `AttackData` do personagem).
-  4.  Cada `Data Resource` (como um `AttackData`) possui **Requisitos** (`req_weapon`, `req_physics`).
-  5.  O `Machine` filtra os `Resources` que **não** atendem aos requisitos do contexto.
-  6.  Dos `Resources` restantes, o que tiver a maior pontuação (mais requisitos de contexto atendidos de forma específica) é escolhido e ativado.
+  1. O sistema mantém um `Context` atual (ex: `Weapon: Katana`, `Physics: AIR`).
+  2. Quando uma ação ou input ocorre (ex: "Input: Ataque"), o `Machine` recebe a requisição.
+  3. Ele busca em uma coleção de `Data Resources` (ex: todos os `AttackData` do personagem).
+  4. Cada `Data Resource` (como um `AttackData`) possui **Requisitos** (`req_weapon`, `req_physics`).
+  5. O `Machine` filtra os `Resources` que **não** atendem aos requisitos do contexto.
+  6. Dos `Resources` restantes, o que tiver a maior pontuação (mais requisitos de contexto atendidos de forma específica) é escolhido e ativado.
 - **Exemplo Simplificado de um `Data Resource` (`AttackData`)**:
 
   ```gdscript
@@ -271,11 +271,11 @@ Essa separação clara, exemplificada por cada domínio, é o que permite constr
 
 ## 4. Diretrizes de Ouro para Criar Plugins (The Machi Way)
 
-1.  **Pense em Domínios, não em Features**: Seu plugin não é "a porta que precisa de chave", é o "Sistema de Interações e Travas".
-2.  **API Clara, Implementação Oculta**: Outros sistemas só devem interagir com seu plugin através de `Autoloads` bem definidos ou sinais. Eles nunca devem precisar de `get_node()` para fuçar a estrutura interna do seu plugin.
-3.  **Use `class_name` e um `icon.svg`**: Dê uma identidade visual e programática aos seus tipos customizados. Facilita o uso no editor e a leitura do código.
-4.  **Documente com um `README.md`**: Todo plugin na pasta `addons/` deve ter um `README.md` explicando o que faz, como configurar e qual sua API principal.
-5.  **Cuidado com Autoloads em Excesso**: Nem todo plugin precisa de um singleton global. Use-os para gerentes de sistema (Managers), não para dados ou helpers.
+1. **Pense em Domínios, não em Features**: Seu plugin não é "a porta que precisa de chave", é o "Sistema de Interações e Travas".
+2. **API Clara, Implementação Oculta**: Outros sistemas só devem interagir com seu plugin através de `Autoloads` bem definidos ou sinais. Eles nunca devem precisar de `get_node()` para fuçar a estrutura interna do seu plugin.
+3. **Use `class_name` e um `icon.svg`**: Dê uma identidade visual e programática aos seus tipos customizados. Facilita o uso no editor e a leitura do código.
+4. **Documente com um `README.md`**: Todo plugin na pasta `addons/` deve ter um `README.md` explicando o que faz, como configurar e qual sua API principal.
+5. **Cuidado com Autoloads em Excesso**: Nem todo plugin precisa de um singleton global. Use-os para gerentes de sistema (Managers), não para dados ou helpers.
 
 ## 5. Mão na Massa: Criando um Plugin de Quests
 
@@ -295,9 +295,9 @@ Vamos criar um sistema de quests que se integra à SoftEngine.
 
 ### Passo 2: A Implementação
 
-1.  Crie a pasta `addons/quest_system/` com `plugin.cfg` e o script que registra o `QuestManager.gd` como Autoload.
-2.  Crie os scripts de `Resource` (`QuestResource.gd`, etc.) usando `class_name`.
-3.  Implemente a lógica no `QuestManager.gd` para carregar quests, escutar eventos do jogo e atualizar o progresso.
+1. Crie a pasta `addons/quest_system/` com `plugin.cfg` e o script que registra o `QuestManager.gd` como Autoload.
+2. Crie os scripts de `Resource` (`QuestResource.gd`, etc.) usando `class_name`.
+3. Implemente a lógica no `QuestManager.gd` para carregar quests, escutar eventos do jogo e atualizar o progresso.
 
 ### Passo 3: A Integração
 

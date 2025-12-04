@@ -288,11 +288,11 @@ Note que _não há_ `if (get_attribute_value("stamina") < 10)` no seu código. O
 
 Como o sistema encontra a ação certa sem testar todas as 500 ações da lista?
 
-1.  **Indexação (Hash Map O(1)):**
+1. **Indexação (Hash Map O(1)):**
     Ao iniciar, o sistema organiza as ações em "baldes" baseados em suas tags principais (ex: todas as ações de `AIR` vão para o balde `AIR`).
     Quando o contexto muda para `AIR`, o sistema olha _apenas_ para esse balde. O custo de busca é constante, não importa quantas ações existam.
 
-2.  **Sistema de Pontuação (Scoring):**
+2. **Sistema de Pontuação (Scoring):**
     Dentro do balde, se houver múltiplos candidatos, o sistema roda um concurso de especificidade:
 
     - **Match Genérico (ANY):** 0 pontos.

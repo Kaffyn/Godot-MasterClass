@@ -8,7 +8,7 @@ Este módulo estabelece as bases mentais necessárias para construir sistemas co
 
 1. [Fundamentos da Arquitetura (Nodes, Resources, Scenes)](./01_Architecture.md)
 2. [GDScript Fundamentals (Tipagem, Collections, Loops)](./02_GDScript.md)
-3. [O Game Loop e Ciclo de Vida (_process, _ready)](./03_GameLoop.md)
+3. [O Game Loop e Ciclo de Vida (\_process, \_ready)](./03_GameLoop.md)
 4. [Sistema de Input e Ações](./04_Input.md)
 5. [Física e Colisão (Bodies, Areas, Layers)](./05_Physics.md)
 6. [Resource-Oriented Programming (Criando Custom Resources)](./06_ROP.md)

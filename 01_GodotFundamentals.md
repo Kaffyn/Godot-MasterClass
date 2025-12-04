@@ -190,34 +190,34 @@ Como os nós conversam sem criar dependências rígidas?
 
 **Exemplo Prático: Barra de Vida (HUD)**
 
-1.  **O Player (Emissor):** Ele não sabe se existe uma UI. Ele apenas avisa que sua vida mudou.
+1. **O Player (Emissor):** Ele não sabe se existe uma UI. Ele apenas avisa que sua vida mudou.
 
-    ```gdscript
-    # player.gd
-    signal health_changed(new_value, max_value)
+   ```gdscript
+   # player.gd
+   signal health_changed(new_value, max_value)
 
-    var hp: int = 100
+   var hp: int = 100
 
-    func take_damage(amount: int):
-        hp -= amount
-        health_changed.emit(hp, 100)
-    ```
+   func take_damage(amount: int):
+       hp -= amount
+       health_changed.emit(hp, 100)
+   ```
 
-2.  **A UI (Receptor):** A UI se conecta ao sinal do Player para se atualizar.
+2. **A UI (Receptor):** A UI se conecta ao sinal do Player para se atualizar.
 
-    ````gdscript # health_bar.gd
-    func \_ready():
-    var player = get_tree().get_first_node_in_group("Player")
-    if player:
-    player.health_changed.connect(update_bar)
+   ````gdscript # health_bar.gd
+   func \_ready():
+   var player = get_tree().get_first_node_in_group("Player")
+   if player:
+   player.health_changed.connect(update_bar)
 
-        func update_bar(new_hp, max_hp):
-            value = new_hp
-            max_value = max_hp
-        ```
+       func update_bar(new_hp, max_hp):
+           value = new_hp
+           max_value = max_hp
+       ```
 
-    Este padrão de Sinais é a base para código desacoplado e fácil de manter.
-    ````
+   Este padrão de Sinais é a base para código desacoplado e fácil de manter.
+   ````
 
 ---
 

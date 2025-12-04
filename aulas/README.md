@@ -5,11 +5,12 @@ Bem-vindo à Graduação do Godot MBA. Aqui você encontrará o currículo prát
 ---
 
 ## 🟢 Módulo 00: Fundamentos da Arquitetura
-*O alicerce mental do engenheiro Godot.*
+
+_O alicerce mental do engenheiro Godot._
 
 1. [Fundamentos da Arquitetura (Nodes, Resources, Scenes)](./00-Fundamentos/01_Architecture.md)
 2. [GDScript Fundamentals (Tipagem, Collections, Loops)](./00-Fundamentos/02_GDScript.md)
-3. [O Game Loop e Ciclo de Vida (_process, _ready)](./00-Fundamentos/03_GameLoop.md)
+3. [O Game Loop e Ciclo de Vida (\_process, \_ready)](./00-Fundamentos/03_GameLoop.md)
 4. [Sistema de Input e Ações](./00-Fundamentos/04_Input.md)
 5. [Física e Colisão (Bodies, Areas, Layers)](./00-Fundamentos/05_Physics.md)
 6. [Resource-Oriented Programming (Criando Custom Resources)](./00-Fundamentos/06_ROP.md)
@@ -20,20 +21,26 @@ Bem-vindo à Graduação do Godot MBA. Aqui você encontrará o currículo prát
 ---
 
 ## 🟡 Módulo 01: Criando seu Primeiro Jogo (Pong/Breakout)
-*Aplicando os fundamentos em um ciclo completo de jogo.*
-> *Em Breve*
+
+_Aplicando os fundamentos em um ciclo completo de jogo._
+
+> _Em Breve_
 
 ---
 
 ## 🟠 Módulo 02: Arquitetura de Entidades (Space Shooter)
-*Herança, Composição e Spawning em escala.*
-> *Em Breve*
+
+_Herança, Composição e Spawning em escala._
+
+> _Em Breve_
 
 ---
 
 ## 🔴 Módulo 03: UI e Sistemas de Dados (RPG)
-*Inventários, Resources complexos e Interfaces ricas.*
-> *Em Breve*
+
+_Inventários, Resources complexos e Interfaces ricas._
+
+> _Em Breve_
 
 ---
 

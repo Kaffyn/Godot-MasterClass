@@ -207,10 +207,10 @@ func load_game():
 
 ## Resumo da Aula
 
-1.  **Dados:** Criamos `CharacterSheet` e `ClassData` como Resources.
-2.  **UI:** Criamos um Control que manipula uma instância temporária de `CharacterSheet`.
-3.  **UX:** Usamos sinais `mouse_entered` para Tooltips informativos.
-4.  **Logica:** Validamos a distribuição de pontos antes de aplicar ao Resource.
-5.  **Save:** Usamos `ResourceSaver` para persistir o objeto final em `user://`.
+1. **Dados:** Criamos `CharacterSheet` e `ClassData` como Resources.
+2. **UI:** Criamos um Control que manipula uma instância temporária de `CharacterSheet`.
+3. **UX:** Usamos sinais `mouse_entered` para Tooltips informativos.
+4. **Logica:** Validamos a distribuição de pontos antes de aplicar ao Resource.
+5. **Save:** Usamos `ResourceSaver` para persistir o objeto final em `user://`.
 
 Você acabou de criar um sistema profissional, traduzível e escalável. Se quiser adicionar uma nova classe "Necromante" amanhã, basta criar um novo `.tres` de `ClassData` e adicionar na lista do `OptionButton`. Zero código alterado.

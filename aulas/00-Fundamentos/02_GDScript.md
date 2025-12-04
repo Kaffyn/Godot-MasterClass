@@ -8,71 +8,102 @@ Se você escreve GDScript como C#, seu jogo será robusto e escalável.
 
 ---
 
-## 0. O que é uma Variável?
+## 1. Variáveis: A Memória do Jogo
 
-Antes de falar de tipos, precisamos entender o que é uma variável.
 Imagine que a memória do computador é um armário gigante cheio de gavetas.
 Uma **Variável** é uma etiqueta que você cola em uma dessas gavetas para guardar algo dentro.
 
-- **Declaração (`var`)**: Você escolhe uma gaveta e cola a etiqueta.
-- **Atribuição (`=`)**: Você abre a gaveta e coloca um valor lá dentro.
-- **Acesso**: Quando você chama o nome da variável, o computador abre a gaveta e te entrega o que tem dentro.
+Mas na Engenharia de Software, não basta jogar coisas na gaveta. Você precisa definir **o que cabe nela**.
 
-Sem variáveis, seu jogo não tem memória. Ele não sabe quanto de vida você tem, onde você está ou qual seu nome.
+### O Ciclo de Vida da Gaveta
 
----
+*   **Declaração (`var`)**: Você escolhe uma gaveta e cola a etiqueta.
+*   **Tipagem (`:`)**: Você instala divisórias na gaveta. Agora ela só aceita um tipo de coisa (ex: só cabe `int`).
+*   **Atribuição (`=`)**: Você abre a gaveta e coloca o valor lá dentro.
+*   **Acesso**: Você chama o nome, o computador abre e te entrega o valor.
+*   **Mutabilidade**: Você pode trocar o valor da gaveta, desde que respeite o tipo.
 
-## 1. Variáveis e Tipagem Estrita (Static Typing)
+### Tipagem Estrita vs Dinâmica
 
 A regra número 1 do MBA: **Sempre tipe suas variáveis.**
 
-A tipagem dinâmica (`var vida = 100`) é para protótipos de 5 minutos.
-A tipagem estrita (`var vida: int = 100`) é para engenharia.
+*   **Dinâmica (Amador):** A gaveta é um saco sem fundo. Cabe tudo.
+    *   `var vida = 100` (Hoje é número, amanhã pode virar texto "Cem").
+    *   *Problema:* Lento e inseguro. Se você somar "Banana" com 10, o jogo crasha.
 
-### Por que tipar?
-
-1. **Performance:** A Godot não precisa "adivinhar" o tipo a cada frame.
-2. **Segurança:** O compilador te avisa se você tentar somar "Banana" com 10.
-3. **Autocomplete:** A IDE sabe o que o objeto é e te mostra as funções disponíveis.
+*   **Estrita (Engenheiro):** A gaveta tem formato específico.
+    *   `var vida: int = 100` (Só cabe número inteiro).
+    *   *Vantagem:* Rápido e seguro. O compilador te avisa antes do jogo rodar se você tentar guardar a coisa errada.
 
 ```gdscript
-# AMADOR (Dinâmico)
+# AMADOR (Dinâmico - Perigoso)
 var health = 100
 var player_name = "Machi"
 
-# ENGENHEIRO (Estrito)
+# ENGENHEIRO (Estrito - Seguro)
 var health: int = 100
 var player_name: String = "Machi"
 
-# INFERÊNCIA DE TIPO (O atalho seguro)
-# O operador := diz: "O tipo dessa variável é o tipo do valor que ela recebe"
-var speed := 300.0 # A Godot sabe que é float e TRAVA como float.
+# INFERÊNCIA DE TIPO (O atalho inteligente)
+# O operador := diz: "Crie uma gaveta do formato exato desse valor inicial"
+var speed := 300.0 # A Godot vê 300.0 (float) e tranca a gaveta como float.
 ```
 
----
+### 1.3. Tipos de Dados
 
-## 2. Tipos de Dados
-
-### Primitivos (Básicos)
+**Primitivos (Básicos):**
 
 - `int`: Números inteiros (1, -5, 42).
 - `float`: Números quebrados (3.14, -0.01). Use sempre o ponto `.`.
 - `bool`: Verdadeiro ou Falso (`true`, `false`).
 - `String`: Texto ("Olá Mundo").
 
-### Tipos de Game Dev (Matemáticos)
-
+**Tipos de Game Dev (Matemáticos):**
 Aqui a Godot brilha. Esses tipos são cidadãos de primeira classe.
 
 - `Vector2`: Uma posição ou direção 2D `(x, y)`.
-  - `var pos := Vector2(100, 200)`
 - `Vector3`: Uma posição ou direção 3D `(x, y, z)`.
 - `Color`: Uma cor RGBA.
-  - `var red := Color.RED`
+
+### 1.4. Enums (Estados Nomeados)
+
+Enums são um tipo especial de variável que só aceita valores de uma lista pré-definida.
+Nunca use "números mágicos" ou strings para definir estados.
+
+**Errado:**
+
+```gdscript
+if estado == 1: # O que é 1? Ninguém sabe.
+    atacar()
+```
+
+**Certo:**
+
+```gdscript
+enum State { IDLE, RUN, ATTACK, DEAD }
+
+var current_state: State = State.IDLE
+
+func update_state():
+    if current_state == State.ATTACK:
+        atacar()
+```
+
+### 1.5. Constantes (`const`)
+
+Uma constante é uma variável que, uma vez definida, **nunca mais muda**.
+Use para valores fixos de configuração.
+
+```gdscript
+const MAX_SPEED: float = 500.0
+const GRAVITY: float = 980.0
+
+# MAX_SPEED = 600.0 # ERRO! O computador não deixa você mudar.
+```
 
 ---
 
-## 3. Coleções (Arrays e Dictionaries)
+## 2. Coleções (Arrays e Dictionaries)
 
 ### Arrays (Listas)
 
@@ -104,34 +135,7 @@ print(player_data["name"]) # Machi
 
 ---
 
-## 4. Enums (Estados Nomeados)
-
-Nunca use "números mágicos" ou strings para definir estados. Use Enums.
-
-**Errado:**
-
-```gdscript
-if estado == 1: # O que é 1? Ninguém sabe.
-    atacar()
-```
-
-**Certo:**
-
-```gdscript
-enum State { IDLE, RUN, ATTACK, DEAD }
-
-var current_state: State = State.IDLE
-
-func update_state():
-    if current_state == State.ATTACK:
-        atacar()
-```
-
-Enums transformam números em palavras legíveis. Internamente `IDLE` é `0`, `RUN` é `1`, etc.
-
----
-
-## 5. Funções
+## 3. Funções
 
 Funções são contratos. Elas prometem receber algo e devolver algo.
 Sempre defina o tipo de retorno com `->`.
@@ -148,7 +152,7 @@ func morrer() -> void:
 
 ---
 
-## 6. Controle de Fluxo (Loops e Condicionais)
+## 4. Controle de Fluxo (Loops e Condicionais)
 
 ### If / Else
 
@@ -200,7 +204,7 @@ while health < 100:
 
 ---
 
-## 7. O "Machi Way" de GDScript
+## 5. O "Machi Way" de GDScript
 
 1. **PascalCase** para Classes (`Enemy`, `LevelManager`).
 2. **snake_case** para variáveis e funções (`player_health`, `get_input()`).
