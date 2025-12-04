@@ -133,15 +133,18 @@ else:
 
 ### Match (O Switch Case)
 
-Perfeito para Máquinas de Estado.
+O `match` compara o valor de uma variável com várias opções. É muito mais limpo do que escrever vários `if` e `elif`.
+
+- **Como ler:** "Combine o valor de `state` com..."
+- **`_` (Underscore):** Significa "Qualquer outra coisa". É o caso padrão (default) se nenhuma das opções acima for verdadeira.
 
 ```gdscript
-match state:
+match State:
     State.IDLE:
         play_anim("idle")
     State.RUN:
         play_anim("run")
-    _: # Default (qualquer outro caso)
+    _: # Default (Se não for nem IDLE nem RUN)
         print("Estado desconhecido")
 ```
 
