@@ -155,15 +155,18 @@ match current_state:
 ### Loops (Repetição)
 
 - **For:** Quando você sabe quantas vezes quer repetir ou quer percorrer uma lista.
-  ```gdscript
-  for i in 5: # 0, 1, 2, 3, 4
-      print(i)
-  ```
+
+```gdscript
+for i in 5: # 0, 1, 2, 3, 4
+    print(i)
+```
+
 - **While:** Repete enquanto uma condição for verdade (Cuidado com loops infinitos!).
-  ```gdscript
-  while health < 100:
-      health += 1
-  ```
+
+```gdscript
+while health < 100:
+    health += 1
+```
 
 ---
 
