@@ -133,13 +133,17 @@ else:
 
 ### Match (O Switch Case)
 
-O `match` compara o valor de uma variável com várias opções. É muito mais limpo do que escrever vários `if` e `elif`.
+Pense no `match` como um **App de Namoro**.
+Dar "Match" significa encontrar a combinação perfeita.
 
-- **Como ler:** "Combine o valor de `state` com..."
-- **`_` (Underscore):** Significa "Qualquer outra coisa". É o caso padrão (default) se nenhuma das opções acima for verdadeira.
+O código pega o valor da sua variável (o "perfil") e compara com várias opções. Quando ele encontra uma que combina, ele executa aquele bloco.
+
+- **`match current_state`:** "Quem combina com o meu estado atual?"
+- **`State.IDLE`:** "Eu combino!" -> Toca animação Idle.
+- **`_` (Underscore):** É o "Tinder Gold". Combina com todo mundo. Se ninguém mais der match, ele assume.
 
 ```gdscript
-match State:
+match current_state:
     State.IDLE:
         play_anim("idle")
     State.RUN:
