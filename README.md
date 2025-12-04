@@ -30,33 +30,33 @@ Estes arquivos não são tutoriais; são especificações técnicas, manifestos 
 
 ### 🏛️ Fundamentos da Engenharia
 
-- [01. Fundamentos Godot](01_GodotFundamentals.md): O modelo mental de Nodes e SceneTree.
-- [02. Resource-Oriented Programming (ROP)](02_ResourceOrientedProgramming.md): O coração do Machi Game Style.
-- [03. Singletons & Autoloads](03_Singletons.md): Gerenciamento global correto.
-- [04. Gestão de Cenas e Dados](04_SceneAndDataManagement.md): Loading e persistência.
+- [01. Fundamentos Godot](./mba/01_GodotFundamentals.md): O modelo mental de Nodes e SceneTree.
+- [02. Resource-Oriented Programming (ROP)](./mba/02_ResourceOrientedProgramming.md): O coração do Machi Game Style.
+- [03. Singletons & Autoloads](./mba/03_Singletons.md): Gerenciamento global correto.
+- [04. Gestão de Cenas e Dados](./mba/04_SceneAndDataManagement.md): Loading e persistência.
 
 ### 🏗️ Estruturas de Dados e Algoritmos
 
-- [05. Máquinas de Estado](05_StateMachines.md): FSMs robustas e desacopladas.
-- [06. Query Hash Map](06_HashMap.md): Otimização de busca O(1).
+- [05. Máquinas de Estado](./mba/05_StateMachines.md): FSMs robustas e desacopladas.
+- [06. Query Hash Map](./mba/06_HashMap.md): Otimização de busca O(1).
 
 ### 📦 Sistemas de Produção
 
-- [07. Sistema de Inventário](07_Inventory.md): Arquitetura de itens e containers.
-- [08. Tradução e Localização (i18n)](08_Translations.md): Preparando para o mundo.
-- [09. Testes e QA](09_Testing_QA.md): Garantia de qualidade automatizada.
-- [12. A Ficha de RPG Suprema](12_CharacterSheet.md): Integração de sistemas complexos.
+- [07. Sistema de Inventário](./mba/07_Inventory.md): Arquitetura de itens e containers.
+- [08. Tradução e Localização (i18n)](./mba/08_Translations.md): Preparando para o mundo.
+- [09. Testes e QA](./mba/09_Testing_QA.md): Garantia de qualidade automatizada.
+- [12. A Ficha de RPG Suprema](./mba/12_CharacterSheet.md): Integração de sistemas complexos.
 
 ### 🎨 Audiovisual e Game Feel
 
-- [10. Game Feel & Juice](10_GameFeel.md): Polimento e feedback visual.
-- [11. Shaders & Materiais](11_Shaders.md): Introdução técnica a VFX.
+- [10. Game Feel & Juice](./mba/10_GameFeel.md): Polimento e feedback visual.
+- [11. Shaders & Materiais](./mba/11_Shaders.md): Introdução técnica a VFX.
 
 ### 🚀 Tópicos Avançados (Extensão)
 
-- [13. Plugins & Tooling](13_Plugins.md): Criando ferramentas para o editor.
-- [14. GDExtensions](14_GDExtensions.md): Performance nativa com C++.
-- [15. Rust AI Extension](15_RustAIExtension.md): Inteligência Artificial com Rust.
+- [13. Plugins & Tooling](./mba/13_Plugins.md): Criando ferramentas para o editor.
+- [14. GDExtensions](./mba/14_GDExtensions.md): Performance nativa com C++.
+- [15. Rust AI Extension](./mba/15_RustAIExtension.md): Inteligência Artificial com Rust.
 
 > "Não escreva código que funciona. Escreva código que sobrevive."
 
