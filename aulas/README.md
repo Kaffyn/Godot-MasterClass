@@ -6,16 +6,16 @@ Este módulo estabelece as bases mentais necessárias para construir sistemas co
 
 ## Índice das Aulas
 
-1. [Fundamentos da Arquitetura (Nodes, Resources, Scenes)](./01.md)
-2. [GDScript Fundamentals (Tipagem, Collections, Loops)](./02.md)
-3. [O Game Loop e Ciclo de Vida (\_process, \_ready)](./03.md)
-4. [Sistema de Input e Ações](./04.md)
-5. [Física e Colisão (Bodies, Areas, Layers)](./05.md)
-6. [Resource-Oriented Programming (Criando Custom Resources)](./06.md)
-7. [Composição vs Herança (Criando Componentes)](./07.md)
-8. [Arquitetura de Eventos (Event Bus)](./08.md)
-9. [UI e Containers (Ancoragem e Layouts)](./09.md)
-10. [Debugging e Profiling (Ferramentas do Engenheiro)](./10.md)
+1. [Fundamentos da Arquitetura (Nodes, Resources, Scenes)](./00-Fundamentos/01_Architecture.md)
+2. [GDScript Fundamentals (Tipagem, Collections, Loops)](./00-Fundamentos/02_GDScript.md)
+3. [O Game Loop e Ciclo de Vida (\_process, \_ready)](./00-Fundamentos/03_GameLoop.md)
+4. [Sistema de Input e Ações](./00-Fundamentos/04_Input.md)
+5. [Física e Colisão (Bodies, Areas, Layers)](./00-Fundamentos/05_Physics.md)
+6. [Resource-Oriented Programming (Criando Custom Resources)](./00-Fundamentos/06_ROP.md)
+7. [Composição vs Herança (Criando Componentes)](./00-Fundamentos/07_Composition.md)
+8. [Arquitetura de Eventos (Event Bus)](./00-Fundamentos/08_EventBus.md)
+9. [UI e Containers (Ancoragem e Layouts)](./00-Fundamentos/09_UI.md)
+10. [Debugging e Profiling (Ferramentas do Engenheiro)](./00-Fundamentos/10_Debugging.md)
 
 ---
 
