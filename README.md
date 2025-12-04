@@ -2,49 +2,63 @@
 
 > **De:** Machi - Seu Mentor no Godot MBA
 > **Para:** Futuros Arquitetos de Software de Jogos
->
-> Este não é um tutorial. É um **MBA em Engenharia de Jogos**.
->
-> Forjado nas trincheiras do desenvolvimento profissional, o **Machi Game Style** é o seu guia para transcender o "fazer funcionar" e construir sistemas escaláveis, modulares e performáticos na Godot Engine.
->
-> Se você está pronto para abandonar o "código frágil" e se tornar um arquiteto de software de jogos, bem-vindo ao seu MBA.
+
+Este repositório contém o conhecimento acumulado para transformar desenvolvedores de jogos em Arquitetos de Software.
+
+A estrutura do curso é dividida em dois níveis de profundidade:
 
 ---
 
-## 0. Índice do MBA (Masterclass)
+## 🎓 Graduação: A Base (Aulas Práticas)
 
-Explore os documentos mestres que detalham cada pilar da nossa arquitetura.
+Aqui você aprende a "falar Godot". O foco é na prática, no passo-a-passo e na construção dos fundamentos mentais.
+Se você está começando ou quer reforçar a base, comece por aqui.
 
-### 🏛️ Fundamentos
+### [👉 ACESSAR O PORTAL DO ALUNO (Índice das Aulas)](./aulas/README.md)
 
-- [Fundamentos Godot](01_GodotFundamentals.md): POO, GDScript, Sinais, Nós, SceneTree e Sistemas de Spawn.
+**Conteúdo do Curso:**
 
-### 🏗️ Arquitetura Core
+- **Módulo 00:** Fundamentos da Arquitetura (Nodes, Resources, Signals, UI, etc.)
+- _(Novos módulos serão adicionados aqui)_
 
-- [Programação Orientada a Resources (ROP)](02_ResourceOrientedProgramming.md): O coração do Machi Game Style.
-- [Singletons & Autoloads](03_Singletons.md): Os Gerentes Globais do seu Jogo.
-- [Gestão de Cenas e Persistência de Dados](04_SceneAndDataManagement.md): Loading screens, troca de fases e a espinha dorsal do seu jogo.
-- [Máquinas de Estado](05_StateMachines.md): A aula teórica da evolução das FSMs.
-- [Query Hash Map (O(1))](06_HashMap.md): A arte de organizar dados para performance extrema.
+---
+
+## 🏛️ Pós-Graduação: O MBA (Arquitetura Avançada)
+
+Aqui estão os **Documentos Mestres**.
+Estes arquivos não são tutoriais; são especificações técnicas, manifestos de arquitetura e padrões de design avançados. Eles assumem que você já sabe programar e quer aprender a **arquitetar**.
+
+### 🏛️ Fundamentos da Engenharia
+
+- [01. Fundamentos Godot](01_GodotFundamentals.md): O modelo mental de Nodes e SceneTree.
+- [02. Resource-Oriented Programming (ROP)](02_ResourceOrientedProgramming.md): O coração do Machi Game Style.
+- [03. Singletons & Autoloads](03_Singletons.md): Gerenciamento global correto.
+- [04. Gestão de Cenas e Dados](04_SceneAndDataManagement.md): Loading e persistência.
+
+### 🏗️ Estruturas de Dados e Algoritmos
+
+- [05. Máquinas de Estado](05_StateMachines.md): FSMs robustas e desacopladas.
+- [06. Query Hash Map](06_HashMap.md): Otimização de busca O(1).
 
 ### 📦 Sistemas de Produção
 
-- [Sistema de Inventário](07_Inventory.md): Do básico ao estilo RPG/Survival.
-- [Sistema de Save/Load](SaveSystem.md): Serialização segura e versionamento.
-- [Tradução e Localização (i18n)](08_Translations.md): Tradução e localização desde o dia 1.
-- [Testes e Qualidade (QA)](09_Testing_QA.md): Garantindo a Robustez do seu Jogo.
+- [07. Sistema de Inventário](07_Inventory.md): Arquitetura de itens e containers.
+- [08. Tradução e Localização (i18n)](08_Translations.md): Preparando para o mundo.
+- [09. Testes e QA](09_Testing_QA.md): Garantia de qualidade automatizada.
+- [12. A Ficha de RPG Suprema](12_CharacterSheet.md): Integração de sistemas complexos.
 
-### 🎨 Audiovisual & Experiência
+### 🎨 Audiovisual e Game Feel
 
-- [Game Feel & Juice](10_GameFeel.md): Animação, Áudio e UI para uma experiência imersiva e polida.
-- [Shaders & Materiais](11_Shaders.md): Introdução a VFX.
-- [A Ficha de RPG Suprema](12_CharacterSheet.md): Integração total de ROP, UI, i18n e Save System.
+- [10. Game Feel & Juice](10_GameFeel.md): Polimento e feedback visual.
+- [11. Shaders & Materiais](11_Shaders.md): Introdução técnica a VFX.
 
-### 🚀 Tópicos Avançados
+### 🚀 Tópicos Avançados (Extensão)
 
-- [Plugins & Modularidade](13_Plugins.md): Estendendo a Engine com suas próprias ferramentas.
-- [GDExtensions & Performance](14_GDExtensions.md): Quando descer para C++/Rust.
-- [GDExtension para IA com Rust](15_RustAIExtension.md): Uma introdução à IA em jogos com Rust.
+- [13. Plugins & Tooling](13_Plugins.md): Criando ferramentas para o editor.
+- [14. GDExtensions](14_GDExtensions.md): Performance nativa com C++.
+- [15. Rust AI Extension](15_RustAIExtension.md): Inteligência Artificial com Rust.
+
+> "Não escreva código que funciona. Escreva código que sobrevive."
 
 ---
 
