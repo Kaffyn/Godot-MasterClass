@@ -50,165 +50,178 @@ var player_name: String = "Machi"
 var speed := 300.0 # A Godot vê 300.0 (float) e tranca a gaveta como float.
 ```
 
-### 1.3. Tipos de Dados
+### Tipos de Dados Essenciais
 
-**Primitivos (Básicos):**
+**Primitivos:**
 
 - `int`: Números inteiros (1, -5, 42).
 - `float`: Números quebrados (3.14, -0.01). Use sempre o ponto `.`.
 - `bool`: Verdadeiro ou Falso (`true`, `false`).
 - `String`: Texto ("Olá Mundo").
 
-**Tipos de Game Dev (Matemáticos):**
-Aqui a Godot brilha. Esses tipos são cidadãos de primeira classe.
+**Matemáticos (Godot):**
 
-- `Vector2`: Uma posição ou direção 2D `(x, y)`.
-- `Vector3`: Uma posição ou direção 3D `(x, y, z)`.
-- `Color`: Uma cor RGBA.
+- `Vector2`: Posição ou direção 2D `(x, y)`.
+- `Vector3`: Posição ou direção 3D `(x, y, z)`.
+- `Color`: Cor RGBA.
 
-### 1.4. Enums (Estados Nomeados)
+**Especiais:**
 
-Enums são um tipo especial de variável que só aceita valores de uma lista pré-definida.
-Nunca use "números mágicos" ou strings para definir estados.
-
-**Errado:**
+- **Enums:** Lista de opções fixas. Evita "números mágicos".
 
 ```gdscript
-if estado == 1: # O que é 1? Ninguém sabe.
-    atacar()
+enum State { IDLE, RUN, ATTACK }
+var current: State = State.IDLE
 ```
 
-**Certo:**
-
-```gdscript
-enum State { IDLE, RUN, ATTACK, DEAD }
-
-var current_state: State = State.IDLE
-
-func update_state():
-    if current_state == State.ATTACK:
-        atacar()
-```
-
-### 1.5. Constantes (`const`)
-
-Uma constante é uma variável que, uma vez definida, **nunca mais muda**.
-Use para valores fixos de configuração.
+- **Constantes (`const`):** Variáveis que nunca mudam.
 
 ```gdscript
 const MAX_SPEED: float = 500.0
-const GRAVITY: float = 980.0
-
-# MAX_SPEED = 600.0 # ERRO! O computador não deixa você mudar.
 ```
 
 ---
 
-## 2. Coleções (Arrays e Dictionaries)
+## 2. Funções: Os Verbos do Jogo
 
-### Arrays (Listas)
+Se variáveis são "Substantivos" (Vida, Velocidade), Funções são "Verbos" (Correr, Atacar, Morrer).
+Uma função é um bloco de código que faz uma tarefa específica.
 
-Listas ordenadas de coisas.
-**Regra:** Use Arrays Tipados sempre que possível.
-
-```gdscript
-# Ruim (Array Genérico - cabe tudo, lento)
-var mochila = ["Espada", 10, true]
-
-# Bom (Array Tipado - só cabe String, rápido)
-var inventario: Array[String] = ["Espada", "Poção", "Mapa"]
-```
-
-### Dictionaries (Mapas / HashTables)
-
-Pares de Chave-Valor. Ótimo para inventários complexos ou dados de save.
+### Anatomia de uma Função
 
 ```gdscript
-var player_data: Dictionary = {
-    "name": "Machi",
-    "level": 55,
-    "is_alive": true
-}
+# func [nome]([parâmetros]) -> [tipo_retorno]:
+func take_damage(amount: int) -> bool:
+    health -= amount
 
-# Acessando
-print(player_data["name"]) # Machi
+    if health <= 0:
+        return true # Morreu
+    return false # Sobreviveu
 ```
+
+1. **Parâmetros:** O que a função precisa receber para trabalhar (`amount`).
+2. **Retorno (`->`):** O que a função devolve para quem chamou. Se não devolver nada, use `-> void`.
+3. **Escopo:** Variáveis criadas dentro da função morrem quando a função termina.
 
 ---
 
-## 3. Funções
+## 3. Controle de Fluxo: Tomando Decisões
 
-Funções são contratos. Elas prometem receber algo e devolver algo.
-Sempre defina o tipo de retorno com `->`.
+O código não precisa rodar linha por linha. Ele pode bifurcar.
 
-```gdscript
-# Recebe dois inteiros, devolve um inteiro
-func somar(a: int, b: int) -> int:
-    return a + b
-
-# Não devolve nada (void)
-func morrer() -> void:
-    queue_free()
-```
-
----
-
-## 4. Controle de Fluxo (Loops e Condicionais)
-
-### If / Else
-
-O básico.
+### If / Elif / Else (Se...)
 
 ```gdscript
-if health > 0:
-    print("Vivo")
+if health > 50:
+    print("Estou bem!")
+elif health > 10:
+    print("Estou ferido...")
 else:
-    print("Morto")
+    print("Vou morrer!")
 ```
 
-### Match (O Switch Case da Godot)
+### Match (O Switch Case)
 
-O `match` é incrivelmente poderoso. Ele compara padrões.
+Perfeito para Máquinas de Estado.
 
 ```gdscript
-match current_state:
+match state:
     State.IDLE:
         play_anim("idle")
     State.RUN:
         play_anim("run")
-    State.ATTACK:
-        play_anim("attack")
-    _: # Default (qualquer outra coisa)
-        print("Estado inválido")
+    _: # Default (qualquer outro caso)
+        print("Estado desconhecido")
 ```
 
-### Loops (For e While)
+### Loops (Repetição)
 
-**For:** Para percorrer listas ou contar.
+- **For:** Quando você sabe quantas vezes quer repetir ou quer percorrer uma lista.
+  ```gdscript
+  for i in 5: # 0, 1, 2, 3, 4
+      print(i)
+  ```
+- **While:** Repete enquanto uma condição for verdade (Cuidado com loops infinitos!).
+  ```gdscript
+  while health < 100:
+      health += 1
+  ```
+
+---
+
+## 4. Coleções: Organizando Dados
+
+### Arrays (Listas)
+
+Uma gaveta com várias divisórias numeradas (0, 1, 2...).
 
 ```gdscript
-# Conta de 0 a 9
-for i in 10:
-    print(i)
+# Array Tipado (Só aceita Strings) - RÁPIDO
+var inventory: Array[String] = ["Espada", "Poção"]
 
-# Percorre lista
-for item in inventario:
-    print("Tenho: " + item)
+# Adicionar
+inventory.append("Mapa")
+
+# Acessar
+print(inventory[0]) # Espada
 ```
 
-**While:** Enquanto uma condição for verdadeira. Cuidado com loops infinitos!
+### Dictionaries (Mapas)
+
+Uma gaveta onde cada divisória tem um nome (Chave) em vez de um número.
 
 ```gdscript
-while health < 100:
-    health += 1 # Regenera até encher
+var stats: Dictionary = {
+    "str": 10,
+    "dex": 5,
+    "int": 2
+}
+
+print(stats["str"]) # 10
 ```
 
 ---
 
-## 5. O "Machi Way" de GDScript
+## 5. Orientação a Objetos (POO): O Poder da Godot
 
-1. **PascalCase** para Classes (`Enemy`, `LevelManager`).
-2. **snake_case** para variáveis e funções (`player_health`, `get_input()`).
-3. **CONSTANTES** em maiúsculo (`MAX_SPEED`).
-4. **Tipagem Estrita** sempre.
-5. **Use `as`** para casting seguro: `var enemy = body as Enemy`. Se `body` não for `Enemy`, vira `null` (evita crash).
+Aqui é onde deixamos de ser "scripters" e viramos engenheiros.
+Na Godot, **cada arquivo `.gd` é uma Classe**.
+
+### Definindo uma Classe
+
+```gdscript
+# hero.gd
+class_name Hero extends CharacterBody2D
+
+var hp: int = 100
+
+func attack():
+    print("Heroi atacou!")
+```
+
+- **`class_name Hero`**: Agora `Hero` é um tipo global no projeto, igual a `int` ou `Sprite2D`.
+- **`extends CharacterBody2D`**: O Herói herda tudo que um CharacterBody tem (física, colisão, movimento).
+
+### Instanciando (Criando Objetos)
+
+```gdscript
+# Em outro script...
+var my_hero = Hero.new() # Cria um novo herói na memória
+my_hero.hp = 50
+my_hero.attack()
+```
+
+### Casting (`as`) e Type Check (`is`)
+
+Quando você colide com algo, a Godot diz que é um `Node` ou `Object`. Você precisa verificar o que é.
+
+```gdscript
+func _on_body_entered(body: Node):
+    # Verificação (É um inimigo?)
+    if body is Enemy:
+        # Casting (Trate esse corpo como Inimigo)
+        var enemy = body as Enemy
+        enemy.take_damage(10)
+```
+
+> **Machi Way:** Use `class_name` para tudo. Isso permite que o autocomplete te ajude e evita erros de digitação.
