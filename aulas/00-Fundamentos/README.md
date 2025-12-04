@@ -15,6 +15,7 @@ Este módulo estabelece as bases mentais necessárias para construir sistemas co
 7. [Composição vs Herança (Criando Componentes)](./07_Composition.md)
 8. [UI e Containers (Ancoragem e Layouts)](./08_UI.md)
 9. [Debugging e Profiling (Ferramentas do Engenheiro)](./09_Debugging.md)
+10. [Internacionalização (i18n/l10n)](./10_Internacionalização.md)
 
 ---
 

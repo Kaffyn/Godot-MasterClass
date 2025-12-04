@@ -1,101 +1,114 @@
-# Godot MBA: Internacionalização (i18n) e Localização
+# Internacionalização (i18n) e Localização (l10n)
 
-> **Instrutor:** Machi
-> **Objetivo:** Preparar o jogo para múltiplos idiomas desde o Dia 1. Proibido escrever texto "Hardcoded" na UI.
-
----
-
-## 1. O Problema do "Hardcoding"
-
-Se você escreve no seu botão: `Button.text = "Jogar"`.
-No dia que quiser lançar em inglês, você terá que caçar esse script e mudar para:
-`Button.text = "Jogar" if lang == "pt" else "Play"`.
-Isso é insustentável.
+Se você quer que seu jogo seja jogado pelo mundo, você não pode escrever textos diretamente no código ("Hardcoding").
+A Godot possui um dos sistemas de localização mais robustos do mercado, baseado no padrão industrial **Gettext**.
 
 ---
 
-## 2. A Solução: Chaves de Tradução (Keys)
+## 1. O Problema do Hardcoding
 
-Em vez de escrever o texto final, escrevemos um **Identificador Único**.
-
-- `MENU_PLAY`
-- `MENU_OPTIONS`
-- `GAME_YOU_DIED`
-- `ITEM_SWORD_NAME`
-- `ITEM_SWORD_DESC`
-
-A Godot (e o padrão da indústria) usa um sistema de **Chave -> Valor**.
-
----
-
-## 3. Configurando na Godot (CSV ou PO)
-
-A Godot suporta nativamente arquivos CSV e Gettext (PO). Para projetos pequenos/médios, CSV é o mais rápido.
-
-### O Formato CSV Mágico
-
-1. Crie um arquivo `translations.csv` na pasta `i18n/`.
-2. A primeira linha (cabeçalho) deve ser: `keys,en,pt_BR,es`.
-3. Preencha:
-
-```csv
-keys,en,pt_BR,es
-MENU_PLAY,Play,Jogar,Jugar
-MENU_OPTIONS,Options,Opções,Opciones
-GAME_OVER,Game Over,Fim de Jogo,Fin del Juego
-```
-
-4. Salve. A Godot vai importar automaticamente e gerar arquivos `.translation` para cada coluna.
-5. Vá em **Project Settings -> Localization -> Translations** e adicione os arquivos gerados.
-
-### O Uso Automático
-
-Agora, em qualquer `Label` ou `Button`, se você escrever `MENU_PLAY` no campo Text, a Godot automaticamente substitui por "Jogar" (ou a língua do sistema) quando o jogo rodar.
-
----
-
-## 4. O Uso via Código (`tr()`)
-
-Se precisar definir texto via script:
+**Errado (Amador):**
 
 ```gdscript
-# Errado
-label.text = "Bem-vindo, " + player_name
-
-# Certo
-label.text = tr("MSG_WELCOME") % player_name
+label.text = "Game Over"
 ```
 
-(Assumindo que no CSV tem: `MSG_WELCOME,Welcome %s,Bem-vindo %s`).
+Se você fizer isso, no dia que quiser traduzir para Português, terá que abrir o script e mudar o código. E se quiser Espanhol? E Chinês?
 
-O método `tr()` busca a chave na tabela atual.
+**Certo (Engenheiro):**
 
----
+```gdscript
+label.text = "GAME_OVER_MSG"
+```
 
-## 5. Formatação Complexa (Plurais e Gênero)
-
-Para casos avançados ("1 coin", "2 coins"), o CSV é limitado.
-Recomendamos usar ferramentas como **Poedit** (formato `.po`).
-A Godot tem suporte nativo a `.po`.
-
-O fluxo é:
-
-1. Extrair strings do jogo.
-2. Mandar o `.po` para o tradutor.
-3. Ele devolve o `.po` preenchido.
-4. Godot lê.
+Você usa uma **CHAVE** (Key). A Godot troca essa chave pelo texto correto dependendo do idioma do jogador.
 
 ---
 
-## 6. Remap de Assets (Dublagem e Imagens)
+## 2. Formatos: CSV vs PO (Gettext)
 
-E se a placa "PARE" no jogo for uma textura?
-E se o áudio da narração precisar mudar de português para inglês?
+A Godot aceita dois formatos principais.
 
-A Godot tem o sistema de **Remaps**.
+### A. CSV (Simples e Rápido)
 
-1. Selecione o arquivo `voice_intro.wav`.
-2. Na aba Import, vá em **Localization**.
-3. Selecione o idioma (ex: `en`) e aponte para o arquivo substituto `voice_intro_en.wav`.
+Ideal para jogos pequenos ou protótipos. Você usa o Excel/Google Sheets.
 
-Quando o jogo estiver em inglês, qualquer `load("res://voice_intro.wav")` vai carregar silenciosamente a versão em inglês. Mágica.
+1. Crie uma planilha.
+2. Primeira linha (Cabeçalho): `keys,en,pt_BR,es`
+3. Linhas seguintes:
+   - `MENU_START,Start Game,Iniciar Jogo,Empezar`
+   - `MSG_HELLO,Hello,Olá,Hola`
+4. Salve como `translations.csv` na pasta do projeto.
+5. A Godot importa automaticamente.
+
+### B. PO / Gettext (Profissional)
+
+O formato `.po` é o padrão da indústria de software. Ele suporta **Plurais** ("1 coin", "2 coins") e **Contextos**.
+Para editar, usamos o software gratuito **Poedit**.
+
+1. Instale o **Poedit**.
+2. Crie um arquivo novo.
+3. Adicione suas chaves e traduções.
+4. Salve como `pt_BR.po`, `en.po`, etc.
+5. A Godot entende nativamente.
+
+> **Machi Way:** Use `.po` se seu jogo tiver muito texto ou narrativa. Use CSV se for só UI básica.
+
+---
+
+## 3. Configurando na Godot
+
+Não importa o formato (CSV ou PO), o passo final é o mesmo:
+
+1. Vá em **Project > Project Settings**.
+2. Aba **Localization > Translations**.
+3. Clique em **Add...** e selecione seus arquivos (`.csv` ou `.po`).
+
+Pronto. A mágica está feita.
+
+---
+
+## 4. Usando no Jogo
+
+### Na UI (Automático)
+
+Em qualquer `Label`, `Button` ou `RichTextLabel`:
+Basta escrever a **CHAVE** no campo texto.
+
+- Text: `MENU_START`
+- Ao rodar o jogo, aparecerá: "Iniciar Jogo".
+
+### No Script (`tr`)
+
+Use a função `tr()` (translate) para traduzir chaves via código.
+
+```gdscript
+func show_welcome(player_name: String):
+    # O texto no arquivo de tradução deve ser: "Olá %s, bem-vindo!"
+    var message = tr("MSG_WELCOME") % player_name
+    print(message)
+```
+
+---
+
+## 5. Remap de Assets (Dublagem e Imagens)
+
+E se a placa "PARE" for uma textura? Ou a dublagem?
+A Godot permite trocar **Arquivos inteiros** baseados no idioma.
+
+1. Selecione o arquivo (ex: `voice_intro.wav`).
+2. Vá na aba **Import** (ao lado de Scene).
+3. Procure a seção **Localization**.
+4. Selecione o idioma (ex: `pt_BR`) e escolha o arquivo substituto (`voice_intro_pt.wav`).
+5. Clique em **Reimport**.
+
+Agora, sempre que o jogo carregar `voice_intro.wav`, ele vai verificar o idioma. Se for PT-BR, ele carrega o outro arquivo silenciosamente.
+
+---
+
+## Resumo
+
+1. Nunca escreva texto final no código. Use **Chaves**.
+2. Use **CSV** para coisas simples, **PO (Poedit)** para complexas.
+3. Adicione os arquivos em **Project Settings > Localization**.
+4. Use `tr("CHAVE")` no GDScript.

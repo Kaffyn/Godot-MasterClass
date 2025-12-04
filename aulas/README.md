@@ -17,6 +17,7 @@ _O alicerce mental do engenheiro Godot._
 7. [Composição vs Herança (Criando Componentes)](./00-Fundamentos/07_Composition.md)
 8. [UI e Containers (Ancoragem e Layouts)](./00-Fundamentos/08_UI.md)
 9. [Debugging e Profiling (Ferramentas do Engenheiro)](./00-Fundamentos/09_Debugging.md)
+10. [Internacionalização (i18n/l10n)](./00-Fundamentos/10_Internacionalização.md)
 
 ---
 
