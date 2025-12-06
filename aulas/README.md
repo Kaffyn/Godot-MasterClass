@@ -1,23 +1,28 @@
 # Portal do Aluno: Machi Class
 
-Bem-vindo à Graduação do Machi Class. Aqui você encontrará o currículo prático, dividido em módulos progressivos.
+Este documento delineia a trilha de aprendizagem completa do curso, focando na transformação de desenvolvedores em arquitetos.
+
+## Sumário
+
+- [Módulo 00: Fundamentos da Arquitetura](./00-Fundamentos/README.md)
+- [Módulo 01: A Tríade Arcade (Snake, Pong, Pacman)](./01-TriadeArcade/README.md)
+- [Módulo 02: Arquitetura de Entidades (Topdown Shooter)](./02-TopdownShooter/README.md)
+- [Módulo 03: UI e Sistemas de Dados (RPG Tático)](./03-RPGTatico/README.md)
+- [Módulo 04: Física Avançada e Estados (Metroidvania)](./04-Metroidvania/README.md)
+- [Módulo 05: Procedural Generation & Tilemaps (Roguelike)](./05-Roguelike/README.md)
+- [Módulo 06: 3D Fundamentals (FPS Retro)](./06-FPSRetro/README.md)
+- [Módulo 07: Inteligência Artificial (Stealth Game)](./07-Stealth/README.md)
+- [Módulo 08: Networking & Multiplayer (Arena)](./08-Multiplayer/README.md)
+- [Módulo 09: Shaders & VFX (Juice)](./09-VFX/README.md)
+- [Módulo 10: Plugins & Tooling (Extensibilidade Nativa)](./10-Plugins/README.md)
+- [Módulo 11: TCC (Projeto Final)](./11-TCC/README.md)
+- [Bônus: Rust & GDExtension (Performance Extrema)](./Bonus-Rust_GDExtension/README.md)
 
 ---
 
 ## 🟢 Módulo 00: Fundamentos da Arquitetura
 
 _O alicerce mental do engenheiro Godot._
-
-1. [Fundamentos da Arquitetura (Nodes, Resources, Scenes)](./00-Fundamentos/01_Architecture.md)
-2. [GDScript Fundamentals (Tipagem, Collections, Loops)](./00-Fundamentos/02_GDScript.md)
-3. [O Game Loop e Ciclo de Vida (\_process, \_ready)](./00-Fundamentos/03_GameLoop.md)
-4. [Sistema de Input e Ações](./00-Fundamentos/04_Input.md)
-5. [Física e Colisão (Bodies, Areas, Layers)](./00-Fundamentos/05_Physics.md)
-6. [Resource-Oriented Programming (Criando Custom Resources)](./00-Fundamentos/06_ROP.md)
-7. [Composição vs Herança (Criando Componentes)](./00-Fundamentos/07_Composition.md)
-8. [UI e Containers (Ancoragem e Layouts)](./00-Fundamentos/08_UI.md)
-9. [Debugging e Profiling (Ferramentas do Engenheiro)](./00-Fundamentos/09_Debugging.md)
-10. [Internacionalização (i18n/l10n)](./00-Fundamentos/10_Internacionalização.md)
 
 ---
 
