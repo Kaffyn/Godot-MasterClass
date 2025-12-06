@@ -7,15 +7,17 @@ Metroidvanias exigem o controle mais refinado de todos os gêneros. Vamos criar 
 ## Ementa
 
 1.  **Character Controller 2D Perfeito:**
-    *   Coyote Time (Pular logo após sair da plataforma).
-    *   Jump Buffer (Aceitar pulo antes de tocar no chão).
-    *   Aceleração e Fricção.
+
+    - Coyote Time (Pular logo após sair da plataforma).
+    - Jump Buffer (Aceitar pulo antes de tocar no chão).
+    - Aceleração e Fricção.
 
 2.  **State Machine Robusta:**
-    *   Implementação de FSM usando Nodes ou Resources.
-    *   Estados: Idle, Run, Jump, Fall, Dash, WallSlide.
+
+    - Implementação de FSM usando Nodes ou Resources.
+    - Estados: Idle, Run, Jump, Fall, Dash, WallSlide.
 
 3.  **Interação com o Mundo:**
-    *   Raycasting para sensores ambientais.
-    *   Plataformas One-way e Escadas.
-    *   Passagens secretas.
+    - Raycasting para sensores ambientais.
+    - Plataformas One-way e Escadas.
+    - Passagens secretas.

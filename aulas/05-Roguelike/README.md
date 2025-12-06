@@ -7,17 +7,20 @@ Como criar jogos infinitos? Vamos mergulhar na geração procedural e na criaç�
 ## Ementa
 
 1.  **TileMaps Avançados:**
-    *   TileMapLayers.
-    *   Terrains (Autotile) e Bitmasking.
+
+    - TileMapLayers.
+    - Terrains (Autotile) e Bitmasking.
 
 2.  **Algoritmos de Geração:**
-    *   Random Walk (Cavernas simples).
-    *   Cellular Automata (Cavernas orgânicas).
-    *   BSP (Salas e Corredores).
+
+    - Random Walk (Cavernas simples).
+    - Cellular Automata (Cavernas orgânicas).
+    - BSP (Salas e Corredores).
 
 3.  **Pathfinding:**
-    *   NavigationServer 2D.
-    *   A* (A-Star) para inimigos em labirintos dinâmicos.
+
+    - NavigationServer 2D.
+    - A\* (A-Star) para inimigos em labirintos dinâmicos.
 
 4.  **Tooling (`@tool`):**
-    *   Criando scripts que rodam no editor para facilitar o Level Design.
+    - Criando scripts que rodam no editor para facilitar o Level Design.
