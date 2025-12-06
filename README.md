@@ -18,19 +18,22 @@ Se você está começando ou quer reforçar a base, comece por aqui.
 
 **Conteúdo do Curso:**
 
-- **Módulo 00:** [Fundamentos da Arquitetura](./aulas/00-Fundamentos/README.md)
-- **Módulo 01:** [A Tríade Arcade (Snake, Pong, Pacman)](./aulas/01-TriadeArcade/README.md)
-- **Módulo 02:** [Arquitetura de Entidades (Topdown Shooter)](./aulas/02-TopdownShooter/README.md)
-- **Módulo 03:** [UI e Sistemas de Dados (RPG Tático)](./aulas/03-RPGTatico/README.md)
-- **Módulo 04:** [Física Avançada e Estados (Metroidvania)](./aulas/04-Metroidvania/README.md)
-- **Módulo 05:** [Procedural Generation & Tilemaps (Roguelike)](./aulas/05-Roguelike/README.md)
-- **Módulo 06:** [3D Fundamentals (FPS Retro)](./aulas/06-FPSRetro/README.md)
-- **Módulo 07:** [Inteligência Artificial (Stealth Game)](./aulas/07-Stealth/README.md)
-- **Módulo 08:** [Networking & Multiplayer (Arena)](./aulas/08-Multiplayer/README.md)
-- **Módulo 09:** [Shaders & VFX (Juice)](./aulas/09-VFX/README.md)
-- **Módulo 10:** [Plugins & Tooling (Extensibilidade Nativa)](./aulas/10-Plugins/README.md)
-- **Módulo 11:** [TCC (Projeto Final)](./aulas/11-TCC/README.md)
-- **Bônus:** [Rust & GDExtension (Performance Extrema)](./aulas/Bonus-Rust_GDExtension/README.md)
+- **Módulo 00:** [Fundamentos da Arquitetura](./aulas/README.md#módulo-00-fundamentos-da-arquitetura)
+- **Módulo 01:** [A Tríade Arcade (Snake, Pong, Pacman)](./aulas/README.md#módulo-01-a-tríade-arcade-snake-pong-pacman)
+- **Módulo 02:** [Arquitetura de Entidades (Topdown Shooter)](./aulas/README.md#módulo-02-arquitetura-de-entidades-topdown-shooter)
+- **Módulo 03:** [Sistemas de Dados e UI (RPG Tático)](./aulas/README.md#módulo-03-sistemas-de-dados-e-ui-rpg-tático)
+- **Módulo 04:** [Física Avançada e Estados (Metroidvania)](./aulas/README.md#módulo-04-física-avançada-e-estados-metroidvania)
+- **Módulo 05:** [Procedural Generation & Tilemaps (Roguelike)](./aulas/README.md#módulo-05-procedural-generation--tilemaps-roguelike)
+- **Módulo 06:** [3D Fundamentals (FPS Retro)](./aulas/README.md#módulo-06-3d-fundamentals-fps-retro)
+- **Módulo 07:** [Inteligência Artificial (Stealth Game)](./aulas/README.md#módulo-07-inteligência-artificial-stealth-game)
+- **Módulo 08:** [Networking & Multiplayer (Arena)](./aulas/README.md#módulo-08-networking--multiplayer-arena)
+- **Módulo 09:** [Shaders & VFX (Juice)](./aulas/README.md#módulo-09-shaders--vfx-juice)
+- **Módulo 10:** [Plugins & Tooling (Extensibilidade Nativa)](./aulas/README.md#módulo-10-plugins--tooling-extensibilidade-nativa)
+- **Módulo 11:** [TCC (Projeto Final)](./aulas/README.md#módulo-11-tcc-projeto-final)
+- **Bônus:** [Rust & GDExtension (Performance Extrema)](./aulas/README.md#bônus-rust--gdextension-performance-extrema)
+- **Bônus:** [DevOps & CI/CD (Automação de Builds)](./aulas/README.md#bônus-devops--cicd-automação-de-builds)
+- **Bônus:** [Arquitetura de Modding & DLCs](./aulas/README.md#bônus-arquitetura-de-modding--dlcs)
+- **Bônus:** [Matemática para Engenheiros de Jogos](./aulas/README.md#bônus-matemática-para-engenheiros-de-jogos)
 
 ---
 
