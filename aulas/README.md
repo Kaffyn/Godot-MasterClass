@@ -25,7 +25,49 @@ Este documento delineia a trilha de aprendizagem completa do curso, focando na t
 
 ## 🟢 [Módulo 00: Fundamentos da Arquitetura](./00-Fundamentos/README.md)
 
-_O alicerce mental do engenheiro Godot._
+- **Objetivo:** Estabelecer o "Mindset do Engenheiro". Antes de criar jogos, aprendemos a criar sistemas. Entender profundamente como a Godot pensa (Nodes, Resources, Scenes) para não lutar contra a engine.
+
+- **Aulas:**
+
+  - **0.1: Fundamentos da Arquitetura**
+    - **Conceito Central:** A trindade da Godot: Nodes (Comportamento), Resources (Dados) e Scenes (Agrupamento).
+    - **Tópicos:** SceneTree, Instanciação e a filosofia de "Tudo é uma Cena".
+
+  - **0.2: GDScript Fundamentals**
+    - **Conceito Central:** GDScript como ferramenta de engenharia, não apenas script.
+    - **Tópicos:** Tipagem Estática, Collections (Array/Dictionary) e Loops eficientes.
+
+  - **0.3: O Game Loop e Ciclo de Vida**
+    - **Conceito Central:** Entender quando as coisas acontecem para evitar bugs de ordem de execução.
+    - **Tópicos:** `_ready`, `_process` (Visual), `_physics_process` (Físico) e `queue_free`.
+
+  - **0.4: Sistema de Input**
+    - **Conceito Central:** Abstração de controle. O jogo ouve "Ações", não teclas.
+    - **Tópicos:** InputMap, Eventos (`_unhandled_input`) vs Polling (`Input.is_action_pressed`).
+
+  - **0.5: Física e Colisão**
+    - **Conceito Central:** A interação espacial entre objetos.
+    - **Tópicos:** CharacterBody vs RigidBody vs Area2D. O sistema de Layers e Masks.
+
+  - **0.6: Resource-Oriented Programming (ROP)**
+    - **Conceito Central:** A arquitetura assinatura do Machi Class. Separação total de Dados e Lógica.
+    - **Tópicos:** Criando Custom Resources (`class_name ... extends Resource`) e editando no Inspector.
+
+  - **0.7: Composição vs Herança**
+    - **Conceito Central:** Evitando a "God Class". Construindo comportamentos através de nós filhos (Componentes).
+    - **Tópicos:** Criando um `HealthComponent` ou `HitboxComponent` reutilizável.
+
+  - **0.8: UI e Containers**
+    - **Conceito Central:** Interfaces responsivas que funcionam em qualquer tela.
+    - **Tópicos:** O sistema de Containers (`HBox`, `VBox`, `Grid`) e Âncoras.
+
+  - **0.9: Debugging e Profiling**
+    - **Conceito Central:** Como encontrar e matar bugs profissionalmente.
+    - **Tópicos:** Breakpoints, Remote Scene Tree e o Profiler de performance.
+
+  - **0.10: Internacionalização (i18n)**
+    - **Conceito Central:** Preparando o jogo para o mundo desde o dia 1.
+    - **Tópicos:** Sistema de Locales, arquivos CSV/PO e remap de assets.
 
 ---
 
