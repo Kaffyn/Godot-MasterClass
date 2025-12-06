@@ -28,7 +28,7 @@ Se você está começando ou quer reforçar a base, comece por aqui.
 - **Módulo 07:** [Inteligência Artificial (Stealth Game)](./aulas/07-Stealth/README.md)
 - **Módulo 08:** [Networking & Multiplayer (Arena)](./aulas/08-Multiplayer/README.md)
 - **Módulo 09:** [Shaders & VFX (Juice)](./aulas/09-VFX/README.md)
-- **Módulo 10:** [TCC (Projeto Final)](./aulas/10-TCC/README.md)
+- **Módulo 10:** [TCC (Projeto Final)](./aulas/11-TCC/README.md)
 
 ---
 

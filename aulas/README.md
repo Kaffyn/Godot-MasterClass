@@ -75,7 +75,7 @@ _Tech Art, Polimento e "Game Feel"._
 
 ---
 
-## 🎓 [Módulo 10: TCC (Projeto Final)](./10-TCC/README.md)
+## 🎓 [Módulo 10: TCC (Projeto Final)](./11-TCC/README.md)
 
 _O Ciclo Completo de Produção e Lançamento._
 
