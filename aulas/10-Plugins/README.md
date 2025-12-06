@@ -6,25 +6,25 @@ O Godot é uma engine feita com Godot. Isso significa que você pode estender o 
 
 ## Ementa
 
-1.  **Ferramentas de Editor (`@tool`):**
+1. **Ferramentas de Editor (`@tool`):**
 
-    - Rodando código no editor.
-    - Ciclo de vida de scripts de ferramenta.
-    - Criando Gizmos customizados na Viewport.
+   - Rodando código no editor.
+   - Ciclo de vida de scripts de ferramenta.
+   - Criando Gizmos customizados na Viewport.
 
-2.  **EditorPlugins:**
+2. **EditorPlugins:**
 
-    - Criando docks (painéis) personalizados.
-    - Adicionando botões na toolbar.
-    - Inspetores customizados (`EditorInspectorPlugin`).
+   - Criando docks (painéis) personalizados.
+   - Adicionando botões na toolbar.
+   - Inspetores customizados (`EditorInspectorPlugin`).
 
-3.  **GDShaders em Plugins:**
+3. **GDShaders em Plugins:**
 
-    - Empacotando shaders complexos como addons reutilizáveis.
-    - Visual Shader Nodes customizados.
-    - Gerando texturas via Compute Shaders (Godot 4+).
+   - Empacotando shaders complexos como addons reutilizáveis.
+   - Visual Shader Nodes customizados.
+   - Gerando texturas via Compute Shaders (Godot 4+).
 
-4.  **Distribuição:**
-    - Estrutura de pastas de um Addon (`addons/`).
-    - `plugin.cfg`.
-    - Publicando na Asset Library.
+4. **Distribuição:**
+   - Estrutura de pastas de um Addon (`addons/`).
+   - `plugin.cfg`.
+   - Publicando na Asset Library.

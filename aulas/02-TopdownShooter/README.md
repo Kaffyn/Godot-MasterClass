@@ -6,20 +6,20 @@ Neste módulo, sairemos dos minigames para um jogo de ação estruturado, focand
 
 ## Ementa
 
-1.  **Herança de Inimigos:**
+1. **Herança de Inimigos:**
 
-    - Classe Base `Enemy`.
-    - Especializações: `MeleeEnemy` (Persegue) e `RangedEnemy` (Atira).
+   - Classe Base `Enemy`.
+   - Especializações: `MeleeEnemy` (Persegue) e `RangedEnemy` (Atira).
 
-2.  **Sistemas de Spawn:**
+2. **Sistemas de Spawn:**
 
-    - Spawners configuráveis e Timers.
-    - Waves (Ondas de inimigos).
+   - Spawners configuráveis e Timers.
+   - Waves (Ondas de inimigos).
 
-3.  **Object Pooling:**
+3. **Object Pooling:**
 
-    - Por que instanciar e deletar (`queue_free`) é lento?
-    - Criando um Pool de Projéteis para performance máxima.
+   - Por que instanciar e deletar (`queue_free`) é lento?
+   - Criando um Pool de Projéteis para performance máxima.
 
-4.  **Componentização:**
-    - Criando um `WeaponComponent` que pode ser usado pelo Player e pelos Inimigos.
+4. **Componentização:**
+   - Criando um `WeaponComponent` que pode ser usado pelo Player e pelos Inimigos.

@@ -6,17 +6,20 @@ O grand finale. Você vai aplicar tudo o que aprendeu para criar, polir e export
 
 ## Ementa
 
-1.  **Arquitetura Modular:**
-    *   Criando seus próprios Plugins para reutilizar código entre projetos.
-    *   Estruturando um projeto de grande porte.
+1. **Arquitetura Modular:**
 
-2.  **Integração de Plataforma:**
-    *   Steamworks (Teórico/Conceitual).
-    *   Exportação para Windows, Linux, Web e Android.
+   - Criando seus próprios Plugins para reutilizar código entre projetos.
+   - Estruturando um projeto de grande porte.
 
-3.  **Analytics e Telemetria:**
-    *   Como saber se os jogadores estão gostando?
-    *   Implementando logs remotos básicos.
+2. **Integração de Plataforma:**
 
-4.  **CI/CD (Integração Contínua):**
-    *   Automatizando builds com GitHub Actions (Conceito).
+   - Steamworks (Teórico/Conceitual).
+   - Exportação para Windows, Linux, Web e Android.
+
+3. **Analytics e Telemetria:**
+
+   - Como saber se os jogadores estão gostando?
+   - Implementando logs remotos básicos.
+
+4. **CI/CD (Integração Contínua):**
+   - Automatizando builds com GitHub Actions (Conceito).

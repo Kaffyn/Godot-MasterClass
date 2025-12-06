@@ -6,17 +6,17 @@ Inimigos que apenas correm na sua direção são chatos. Vamos criar IAs que pen
 
 ## Ementa
 
-1.  **Sistemas de Percepção:**
+1. **Sistemas de Percepção:**
 
-    - Vision Cones (Matemática vetorial: Dot Product).
-    - Audição (Detectando sons na área).
+   - Vision Cones (Matemática vetorial: Dot Product).
+   - Audição (Detectando sons na área).
 
-2.  **Navegação 3D:**
+2. **Navegação 3D:**
 
-    - `NavigationRegion3D` e Baking.
-    - `NavigationAgent3D` e Avoidance (RVO).
+   - `NavigationRegion3D` e Baking.
+   - `NavigationAgent3D` e Avoidance (RVO).
 
-3.  **Arquitetura de IA:**
-    - Behavior Trees (Árvores de Comportamento).
-    - Máquinas de Estado Hierárquicas (HFSM).
-    - Patrulha e Investigação.
+3. **Arquitetura de IA:**
+   - Behavior Trees (Árvores de Comportamento).
+   - Máquinas de Estado Hierárquicas (HFSM).
+   - Patrulha e Investigação.

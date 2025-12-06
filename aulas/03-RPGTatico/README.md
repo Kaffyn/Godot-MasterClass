@@ -6,21 +6,21 @@ Aqui o foco sai da ação frenética e vai para a arquitetura de dados. Como ger
 
 ## Ementa
 
-1.  **Custom Resources Avançados:**
+1. **Custom Resources Avançados:**
 
-    - `ItemData`, `SkillData`, `CharacterSheet`.
-    - Resources referenciando outros Resources.
+   - `ItemData`, `SkillData`, `CharacterSheet`.
+   - Resources referenciando outros Resources.
 
-2.  **Sistema de Inventário:**
+2. **Sistema de Inventário:**
 
-    - Separação total entre Dados (`InventoryComponent`) e Visual (`InventoryUI`).
-    - Drag and Drop.
+   - Separação total entre Dados (`InventoryComponent`) e Visual (`InventoryUI`).
+   - Drag and Drop.
 
-3.  **Arquitetura de UI:**
+3. **Arquitetura de UI:**
 
-    - Padrão MVC (Model-View-Controller) adaptado para Godot.
-    - Temas e Estilização global.
+   - Padrão MVC (Model-View-Controller) adaptado para Godot.
+   - Temas e Estilização global.
 
-4.  **Persistência (Save/Load):**
-    - Serializando Resources para disco.
-    - Salvando o estado do mundo.
+4. **Persistência (Save/Load):**
+   - Serializando Resources para disco.
+   - Salvando o estado do mundo.

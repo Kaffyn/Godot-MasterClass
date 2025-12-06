@@ -6,24 +6,24 @@ Quando o GDScript não é suficiente (ou quando você quer a robustez do Rust), 
 
 ## Ementa
 
-1.  **Por que Rust?:**
+1. **Por que Rust?:**
 
-    - Safety (Zero Null Pointers, Zero Data Races).
-    - Performance similar a C++.
-    - Ecossistema Cargo.
+   - Safety (Zero Null Pointers, Zero Data Races).
+   - Performance similar a C++.
+   - Ecossistema Cargo.
 
-2.  **Configurando o Ambiente:**
+2. **Configurando o Ambiente:**
 
-    - A binding `godot-rust` (gdext).
-    - Estrutura de um projeto GDExtension.
-    - Compilando bibliotecas dinâmicas (`.dll` / `.so`).
+   - A binding `godot-rust` (gdext).
+   - Estrutura de um projeto GDExtension.
+   - Compilando bibliotecas dinâmicas (`.dll` / `.so`).
 
-3.  **Expondo para Godot:**
+3. **Expondo para Godot:**
 
-    - Criando Classes e Nodes em Rust.
-    - Exportando propriedades e sinais para o Editor.
-    - Hot-reloading (com limitações).
+   - Criando Classes e Nodes em Rust.
+   - Exportando propriedades e sinais para o Editor.
+   - Hot-reloading (com limitações).
 
-4.  **Integração Híbrida:**
-    - Chamando Rust do GDScript e vice-versa.
-    - Otimizando algoritmos pesados (Pathfinding customizado, PCG).
+4. **Integração Híbrida:**
+   - Chamando Rust do GDScript e vice-versa.
+   - Otimizando algoritmos pesados (Pathfinding customizado, PCG).
