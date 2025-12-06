@@ -5,9 +5,9 @@ Este documento delineia a trilha de aprendizagem completa do curso, focando na t
 ## Sumário
 
 - [Módulo 00: Fundamentos da Arquitetura](./00-Fundamentos/README.md)
-- [Módulo 01: A Tríade Arcade (Snake, Pong, Pacman)](#módulo-01-a-tríade-arcade-snake-pong-pacman)
-- [Módulo 02: Arquitetura de Entidades (Topdown Shooter)](#módulo-02-arquitetura-de-entidades-topdown-shooter)
-- [Módulo 03: Sistemas de Dados e UI (RPG Tático)](#módulo-03-sistemas-de-dados-e-ui-rpg-tático)
+- [Módulo 01: A Tríade Arcade (Snake, Pong, Pacman)](./01-TriadeArcade/README.md)
+- [Módulo 02: Arquitetura de Entidades (Topdown Shooter)](./02-TopdownShooter/README.md)
+- [Módulo 03: Sistemas de Dados e UI (RPG Tático)](./03-RPGTatico/README.md)
 - [Módulo 04: Física Avançada e Estados (Metroidvania)](./04-Metroidvania/README.md)
 - [Módulo 05: Procedural Generation & Tilemaps (Roguelike)](./05-Roguelike/README.md)
 - [Módulo 06: 3D Fundamentals (FPS Retro)](./06-FPSRetro/README.md)
