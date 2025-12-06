@@ -93,4 +93,22 @@ _Segurança de Memória, Performance Nativa e Integração de Baixo Nível._
 
 ---
 
+## 🏗️ [Bônus: DevOps & CI/CD (Automação de Builds)](./Bonus-DevOps_CICD/README.md)
+
+_Automação de Builds, Exportação e Entrega Contínua._
+
+---
+
+## 🧩 [Bônus: Arquitetura de Modding & DLCs](./Bonus-Modding_DLCs/README.md)
+
+_Extensibilidade do Produto Final e Carregamento Dinâmico._
+
+---
+
+## 📐 [Bônus: Matemática para Engenheiros de Jogos](./Bonus-Math_Engineers/README.md)
+
+_Vetores, Matrizes, Quaternions e o que acontece "debaixo do capô"._
+
+---
+
 > **Nota:** Para conceitos avançados de arquitetura, consulte a seção de **Pós-Graduação** na raiz do repositório.

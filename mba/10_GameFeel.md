@@ -116,6 +116,7 @@ func change_scene(path):
 ```
 
 ---
+
 ## Áudio Dinâmico e Imersivo
 
 > **Objetivo:** Parar de usar sons repetitivos e estáticos. Aprender a usar o `AudioStreamRandomizer` e `AudioBuses` para criar uma paisagem sonora profissional.
@@ -225,6 +226,7 @@ func enter_combat_mode():
 Ou use o recurso **Interactive Music** se estiver usando ferramentas de middleware como FMOD/Wwise (avançado), mas para Godot puro, Crossfading é a chave.
 
 ---
+
 ## UI Profissional (Themes & Containers)
 
 > **Objetivo:** Criar interfaces que se adaptam a qualquer resolução de tela e são fáceis de reestilizar globalmente. Proibido posicionar botões "na mão".
