@@ -1,4 +1,4 @@
-# Godot MBA: Testes e Qualidade (QA) - Garantindo a Robustez do seu Jogo
+# Machi Class: Testes e Qualidade (QA) - Garantindo a Robustez do seu Jogo
 
 > **De:** Machi
 > **Para:** Você, que busca excelência e evita surpresas desagradáveis.

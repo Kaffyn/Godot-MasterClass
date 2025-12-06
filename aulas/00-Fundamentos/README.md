@@ -1,6 +1,6 @@
 # Módulo 00: Fundamentos da Arquitetura
 
-Bem-vindo ao módulo introdutório do **Godot MBA**. Aqui, não ensinamos apenas a usar a engine, mas a **pensar como um engenheiro** dentro dela.
+Bem-vindo ao módulo introdutório do **Machi Class**. Aqui, não ensinamos apenas a usar a engine, mas a **pensar como um engenheiro** dentro dela.
 
 Este módulo estabelece as bases mentais necessárias para construir sistemas complexos e escaláveis.
 

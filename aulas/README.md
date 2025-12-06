@@ -1,6 +1,6 @@
-# Portal do Aluno: Godot MBA
+# Portal do Aluno: Machi Class
 
-Bem-vindo à Graduação do Godot MBA. Aqui você encontrará o currículo prático, dividido em módulos progressivos.
+Bem-vindo à Graduação do Machi Class. Aqui você encontrará o currículo prático, dividido em módulos progressivos.
 
 ---
 

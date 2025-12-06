@@ -1,4 +1,4 @@
-# Godot MBA: Máquinas de Estado - A Arte de Orquestrar o Comportamento
+# Machi Class: Máquinas de Estado - A Arte de Orquestrar o Comportamento
 
 > **De:** Machi
 > **Para:** Você, que busca controle e clareza no comportamento do seu jogo.

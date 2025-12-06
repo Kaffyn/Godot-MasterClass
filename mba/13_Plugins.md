@@ -4,7 +4,7 @@
 
 Todo projeto de jogo começa simples. Um script de player, um de inimigo. Logo, o script do player tem 800 linhas e controla movimento, inventário, vida e diálogo. Isso é um **monolito**: frágil, difícil de manter e impossível de reutilizar.
 
-O "Godot MBA" ensina a pensar como um arquiteto. Em vez de um bloco de código gigante, construímos um **ecossistema de sistemas independentes** que conversam entre si. Plugins são a materialização dessa filosofia, a ferramenta que nos força a criar fronteiras saudáveis e nos traz vantagens arquiteturais claras:
+O "Machi Class" ensina a pensar como um arquiteto. Em vez de um bloco de código gigante, construímos um **ecossistema de sistemas independentes** que conversam entre si. Plugins são a materialização dessa filosofia, a ferramenta que nos força a criar fronteiras saudáveis e nos traz vantagens arquiteturais claras:
 
 - **Reusabilidade**: O benefício óbvio. Um sistema de inventário bem feito pode ser usado em seu RPG, no seu jogo de sobrevivência e no seu FPS com pouca ou nenhuma alteração.
 
@@ -45,7 +45,7 @@ Este arquivo `INI` é o coração do seu addon. Ele diz à Godot que a pasta exi
 [plugin]
 
 name="Meu Primeiro Plugin"
-description="Um plugin de exemplo para o Godot MBA."
+description="Um plugin de exemplo para o Machi Class."
 author="Seu Nome"
 version="1.0"
 script="plugin_script.gd"
@@ -348,4 +348,4 @@ func _ready():
 - O método `unlock` simplesmente faz `provider.unlock_achievement(...)`.
 - O código do jogo **nunca sabe** se está falando com a Steam, com o Xbox ou com um arquivo de save local. A arquitetura o protege dessa complexidade.
 
-Com isso, você não apenas criou um plugin, mas uma solução de software robusta, escalável e portável. Este é o nível do Godot MBA.
+Com isso, você não apenas criou um plugin, mas uma solução de software robusta, escalável e portável. Este é o nível do Machi Class.

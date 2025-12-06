@@ -1,4 +1,4 @@
-# Godot MBA: Game Feel & Juice
+# Machi Class: Game Feel & Juice
 
 > **Instrutor:** Machi
 > **Objetivo:** Unificar os conceitos de movimento, som e interface para criar uma experiência de usuário polida, responsiva e satisfatória. O "Juice" não é um extra, é um requisito.

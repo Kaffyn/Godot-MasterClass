@@ -1,4 +1,4 @@
-# Godot MBA: Masterclass de Sistemas de Inventário
+# Machi Class: Masterclass de Sistemas de Inventário
 
 > **Instrutor:** Machi
 > **Nível:** Básico ao Arquiteto Sênior

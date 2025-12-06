@@ -1,4 +1,4 @@
-# Godot MBA: Programação Orientada a Resources (ROP)
+# Machi Class: Programação Orientada a Resources (ROP)
 
 Bem-vindo ao guia definitivo sobre **Resource-Oriented Programming (ROP)** na Kaffyn. Este documento foi estruturado como um mini-curso para transformar sua mentalidade de "Programador de Scripts" para "Arquiteto de Sistemas Godot".
 

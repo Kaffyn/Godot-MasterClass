@@ -1,4 +1,4 @@
-# Godot MBA: Shaders & Materiais
+# Machi Class: Shaders & Materiais
 
 > **Instrutor:** Machi
 > **Objetivo:** Perder o medo da linguagem de Shaders (GLSL/GDShader) e entender como criar efeitos visuais (VFX) que rodam na GPU.

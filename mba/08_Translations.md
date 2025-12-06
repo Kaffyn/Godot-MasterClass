@@ -1,4 +1,4 @@
-# Godot MBA: Internacionalização (i18n) e Localização
+# Machi Class: Internacionalização (i18n) e Localização
 
 > **Instrutor:** Machi
 > **Objetivo:** Preparar o jogo para múltiplos idiomas desde o Dia 1. Proibido escrever texto "Hardcoded" na UI.

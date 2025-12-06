@@ -1,4 +1,4 @@
-# Godot MBA: Gestão de Cenas e Persistência de Dados
+# Machi Class: Gestão de Cenas e Persistência de Dados
 
 > **Instrutor:** Machi
 > **Objetivo:** Unificar os conceitos de fluxo de cenas, carregamento de dados e salvamento de estado para criar uma arquitetura de jogo robusta e escalável.
@@ -51,7 +51,7 @@ Enquanto o `JSON` foi criado para ser transformado em objetos JavaScript genéri
 
 ### 4. O Padrão Ouro: ROP (Resource-Oriented Programming) em Ação
 
-A filosofia do Godot MBA e da SoftEngine é clara: **use `Resource`s para tudo que for conteúdo de design**. Isso significa que, em vez de apenas guardar dados, os `Resource`s se tornam blocos de construção.
+A filosofia do Machi Class e da SoftEngine é clara: **use `Resource`s para tudo que for conteúdo de design**. Isso significa que, em vez de apenas guardar dados, os `Resource`s se tornam blocos de construção.
 
 O poder real vem da **composição**: `Resource`s que contêm outros `Resource`s.
 

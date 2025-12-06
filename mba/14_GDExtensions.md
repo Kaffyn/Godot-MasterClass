@@ -1,4 +1,4 @@
-# Godot MBA: GDExtension & Performance Nativa
+# Machi Class: GDExtension & Performance Nativa
 
 > **Instrutor:** Machi
 > **Objetivo:** Entender a arquitetura nativa da Godot. Saber como integrar código C++ ou Rust para plugins e sistemas de alta performance.

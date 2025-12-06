@@ -13,7 +13,7 @@ GDScript é a linguagem nativa da Godot, projetada para ser concisa e integrada.
 
 ### 1.1. Variáveis e Tipagem Estática
 
-No Godot MBA, a **Tipagem Estática não é opcional, é lei**. Ela nos dá segurança, performance e um autocomplete que funciona, economizando horas de depuração.
+No Machi Class, a **Tipagem Estática não é opcional, é lei**. Ela nos dá segurança, performance e um autocomplete que funciona, economizando horas de depuração.
 
 ```gdscript
 # Ruim (Dinâmico - pode ser qualquer coisa)

@@ -1,6 +1,6 @@
-# Machi Game Style: The Godot MBA
+# Machi Game Style: The Machi Class
 
-> **De:** Machi - Seu Mentor no Godot MBA
+> **De:** Machi - Seu Mentor no Machi Class
 > **Para:** Futuros Arquitetos de Software de Jogos
 
 Este repositório contém o conhecimento acumulado para transformar desenvolvedores de jogos em Arquitetos de Software.
@@ -317,7 +317,7 @@ func _physics_process(delta: float) -> void:
 
 Neste exemplo, ao anexar `meu_personagem.gd` a um `CharacterBody2D` na sua cena, você está dizendo que aquele nó agora é uma instância da classe `MeuPersonagem`. Ele tem acesso a `velocity`, `move_and_slide()` (do `CharacterBody2D`) e à nova variável `velocidade_movimento` e ao método `_physics_process` que você definiu.
 
-Compreender essa natureza de "classe" dos seus scripts é o primeiro passo para pensar em termos de Programação Orientada a Objetos na Godot, um pilar fundamental do Godot MBA.
+Compreender essa natureza de "classe" dos seus scripts é o primeiro passo para pensar em termos de Programação Orientada a Objetos na Godot, um pilar fundamental do Machi Class.
 
 `
 

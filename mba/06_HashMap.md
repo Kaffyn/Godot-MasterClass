@@ -1,4 +1,4 @@
-# Godot MBA: A Arte do Hash Map (De O(N) a O(1))
+# Machi Class: A Arte do Hash Map (De O(N) a O(1))
 
 > **De:** Machi
 > **Nível:** Arquiteto (Level 4)

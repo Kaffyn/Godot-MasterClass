@@ -6,7 +6,7 @@
 
 Na Godot, a ferramenta para isso é o **Autoload**. No entanto, essa facilidade de acesso é uma faca de dois gumes. Se mal utilizada, ela leva ao anti-padrão mais temido da arquitetura de software: o **"God Object"** (Objeto Deus). Este é um único Autoload, frequentemente chamado `Global.gd`, que acaba fazendo tudo: controla o som, o save, a UI, o estado do jogador, as quests... Ele sabe tudo e gerencia tudo.
 
-O "God Object" é o inimigo da manutenção. Mudar uma pequena coisa no sistema de áudio pode quebrar o sistema de save, porque ambos vivem no mesmo arquivo gigante e acoplado. O "Godot MBA" ensina a usar o poder dos singletons com a disciplina de um arquiteto, criando múltiplos gerentes especializados em vez de um único "faz-tudo".
+O "God Object" é o inimigo da manutenção. Mudar uma pequena coisa no sistema de áudio pode quebrar o sistema de save, porque ambos vivem no mesmo arquivo gigante e acoplado. O "Machi Class" ensina a usar o poder dos singletons com a disciplina de um arquiteto, criando múltiplos gerentes especializados em vez de um único "faz-tudo".
 
 ## 2. Autoloads: A Solução Padrão da Godot
 
