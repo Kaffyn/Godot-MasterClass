@@ -75,9 +75,21 @@ _Tech Art, Polimento e "Game Feel"._
 
 ---
 
-## 🎓 [Módulo 10: TCC (Projeto Final)](./11-TCC/README.md)
+## 🎓 [Módulo 10: Plugins & Tooling (Extensibilidade Nativa)](./10-Plugins/README.md)
+
+_Criando suas próprias ferramentas usando GDScript e GDShaders._
+
+---
+
+## 🎓 [Módulo 11: TCC (Projeto Final)](./11-TCC/README.md)
 
 _O Ciclo Completo de Produção e Lançamento._
+
+---
+
+## 🦀 [Bônus: Rust & GDExtension (Performance Extrema)](./Bonus-Rust_GDExtension/README.md)
+
+_Segurança de Memória, Performance Nativa e Integração de Baixo Nível._
 
 ---
 
