@@ -106,46 +106,46 @@ Transformamos uma busca complexa em uma concatenação de string e um acesso dir
 
 ---
 
-## 4. Query Hash Map Invertido (A Arquitetura do Plugin)
+## 4. Query Hash Map Invertido (A Arquitetura do GAS)
 
-Aqui é onde separamos os amadores dos profissionais. Esta é a arquitetura usada no **Behavior Engineering** (Plugin) para gerenciar milhares de ações sem perder performance.
+Aqui é onde separamos os amadores dos profissionais. Esta é a arquitetura usada no **Gameplay Ability System (GAS)** para gerenciar milhares de habilidades sem perder performance.
 
 ### 4.1. O Problema da Escolha
 
-Em uma State Machine complexa, você não quer um item específico. Você quer **"Qualquer coisa que sirva"**.
-_"Estou caindo (AIR) e segurando uma lança (SPEAR). O que posso fazer?"_
+Em um sistema de habilidades complexo, você não quer uma habilidade específica. Você quer **"Qualquer coisa que sirva"**.
+_"Estou caindo (AIR) e segurando uma lança (SPEAR). O que posso usar?"_
 
 Não existe uma chave única "AIR_SPEAR" que retorne uma única ação. Podem existir 10 ataques aéreos diferentes.
 
 ### 4.2. A Inversão (O "Balde")
 
-Em vez de mapear `Chave -> Valor Único`, nós mapeamos `Contexto -> Lista de Candidatos`.
-Chamamos isso de **Indexação Invertida** (similar a como o Google busca sites por palavras-chave).
+Em vez de mapear `Chave -> Valor Único`, nós mapeamos `Contexto (Tag) -> Lista de Candidatos`.
+Chamamos isso de **Indexação Invertida**.
 
 **Estrutura de Dados (O Mapa):**
 
 ```gdscript
-# Mapeia uma TAG de Contexto para uma LISTA de Ações possíveis
-var rules = {
-    BehaviorTags.Physics.AIR: [AirSlash, DiveKick, Glide],
-    BehaviorTags.Physics.GROUND: [Walk, Run, Idle],
-    BehaviorTags.Weapon.SPEAR: [SpearThrust, SpearThrow]
+# Mapeia uma TAG de Contexto para uma LISTA de Abilities possíveis
+var ability_buckets = {
+    GameplayTags.Physics.AIR: [AirSlash, DiveKick, Glide],
+    GameplayTags.Physics.GROUND: [Walk, Run, Idle],
+    GameplayTags.Weapon.SPEAR: [SpearThrust, SpearThrow]
 }
 ```
 
 ### 4.3. O Algoritmo de Query (Runtime)
 
-Quando o jogador aperta "Ataque", nós não checamos todas as ações.
+Quando o jogador aperta "Ataque", nós não checamos todas as 500 habilidades.
 Nós olhamos para o contexto atual do personagem.
 
 1. **Contexto:** Estou no `AIR`.
-2. **Query O(1):** `rules[AIR]` retorna `[AirSlash, DiveKick, Glide]`.
-3. **Redução:** De 500 ações possíveis, reduzimos para 3 candidatos instantaneamente.
+2. **Query O(1):** `ability_buckets[AIR]` retorna `[AirSlash, DiveKick, Glide]`.
+3. **Redução:** Reduzimos o universo de busca instantaneamente.
 
 ### 4.4. O Desempate (Scoring System)
 
 Agora que temos 3 candidatos no "balde", quem vence?
-Rodamos um algoritmo de **Score** simples nesses 3 itens:
+Rodamos um algoritmo de **Score** nos candidatos:
 
 - `Glide`: Requer `AIR`. (Match: 1 ponto)
 - `AirSlash`: Requer `AIR` + `SWORD`. (Tenho Spear. Match: Inválido ❌)
@@ -155,4 +155,4 @@ Rodamos um algoritmo de **Score** simples nesses 3 itens:
 
 ### Conclusão
 
-O **Query Hash Map Invertido** permite que seu jogo tenha milhares de habilidades, itens e reações, mantendo a lógica de decisão extremamente rápida e desacoplada. Você não escreve `if/else`. Você apenas joga dados nos baldes certos e deixa o Hash Map fazer a mágica.
+O **Query Hash Map Invertido** permite que o Zyris GAS suporte milhares de habilidades, itens e reações, mantendo a lógica de decisão extremamente rápida e desacoplada. Você não escreve `if/else`. Você organiza seus dados.

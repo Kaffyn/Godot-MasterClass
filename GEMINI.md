@@ -64,10 +64,10 @@ Organize por **Domínio (Contexto)**.
 
 ```
 res://
-├── systems/            # Lógica pura e Autoloads (Managers)
+├── systems/            # Lógica pura e Autoloads (Managers/Servers)
 │   ├── save_system/
 │   ├── sound_manager/
-│   └── state_machine/
+│   └── ability_system/
 ├── entities/           # Objetos do mundo
 │   ├── player/         # Tudo do Player aqui (.gd, .tscn, .png)
 │   ├── enemies/
@@ -92,8 +92,8 @@ Este é o coração da arquitetura Kaffyn. Se você entender ROP, você entende 
 
 ### 3.1. A Filosofia
 
-**Nós (Nodes)** são comportamentos. Eles sabem "fazer coisas" (andar, tocar som, colidir).
-**Recursos (Resources)** são dados. Eles sabem "o que são as coisas" (velocidade, dano, ícone).
+**Nós (Nodes)** são comportamentos e visualização. Eles sabem "exibir coisas" e "orquestrar coisas".
+**Recursos (Resources)** são dados e regras. Eles sabem "o que são as coisas" e "como elas funcionam logicamente".
 
 **O Erro Comum:**
 Colocar `var max_health = 100` no script do Inimigo.
@@ -115,62 +115,50 @@ Se você tiver 50 tipos de inimigos, terá 50 scripts ou uma herança complexa.
 ### 3.3. Resources com Comportamento (Helper Functions)
 
 Resources não precisam ser "structs burras". Eles podem ter funções, desde que sejam **Puras** (não dependam de estado global ou SceneTree).
-
-_Exemplo:_ Um `ItemData` pode ter `func get_sell_price(merchant_reputation: float) -> int`. Ele calcula o preço baseado nos seus próprios dados e num parâmetro externo.
+Isso é fundamental no **Gameplay Ability System**, onde a lógica da habilidade vive no Resource `Ability.gd`.
 
 ---
 
-## 4. Behavior Engineering (A Revolução Unificada)
+## 4. Gameplay Ability System (GAS)
 
-Esqueça a fragmentação entre "estados" e "atributos". Tudo é _comportamento_. O Behavior Engineering é o motor de RPG que unifica _o que_ um personagem é e _o que_ ele faz, tudo guiado por dados.
+O Zyris Framework utiliza o GAS para unificar ações, estados e atributos.
 
-### 4.1. O Paradigma: Tudo é Comportamento
+### 4.1. O Paradigma: Contexto -> Decisão -> Execução
 
-- **Atributos** são o comportamento de um número que se modifica.
-- **Ações** (movimentos, ataques) são o comportamento de uma entidade que reage ao contexto.
-  Nosso sistema gerencia isso em um único `BehaviorController`.
+Não diga ao código o que fazer (`if pressed: jump()`). Diga ao código sua intenção e deixe o sistema decidir se é possível.
+
+1. **Intenção:** "Quero ativar a habilidade `Pulo`."
+2. **Contexto:** "Estou `Stunned`? Tenho `Stamina`?" (Validação de Tags e Custos).
+3. **Execução:** Se válido, o sistema paga o custo e executa a lógica do Resource.
 
 ### 4.2. Os 3 Pilares Fundamentais
 
-#### A. Atributos e Modificadores: O Motor de Stats
+#### A. Atributos e Modificadores
 
-- **Attribute:** Não é um `int`; é um objeto que calcula `(Base + Flat) * Multiplicadores`.
-- **StatModifier (Resource):** Define como e quanto um atributo é alterado (`FLAT`, `PERCENT_ADD`, `PERCENT_MULT`).
+- **Atributos:** Números vivos (Vida, Mana).
+- **Effects (Resources):** Modificadores temporários (`Buff`, `Debuff`, `Dano`). Você não reduz vida; você aplica um Efeito de Dano Instantâneo.
 
-#### B. Ações e Contexto: O Coração do Combate e Movimento
+#### B. Tags de Gameplay
 
-- **BehaviorTags (Singleton Global):** Nosso vocabulário universal de _Tags_ para o jogo (ex: `Weapon: SWORD`, `Physics: AIR`).
-- **ActionData (Resource):** Define um comportamento (antigo "estado"). Possui:
-  - _Requisitos Contextuais:_ Tags que ele precisa (`req_weapon: SWORD`).
-  - _Regras de Reação:_ O que fazer se o contexto mudar (`on_physics_change: CANCEL`).
-  - _Efeitos:_ O que ele causa (`effects_to_apply`).
-- **BehaviorCompose (Resource):** Agrupa `ActionData`s, criando "decks de habilidades" que podem ser trocados ou herdados.
-- **Score System:** O algoritmo (`find_best_match()`) que seleciona a `ActionData` mais adequada com base no Contexto.
+- Vocabulário hierárquico (`State.Stunned`, `Element.Fire`). Substitui booleanos.
+- Permite lógica complexa sem acoplamento (`HasTag("State.Stunned")` bloqueia habilidades).
 
-#### C. Efeitos: O "O Que Acontece"
+#### C. Resources de Ação
 
-- **Effect (Resource):** Define as consequências (Dano, Cura, Aplicar Status). Processado pelo `BehaviorController`.
-
-### 4.3. O BehaviorController (O Cérebro Unificado)
-
-Este `Node` no personagem gerencia TUDO:
-
-- Atributos (`get_attribute_value()`, `apply_modifier()`).
-- Contexto (`set_context_tag()`).
-- Seleção e execução de `Actions` (`perform_action()`, `find_best_match()`).
-- Processamento de `Effects` (`apply_effect()`).
+- `AbilityResource`: Define custos, cooldowns e lógica de execução.
 
 ---
 
-## 5. Arquitetura de Sistemas Críticos
+## 5. Arquitetura de Sistemas Críticos (Servers)
 
-### 5.1. Sistema de Inventário (Minecraft Style)
+### 5.1. O Padrão Server (Object-Based)
 
-Para um inventário real (com durabilidade, encantamentos e stacks), você precisa do padrão **Definição vs. Instância**.
+Um **Server** é uma entidade global, persistente e autoritativa.
+**Arquitetura:** Em GDScript, um Server robusto deve estender `Object` ou `RefCounted`, não `Node`. Ele não deve habitar a SceneTree a menos que precise desenhar ou tocar áudio.
+Acesso deve ser feito via Singleton Estático (`MyServer.get_instance()`).
 
-1. **ItemDefinition (Resource):** O que é o item? (Nome, Ícone, MaxStack). É estático e compartilhado.
-2. **ItemInstance (Resource ou Object):** O item no bolso. Contém uma referência à Definição + `quantidade` + `durabilidade`.
-    - Integração: `ItemInstance` pode carregar `StatModifier`s que são aplicados ao `BehaviorController` ao equipar.
+- **Autoload (Node):** Use apenas para Áudio, UI Global e Loading.
+- **Server (Object):** Use para Lógica de Regras, Inventário, Quests, Crafting.
 
 ### 5.2. Save System (Serialização)
 
@@ -178,25 +166,12 @@ Não salve nós. Nunca salve a SceneTree.
 O Save System deve salvar **DADOS**.
 
 1. Crie um dicionário ou Resource dedicado (`SaveData`).
-2. Colete os dados dos sistemas (`Inventory`, `QuestManager`, `BehaviorController`).
+2. Colete os dados dos sistemas (`Inventory`, `QuestManager`).
 3. Salve esse objeto em `user://savegame.tres`.
-
-Para carregar:
-
-1. Carregue o arquivo.
-2. Instancie a cena do jogo "limpa".
-3. Injete os dados carregados nos sistemas.
-
-### 5.3. Singletons (Autoloads)
-
-Use com extrema moderação.
-
-- **Bom:** Managers de sistemas globais (`SoundManager`, `SceneLoader`, `SaveSystem`).
-- **Ruim:** Compartilhamento de variáveis de gameplay (`PlayerHP`, `Score`). Use Resources ou EventBus para isso.
 
 ---
 
-## 6. Modularidade e Plugins (SoftEngine)
+## 6. Modularidade e Plugins (Zyris Modules)
 
 Pense no seu jogo como um sistema operacional. A Godot é o Kernel. Seus sistemas são os Drivers.
 
@@ -210,14 +185,6 @@ A Kaffyn divide a arquitetura em camadas claras. Respeite essas fronteiras.
 4. **FX:** Áudio e Visual. Apenas reage a eventos ("Tocar som X").
 5. **UI:** A camada visual. Apenas observa dados e mostra na tela.
 
-### 6.2. A Regra do Desacoplamento
-
-Um plugin de UI nunca deve acessar `Player.gd`.
-Ele deve acessar um sinal ou um dado intermediário.
-
-- _Errado:_ `HealthBar` lê `Player.hp`.
-- _Certo:_ `HealthBar` se conecta a `Player.health_changed`.
-
 ---
 
 ## 7. Polimento e Game Feel ("Juice")
@@ -226,15 +193,15 @@ Um jogo funcional sem "Juice" é um protótipo chato. O polimento não é a últ
 
 ### 7.1. AnimationPlayer vs. Tweens
 
-- **AnimationPlayer:** Para coisas complexas, visuais e desenhadas à mão (Ataques, Cutscenes). Use "Call Method Tracks" para sincronizar lógica (ex: causar dano no frame exato da espada).
-- **Tweens:** Para matemática, interpolação e procedural (UI entrando, Screen Shake, Cor piscando). Use `create_tween()` e sempre defina `set_ease()` e `set_trans()`. Movimento linear é proibido.
+- **AnimationPlayer:** Para coisas complexas e artísticas. Use "Call Method Tracks" para sincronizar lógica.
+- **Tweens:** Para matemática e procedural. Use `create_tween()` e sempre defina `set_ease()` e `set_trans()`.
 
 ### 7.2. Áudio Dinâmico
 
-Nunca toque o mesmo `.wav` repetidamente. O cérebro odeia isso (Machine Gun Effect).
+Nunca toque o mesmo `.wav` repetidamente.
 
-- Use `AudioStreamRandomizer` para variar pitch e volume automaticamente.
-- Use **Audio Buses** para mixagem (Music, SFX, Voice). Nunca jogue tudo no Master.
+- Use `AudioStreamRandomizer` para variar pitch e volume.
+- Use **Audio Buses** para mixagem.
 
 ---
 
@@ -263,109 +230,28 @@ Para manter o código limpo e a sanidade mental da equipe (e da IA), siga estas 
 
 ---
 
-## 9. Vocabulário e Terminologia
-
-Para manter o nível "MBA", evitamos gírias amadoras e preferimos termos de engenharia.
-
-| Termo Proibido (Amador)        | Termo Recomendado (Profissional)                                                               |
-| :----------------------------- | :--------------------------------------------------------------------------------------------- |
-| "Spaghetti Code"               | "Código Frágil", "Acoplamento Excessivo", "Alta Complexidade Ciclomática", "Código Monolítico" |
-| "Jeitinho" / "Gambiarra"       | "Workaround", "Solução Ad-hoc", "Solução Temporária", "Anti-pattern"                           |
-| "Script do Player"             | "Controlador de Personagem", "PlayerController"                                                |
-| "Vida" (em contexto de código) | "Health Points (HP)", "HealthComponent"                                                        |
-| "Fazer funcionar"              | "Implementar", "Viabilizar"                                                                    |
-
----
-
-## 10. Cheat Sheet de Código (Snippets Machi)
-
-### A. Declaração de Resource (Data)
-
-```gdscript
-class_name MyData extends Resource
-
-@export_group("Configuração")
-@export var id: String = "unique_id"
-@export var value: int = 10
-
-# Função pura (sem efeitos colaterais)
-func get_display_name() -> String:
-    return "Item: " + id
-```
-
-### B. Declaração de Componente (Node)
-
-```gdscript
-class_name MyComponent extends Node
-
-# Dependência explícita
-@export var data: MyData
-
-signal executed(result: int)
-
-func execute():
-    if not data:
-        push_warning("Data missing!")
-        return
-
-    # Lógica usando o dado
-    var result = data.value * 2
-    executed.emit(result)
-```
-
-### C. Singleton/Autoload Pattern
-
-```gdscript
-extends Node
-
-# Acesso estático para facilitar (Opcional, mas útil)
-static var instance: GameManager
-
-func _enter_tree():
-    instance = self
-
-func _exit_tree():
-    if instance == self:
-        instance = null
-```
-
-### D. Tween ("Juice")
-
-```gdscript
-func animate_pop():
-    var t = create_tween()
-    t.set_trans(Tween.TRANS_ELASTIC)
-    t.set_ease(Tween.EASE_OUT)
-
-    scale = Vector2.ZERO
-    t.tween_property(self, "scale", Vector2.ONE, 0.5)
-```
-
----
-
 ## 11. Mapa do Conhecimento (Índice de Arquivos)
 
 Para onde ir se você quiser aprender sobre...
 
 ### Core & Arquitetura
 
-### Core & Arquitetura
-
 - **`06_HashMap.md`**: A arte de organizar dados para performance extrema.
 - **`02_ResourceOrientedProgramming.md`**: (Nível 3) A fundação de dados vs lógica.
-- **`13_Plugins.md`**: Modularidade e a arquitetura da SoftEngine.
+- **`13_Plugins.md`**: Modularidade e a arquitetura Zyris.
+- **`03_Singletons.md`**: A diferença entre Servers (Object) e Autoloads (Node).
 
 ### Gameplay
 
+- **`16_GameplayAbilitySystem.md`**: (NOVO) A arquitetura Zyris de Habilidades, Tags e Efeitos.
 - **`07_Inventory.md`**: De arrays simples a inventários instanciados complexos.
-- **`05_StateMachines.md`**: A aula teórica da evolução das FSMs.
+- **`05_StateMachines.md`**: De FSM simples ao Context-Aware AI.
 - **`12_CharacterSheet.md`**: Projeto prático integrando UI, Dados e Save.
 
 ### Fundamentos
 
 - **`01_GodotFundamentals.md`**: Tipagem, Sinais e Ciclo de Vida.
 - **`04_SceneAndDataManagement.md`**: Troca de cenas e persistência.
-- **`03_Singletons.md`**: Quando usar (e não usar) Autoloads.
 
 ### Polimento
 
@@ -382,78 +268,3 @@ Para onde ir se você quiser aprender sobre...
 
 Este é o seu arsenal. Use-o para construir não apenas jogos, mas sistemas de engenharia robustos e belos.
 **Machi out.**
-
----
-
-## 12. Ferramentas e Workflow do Agente (Gemini Tools)
-
-Instruções específicas para o Agente (Gemini) sobre como operar ferramentas no ambiente do usuário.
-
-### 12.1. Mapeamento de Estrutura (Tree)
-
-Quando for solicitado que você gere uma "tree" ou mapeie a estrutura de arquivos:
-
-1. **Execute o comando:**
-
-    ```powershell
-    tree /F /A | Out-File -Encoding UTF8 tree.txt
-    ```
-
-2. **Analise o resultado:**
-    Imediatamente após a execução, leia e analise o arquivo `tree.txt` gerado no diretório atual para entender a estrutura do projeto.
-
-### 12.2. Debugging e Logs (Godot)
-
-Quando for solicitado iniciar o Debug ou verificar erros na Godot:
-
-1. **Execute o comando:**
-
-    ```cmd
-    cmd /c "C:\Users\bruno\Desktop\Godot.exe -e --path . --verbose > godot_debug.log 2>&1"
-    ```
-
-    _Nota: Isso iniciará o editor/jogo. O usuário irá interagir e testar. O terminal ficará ocupado ou rodando em background._
-
-2. **Analise o Log:**
-    Após o fechamento da Godot (pelo usuário), o arquivo `godot_debug.log` conterá toda a saída. Leia este arquivo para identificar erros, warnings e stack traces para proceder com as correções.
-
-### 12.3. Renomeação em Massa (moka-rename)
-
-> **Instalação:** Caso não tenha a ferramenta, instale via: `npm -g install moka-code`
-
-Quando precisar padronizar nomes de arquivos ou pastas em massa (refatoração):
-
-1. **Execute o comando:**
-
-    ```powershell
-    moka-rename --source "caminho/para/pasta" --case snake_case
-    ```
-
-    _Opções de Case:_ `snake_case` (padrão Godot), `PascalCase` (Classes), `camelCase`, `kebab-case`.
-    _Nota:_ Use com cautela em pastas com muitos arquivos. O padrão da Godot para arquivos é sempre `snake_case`.
-
-### 12.4. Web Build & Test (Browser Agent)
-
-Para testar o jogo rodando no ambiente final (Web) e permitir que o Agente visualize o jogo via Browser:
-
-1. **Pré-requisito:** Ter um preset de exportação Web configurado no projeto (Project > Export > Add... > Web).
-2. **Execute o comando:**
-
-    ```powershell
-    # Cria a pasta de build se não existir
-    mkdir -Force builds/web
-    # Exporta o projeto para HTML5 (headless)
-    C:\Users\bruno\Desktop\Godot.exe --headless --export-release "Web" builds/web/index.html
-    ```
-
-3. **Acesse:** Abra o arquivo `builds/web/index.html` diretamente no navegador (ou use `start builds/web/index.html` no Windows). O Agente pode então usar suas ferramentas de browser para interagir e visualizar.
-
-### 12.5. Comandos Úteis de CLI (Godot)
-
-Além dos comandos básicos, use estes para automação e testes:
-
-- **Rodar Script:** `godot -s res://path/to/script.gd` (Útil para scripts de manutenção ou testes unitários).
-- **Modo Debug:** `godot -d` (Roda o jogo com debugger ativado, capturando erros no console).
-- **Modo Headless:** `godot --headless` (Roda sem interface gráfica, ideal para CI/CD ou scripts de fundo).
-- **Rodar Cena:** `godot res://scenes/minha_cena.tscn` (Testa uma cena isolada rapidamente).
-- **Logs Detalhados:** Adicione `--verbose` a qualquer comando para ver logs internos da engine.
